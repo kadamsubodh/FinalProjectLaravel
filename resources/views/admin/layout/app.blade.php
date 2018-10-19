@@ -370,6 +370,32 @@
           </ul>
          </li>
        @endhasrole
+       <li class="{{str_contains(Request::path(),'admin/productsattributes') ? 'active' : ''}} treeview">
+          <a href="#">
+            <i class="fa fa-files-o"></i>
+            <span>Products Attributes</span>
+            <span class="pull-right-container">
+              <span class="label label-primary pull-right">2</span>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+            <li><a href="/admin/productsattributes "><i class="fa fa-circle-o"></i>Product Attributes List</a></li>
+            <li><a href="/admin/productsattributes/create "><i class="fa fa-circle-o"></i> Create New Product Attributes</a></li>
+          </ul>
+         </li>
+        <li class="{{str_contains(Request::path(),'admin/products') ? 'active' : ''}} treeview">
+          <a href="#">
+            <i class="fa fa-files-o"></i>
+            <span>Products</span>
+            <span class="pull-right-container">
+              <span class="label label-primary pull-right">2</span>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+            <li><a href="/admin/products "><i class="fa fa-circle-o"></i>Product List</a></li>
+            <li><a href="/admin/products/create "><i class="fa fa-circle-o"></i> Create New Product</a></li>
+          </ul>
+         </li>
         <li class="treeview">
           <a href="#">
             <i class="fa fa-files-o"></i>

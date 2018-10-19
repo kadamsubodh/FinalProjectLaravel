@@ -89,3 +89,8 @@ Route::resource('admin/configurations', 'configurationController')->middleware('
 
 Route::resource('admin/banners', 'BannerController')->middleware('checkLogin');
 Route::resource('admin/categories', 'CategoryController')->middleware('checkLogin');
+Route::get('/demo', function () {
+    return view('admin.categories.demo');
+});
+Route::resource('admin/products', 'ProductController')->middleware('checkLogin');
+Route::resource('admin/productsattributes', 'ProductAttributesController')->middleware('checkLogin');

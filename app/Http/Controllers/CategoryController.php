@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 use Auth;
+use DB;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Session;
@@ -142,5 +143,41 @@ class CategoryController extends Controller
         Category::destroy($id);
 
         return redirect('admin/categories')->with('flash_message', 'Category deleted!');
+    }
+
+   static function getCategoryTree($id)
+    {  
+        
+        $parent_id;
+        $categories1=array();
+        $category= DB::table('categories')->where(function ($query) use ($id){
+                    $query->where('id','=', $id);
+                    // $query->where('id','=', $id);
+                    })->get();
+        foreach($category as $cate)
+        {  
+                $name= $cate->name;
+                array_push($categories1,$name);
+                $parent_id=$cate->parent_id;
+        }
+        while($parent_id!=0)
+        {
+            $category1=DB::table('categories')->where(function ($query) use ($parent_id){
+                    $query->where('id','=', $parent_id);
+                    // $query->where('id','=', $id);
+                    })->get();
+               foreach($category1 as $cate1)
+                {  
+                        $name= $cate1->name;
+                        array_unshift($categories1,$name);
+                        $parent_id=$cate1->parent_id;
+                }
+        }
+        print_r($categories1);
+        exit();
+    //     return view('admin.categories.index', compact('categories1'));
+   
+        // return view('admin.categories.demo', compact('categories'));
+       
     }
 }
