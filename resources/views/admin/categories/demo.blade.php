@@ -1,1 +1,1 @@
-{{\App\Http\Controllers\CategoryController::getCategoryTree(5)}}
+{{\App\Http\Controllers\CategoryController::getCategoryTree(4)}}

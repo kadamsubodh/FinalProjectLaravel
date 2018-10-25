@@ -1,10 +1,7 @@
 <?php
-
 namespace App\Http\Middleware;
-
 use Closure;
 use Auth;
-
 class checkLogin
 {
     /**
@@ -15,8 +12,8 @@ class checkLogin
      * @return mixed
      */
     public function handle($request, Closure $next)
-
-    {   if(!Auth::user())
+    {   
+        if(!Auth::user())
         {
             return redirect('/');
         }

@@ -1,0 +1,2 @@
+php artisan crud:view products --fields="name#string; sku#string; short_decsription#string; long_description#text; price#number; special_price#number; special_price_from#date; special_price_to#date; status#radio; quantity#number; meta_title#string; meta_description#text; meta_keywords#text; is_featured#radio; image#file; image_status#radio; Attribute_name#select#option={"id":"value"};
+Attribute_value#string"  --view-path="admin" --route-group=admin --form-helper=html

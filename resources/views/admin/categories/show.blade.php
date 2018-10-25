@@ -1,23 +1,23 @@
 @extends('admin.dashboard.index')
 @section('contentHeader')
-      <h1>
+    <h1>
         Categories
         <small>Control panel</small>
-      </h1>
-      <ol class="breadcrumb">
+    </h1>
+    <ol class="breadcrumb">
         <li><a href="/index"><i class="fa fa-dashboard"></i> Home</a></li>
         <li><a href="/admin/categories"><i class="fa fa-dashboard"></i>Categories</a></li>
         <li class="active">Update {{ $category->id }}</li>
-      </ol>
+    </ol>
 @endsection
 @section('content')
     <div class="container">
         <div class="row">
             <div class="col-md-9">
                 <div class="card">
-                    <div class="card-header">category {{ $category->id }}</div>
+                    <div class="card-header">category {{ $category->id }}
+                    </div>
                     <div class="card-body">
-
                         <a href="{{ url('/admin/categories') }}" title="Back"><button class="btn btn-warning btn-sm"><i class="fa fa-arrow-left" aria-hidden="true"></i> Back</button></a>
                         <a href="{{ url('/admin/categories/' . $category->id . '/edit') }}" title="Edit category"><button class="btn btn-primary btn-sm"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit</button></a>
 

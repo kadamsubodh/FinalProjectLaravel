@@ -7,7 +7,6 @@
 @section('bodyTag')
 @show
 <div class="wrapper">
-
   <header class="main-header">
     <!-- Logo -->
     <a href="/index2" class="logo">
@@ -354,7 +353,7 @@
             <li><a href="/admin/banners/create "><i class="fa fa-circle-o"></i> Create New Banner</a></li>
           </ul>
          </li>
-           @endhasrole
+        @endhasrole
         @hasrole('superadmin|admin')
          <li class="{{str_contains(Request::path(),'admin/categories') ? 'active' : ''}} treeview">
           <a href="#">
@@ -367,6 +366,19 @@
           <ul class="treeview-menu">
             <li><a href="/admin/categories "><i class="fa fa-circle-o"></i>Category List</a></li>
             <li><a href="/admin/categories/create "><i class="fa fa-circle-o"></i> Create New Category</a></li>
+          </ul>
+         </li>
+         <li class="{{str_contains(Request::path(),'admin/coupons') ? 'active' : ''}} treeview">
+          <a href="#">
+            <i class="fa fa-files-o"></i>
+            <span>Coupons</span>
+            <span class="pull-right-container">
+              <span class="label label-primary pull-right">2</span>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+            <li><a href="/admin/coupons "><i class="fa fa-circle-o"></i>Coupons List</a></li>
+            <li><a href="/admin/coupons/create "><i class="fa fa-circle-o"></i> Create New Coupon</a></li>
           </ul>
          </li>
        @endhasrole
@@ -807,6 +819,8 @@
 <script src="{{asset('dist/js/pages/dashboard2.js')}}"></script>
 <!-- AdminLTE for demo purposes -->
 <script src="{{asset('dist/js/demo.js')}}"></script>
+ <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+
 @show
 </body>
 </html>

@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Session;
 use App\Http\Requests;
@@ -48,25 +47,23 @@ class configurationController extends Controller
      */
     public function store(Request $request)
     {
-        
-       $validate=$request->validate([
-           'conf_key'=>'required',
-           'conf_value'=>'required',
-           'status'=>'required' 
-       ]);
-       $conf=new Configuration_table();
-       $conf->conf_key=$request->conf_key;
-        $conf->conf_value=$request->conf_value;
-        $conf->status=$request->status;
-        $conf->created_by=Auth::user()->id;
-        $conf->modify_by=Auth::user()->id;
-        $v=$conf->save();
-        if($v)
+        $validate=$request->validate([
+           'conf_key'   =>'required',
+           'conf_value' =>'required',
+           'status'     =>'required' 
+        ]);
+        $configuration=new Configuration_table();
+        $configuration->conf_key=$request->conf_key;
+        $configuration->conf_value=$request->conf_value;
+        $configuration->status=$request->status;
+        $configuration->created_by=Auth::user()->id;
+        $configuration->modify_by=Auth::user()->id;
+        $configuration->save();
+        if($configuration)
         {
             Session::flash('alert-success', 'Configuration added!');
-        return redirect('admin/configurations');
+            return redirect('admin/configurations');
         }
-
     }
 
     /**
@@ -79,7 +76,6 @@ class configurationController extends Controller
     public function show($id)
     {
         $configuration = Configuration_table::findOrFail($id);
-
         return view('configurations.show', compact('configuration'));
     }
 
@@ -93,7 +89,6 @@ class configurationController extends Controller
     public function edit($id)
     {
         $configuration = Configuration_table::findOrFail($id);
-
         return view('configurations.edit', compact('configuration'));
     }
 
@@ -107,25 +102,22 @@ class configurationController extends Controller
      */
     public function update(Request $request, $id)
     {
-        
         $validate=$request->validate([
-           'conf_key'=>'required',
-           'conf_value'=>'required',
-           'status'=>'required' 
-       ]);
-        $conf = Configuration_table::findOrFail($id);
-        $conf->conf_key=$request->conf_key;
-        $conf->conf_value=$request->conf_value;
-        $conf->status=$request->status;
-        $conf->modify_by=Auth::user()->id;
-        $v=$conf->save();
-        if($v)
+           'conf_key'   =>'required',
+           'conf_value' =>'required',
+           'status'     =>'required' 
+        ]);
+        $configuration = Configuration_table::findOrFail($id);
+        $configuration->conf_key=$request->conf_key;
+        $configuration->conf_value=$request->conf_value;
+        $configuration->status=$request->status;
+        $configuration->modify_by=Auth::user()->id;
+        $configuration->save();
+        if($configuration)
         {
             Session::flash('alert-success', 'Configuration updated!');
-
-        return redirect('admin/configurations');
+            return redirect('admin/configurations');
         }
-        
     }
 
     /**
@@ -139,7 +131,6 @@ class configurationController extends Controller
     {
         Configuration_table::destroy($id);
         Session::flash('alert-success', 'Configuration Deleted!');
-
         return redirect('admin/configurations');
     }
 }

@@ -38,11 +38,19 @@
 </div>
 <div class="form-group {{ $errors->has('role') ? 'has-error' : ''}}">
     <label for="role" class="control-label">{{ 'Role' }}</label>
-<select name="role" class="form-control" id="role" >
-      @foreach (App\Role::all() as $role)
-        <option value="{{$role->id}}">{{ $role->name}}</option>
-    @endforeach
-</select>
+    @if(isset($user))
+     <select name="role" class="form-control" id="role" >
+        @foreach (App\Role::all() as $role)
+            <option @if($user->role_id == $role->id) selected @endif value="{{$role->id}}"> {{ $role->name}}</option>
+        @endforeach
+    </select>
+    @else
+    <select name="role" class="form-control" id="role" >
+        @foreach (App\Role::all() as $role)
+            <option value="{{$role->id}}">{{ $role->name}}</option>
+        @endforeach
+    </select>
+    @endif
     {!! $errors->first('role', '<p class="help-block">:message</p>') !!}
 </div>
 <div class="form-group">

@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Http\Controllers;
-
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Auth;
@@ -11,7 +10,6 @@ class loginController extends Controller
     public function showLogin()
     {
     	return view('admin.layout.login');
-
     }
 
     public function doLogin(Request $request)
@@ -33,18 +31,16 @@ class loginController extends Controller
                 }
                 else
                 {
-                    Session::flash('alert-danger', 'Sorry! Access Denied as your are not admin');
+                    Session::flash('alert-danger', 'Sorry! Access Denied as you are not admin');
                     return redirect('/');
                 }
 
     		}
-
     	else
     		{
                 Session::flash('alert-danger', 'Invalid credentials');
                 return redirect('/');
     		}
-    	
     }
     public function doLogOut()
     {

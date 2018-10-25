@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Session;
 use App\Http\Requests;
@@ -23,10 +22,10 @@ class userController extends Controller
           // $role=auth()->user()->givePermissionTo('Add');
         $keyword = $request->get('search');
         $perPage = 25;
-
         if (!empty($keyword)) {
             $users = User::latest()->paginate($perPage);
-        } else {
+        } 
+        else {
             $users = User::latest()->paginate($perPage);
         }
       // $user= DB::table('users')->where('id', DB::raw("(select max(`id`) from users)"))->get();
@@ -52,7 +51,7 @@ class userController extends Controller
                     
       //       }
             // return $permissions;
-         return view('users.index', compact('users'));
+        return view('users.index', compact('users'));
     }
 
     /**
@@ -96,33 +95,28 @@ class userController extends Controller
         $v=$user->save();
         if($v)
         {
-
             $user1= DB::table('users')->where('id', DB::raw("(select max(`id`) from users)"))->get();
             foreach($user1 as $us)
             {
-                 $role=$us->role_id;
-                 $id=$us->id;
-                 $permissions= DB::table('role_has_permissions')->where(function ($query) use ($role,$id){
+                $role=$us->role_id;
+                $id=$us->id;
+                $permissions= DB::table('role_has_permissions')->where(function ($query) use ($role,$id){
                     $query->where('role_id','=', $role)->pluck('permission_id');
                     // $query->where('id','=', $id);
                     })->get();
-                 $modelRole= DB::insert('insert into model_has_roles(role_id,model_type,model_id) values(?,?,?)',[$role,'App\User',$id]);
+                $modelRole= DB::insert('insert into model_has_roles(role_id,model_type,model_id) values(?,?,?)',[$role,'App\User',$id]);
                     
                     foreach ($permissions as $per) {
                     $permission= $per->permission_id;
 
-                    $modelPermissions= DB::insert('insert into model_has_permissions(permission_id,model_type,model_id) values(?,?,?)',[$permission,'App\User',$id]);
-                        
-                    }
-                    
-                    
+                    $modelPermissions= DB::insert('insert into model_has_permissions(permission_id,model_type,model_id) values(?,?,?)',[$permission,'App\User',$id]);                        
+                    }           
             }
             if($modelPermissions && $modelRole )
-                    {
-                       Session::flash('alert-success', 'User added!');
-                        return redirect('admin/users');
-                    }
-            
+            {
+                Session::flash('alert-success', 'User added!');
+                return redirect('admin/users');
+            }            
         }
     }
 
@@ -136,7 +130,6 @@ class userController extends Controller
     public function show($id)
     {
         $user = User::findOrFail($id);
-
         return view('users.show', compact('user'));
     }
 
@@ -150,7 +143,6 @@ class userController extends Controller
     public function edit($id)
     {
         $user = User::findOrFail($id);
-
         return view('users.edit', compact('user'));
     }
 
@@ -170,7 +162,6 @@ class userController extends Controller
             'email'=>'required|email',
             'status'=>'required',
             'role'=>'required'
-
         ]);
         $user = User::findOrFail($id);
         $user->firstname=$request->firstname;
@@ -179,42 +170,34 @@ class userController extends Controller
         $user->status=$request->status;
         $user->role_id=$request->role;
         $user->created_date = date("Y-m-d H:i:s");
-        $v=$user->save();
-        if($v)
+        $user->save();
+        $modelPermissions;
+        if($user)
         {
-
-
-                 $role=$request->role;
-                 $permissions= DB::table('role_has_permissions')->where(function ($query) use ($role,$id){
+            $role=$request->role;
+            $permissions= DB::table('role_has_permissions')->where(function ($query) use ($role,$id){
                     $query->where('role_id','=', $role)->pluck('permission_id');
                     // $query->where('id','=', $id);
                     })->get();
-                 $modelRole= DB::update('update model_has_roles set role_id=? where model_id=?',[$role,$id]);
-                    $deletePermission=DB::delete('delete from model_has_permissions where model_id=?',[$id]);
-
-                    if($deletePermission)
+            $modelRole= DB::update('update model_has_roles set role_id=? where model_id=?',[$role,$id]);
+            $deletePermission=DB::delete('delete from model_has_permissions where model_id=?',[$id]);
+            if($deletePermission)
                     {
                         foreach ($permissions as $per) {
                         $permission= $per->permission_id;
-
                         $modelPermissions= DB::insert('insert into model_has_permissions(permission_id,model_type,model_id) values(?,?,?)',[$permission,'App\User',$id]);
                         }       
-                    }
-                    
-                    
-        }
-        if($modelPermissions && $modelRole )
-        {
-            Session::flash('alert-success', 'User updated!');
+                    }                    
+       
+            if($modelPermissions && $modelRole)
+            {
+                Session::flash('alert-success', 'User updated!');
 
-            return redirect('admin/users');
+                return redirect('admin/users');
+            }
         }
             
     }
-
-        
-    
-
     /**
      * Remove the specified resource from storage.
      *

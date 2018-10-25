@@ -94,3 +94,8 @@ Route::get('/demo', function () {
 });
 Route::resource('admin/products', 'ProductController')->middleware('checkLogin');
 Route::resource('admin/productsattributes', 'ProductAttributesController')->middleware('checkLogin');
+Route::resource('admin/coupons', 'CouponsController')->middleware('checkLogin');
+
+Route::post('/selectAjax', function () {
+    return view('admin.products.addSelect');
+});

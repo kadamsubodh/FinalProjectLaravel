@@ -48,23 +48,20 @@ class ProductAttributesController extends Controller
      */
     public function store(Request $request)
     {
-        
         $validate = $request->validate([
                 'name'=>'required',
         ]);
         $attribute=new Product_attribute();
         $attribute->name=$request->name;
-          $attribute->created_by=Auth::user()->id;
+        $attribute->created_by=Auth::user()->id;
         $attribute->modify_by=Auth::user()->id;
-        $v=$attribute->save();
-        if($v)
+        $attribute->save();
+        if($attribute)
         {
-
-        Session::flash('alert-success', 'Attribute added!');
-        return redirect('admin/productsattributes');
+            Session::flash('alert-success', 'Attribute added!');
+            return redirect('admin/productsattributes');
         }
     }
-
     /**
      * Display the specified resource.
      *
@@ -75,7 +72,6 @@ class ProductAttributesController extends Controller
     public function show($id)
     {
         $productsattribute = Product_attribute::findOrFail($id);
-
         return view('admin.productsattributes.show', compact('productsattribute'));
     }
 
@@ -89,7 +85,6 @@ class ProductAttributesController extends Controller
     public function edit($id)
     {
         $productsattribute = Product_attribute::findOrFail($id);
-
         return view('admin.productsattributes.edit', compact('productsattribute'));
     }
 
@@ -106,16 +101,14 @@ class ProductAttributesController extends Controller
         $validate = $request->validate([
                 'name'=>'required',
         ]);
-        
         $attribute = Product_attribute::findOrFail($id);
         $attribute->name=$request->name;
         $attribute->modify_by=Auth::user()->id;
-        $v=$attribute->save();
-        if($v)
+        $attribute->save();
+        if($attribute)
         {
-
-        Session::flash('alert-success', 'Attribute Updated!');
-        return redirect('admin/productsattributes');
+            Session::flash('alert-success', 'Attribute Updated!');
+            return redirect('admin/productsattributes');
         }
     }
 
@@ -129,7 +122,6 @@ class ProductAttributesController extends Controller
     public function destroy($id)
     {
         Product_attribute::destroy($id);
-
         return redirect('admin/productsattributes')->with('flash_message', 'Product_attribute deleted!');
     }
 }

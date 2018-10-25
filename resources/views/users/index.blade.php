@@ -40,6 +40,7 @@
 @section('bodyTag')
 <body class="hold-transition skin-blue sidebar-mini">
 @endsection
+
 @section('contentHeader')
       <h1>
         User Management
@@ -48,34 +49,29 @@
       <ol class="breadcrumb">
         <li><a href="/index"><i class="fa fa-dashboard"></i> Home</a></li>
         <li class="active">Users</li>
-      </ol>
-     
+      </ol>     
 @endsection
 
 @section('content')
     <div class="container">
         <div class="row">
-                <div class="col-md-9">
-                <div class="card">
-                    <div class="card-header">Users</div>
+            <div class="col-md-9">
+              <div class="card">
+                  <div class="card-header">Users</div>
                     <div class="card-body">
-                        <a href="{{ url('/admin/users/create') }}" class="btn btn-success btn-sm" title="Add New User">
-                            <i class="fa fa-plus" aria-hidden="true"></i> Add New
-                        </a>
-                           <!-- @if(isset($flash_message)) -->
-                           
-                           <!--  @endif -->
-                        <form method="GET" action="{{ url('/admin/users') }}" accept-charset="UTF-8" class="form-inline my-2 my-lg-0 float-right" role="search">
-                            <div class="input-group">
-                                <input type="text" class="form-control" name="search" placeholder="Search..." value="{{ request('search') }}">
-                                <span class="input-group-append">
-                                    <button class="btn btn-secondary" type="submit">
-                                        <i class="fa fa-search"></i>
-                                    </button>
+                      <a href="{{ url('/admin/users/create') }}" class="btn btn-success btn-sm" title="Add New User">
+                          <i class="fa fa-plus" aria-hidden="true"></i> Add New
+                      </a>
+                      <form method="GET" action="{{ url('/admin/users') }}" accept-charset="UTF-8" class="form-inline my-2 my-lg-0 float-right" role="search">
+                          <div class="input-group">
+                              <input type="text" class="form-control" name="search" placeholder="Search..." value="{{ request('search') }}">
+                              <span class="input-group-append">
+                                  <button class="btn btn-secondary" type="submit">
+                                      <i class="fa fa-search"></i>
+                                  </button>
                                 </span>
                             </div>
                         </form>
-
                         <br/>
                         <br/>
                         <div class="table-responsive">
@@ -91,9 +87,13 @@
                                 @foreach($users as $item)
                                     <tr>
                                         <td>{{ $loop->iteration or $item->id }}</td>
-                                        <td>{{ $item->firstname }}</td><td>{{ $item->lastname }}</td><td>{{ $item->email }}</td>
+                                        <td>{{ $item->firstname }}</td>
+                                        <td>{{ $item->lastname }}</td>
+                                        <td>{{ $item->email }}</td>
                                         <td>{{ App\User::with('role')->find($item->id)->role->name}}
+                                        </td>
                                         <td>{{ (isset($item) && (1 == $item->status)?'Active' : 'Inactive')}}
+                                        </td>
                                         <td>
                                             <a href="{{ url('/admin/users/' . $item->id) }}" title="View User"><button class="btn btn-info btn-sm"><i class="fa fa-eye" aria-hidden="true"></i> View</button></a>
                                             <a href="{{ url('/admin/users/' . $item->id . '/edit') }}" title="Edit User"><button class="btn btn-primary btn-sm"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit</button></a>
