@@ -4,7 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
-
+use Auth;
+use DB;
 use App\Coupon;
 use Illuminate\Http\Request;
 
@@ -49,11 +50,18 @@ class CouponsController extends Controller
     public function store(Request $request)
     {
         
-        $requestData = $request->all();
-        
-        Coupon::create($requestData);
-
-        return redirect('admin/coupons')->with('flash_message', 'Coupon added!');
+       $validate=$request->validate([
+        'code'=>'required|alphaNum|min:4|max:8',
+        'percent_off'=>'required|regex:/^\d*(\.\d{2})?$/',
+        'number_of_uses'=>'required|regex:/^\d*(\.\d{2})?$/',
+       ]);
+       $code=$request->code;
+       $percent_off=$request->percent_off;
+       $number_of_uses=$request->number_of_uses;
+       $created_by=Auth::user()->id;
+       $modify_by=Auth::user()->id;
+       $addCoupon=DB::select('call addNewCoupon(?,?,?,?,?)',array($code,$percent_off,$number_of_uses, $created_by,$modify_by));
+       return redirect('admin/coupons')->with('flash_message', 'Coupon added!');
     }
 
     /**
@@ -115,5 +123,16 @@ class CouponsController extends Controller
         Coupon::destroy($id);
 
         return redirect('admin/coupons')->with('flash_message', 'Coupon deleted!');
+    }
+
+    public function isExist(Request $request)
+    {
+        $code=$request->code;
+        $check=DB::select('exec checkCode(?)',array($code));
+        if($check)
+        {
+            return true;
+        }
+
     }
 }

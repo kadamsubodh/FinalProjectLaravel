@@ -28,7 +28,7 @@ class CreateUsersTable extends Migration
             $table->unsignedInteger('role_id')->unsigned();
             $table->timestamps();
             $table->text('remember_token');
-            $table->foreign('role_id')->references('id')->on('roles');
+            
         });
     }
 

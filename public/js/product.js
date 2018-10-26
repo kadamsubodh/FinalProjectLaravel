@@ -61,6 +61,21 @@ function deleteAttributeValue(event){
 $(this).parent().parent().remove();
 };
 
+function getCode()
+{
+	var code=Math.random().toString(36).slice(2).toUpperCase();
+	$.ajax({
+		type:"POST",
+		data:{"code": code},
+		url: "/checkCode",
+		success:function(responce){
+				alert(responce.code);
+
+		}	
+
+	});
+}
+
 // ----------------------------------------------------------------------------
 // else{
 		// var Attributes="";

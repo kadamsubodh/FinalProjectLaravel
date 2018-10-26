@@ -39,7 +39,7 @@ class userSeeder extends Seeder
             'twitter_token' => 'null',
             'google_token' => 'null',
             'registration_method' => 'n',
-            'role_id' => '4',
+            'role_id' => '2',
             'created_at'=>date("Y-m-d H:i:s"),
             'updated_at'=>date("Y-m-d H:i:s"),
             'remember_token'=>null,

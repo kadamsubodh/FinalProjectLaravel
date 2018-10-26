@@ -46,7 +46,7 @@
                                 @foreach($coupons as $item)
                                     <tr>
                                         <td>{{ $loop->iteration or $item->id }}</td>
-                                        <td>{{ $item->code }}</td><td>{{ $item->percent_off }}</td><td>{{ $item->number_of_uses }}</td>
+                                        <td>{{ $item->code }}</td><td>{{ $item->percent_off }}</td><td>{{ $item->no_of_uses }}</td>
                                         <td>
                                             <a href="{{ url('/admin/coupons/' . $item->id) }}" title="View coupon"><button class="btn btn-info btn-sm"><i class="fa fa-eye" aria-hidden="true"></i> View</button></a>
                                             <a href="{{ url('/admin/coupons/' . $item->id . '/edit') }}" title="Edit coupon"><button class="btn btn-primary btn-sm"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit</button></a>

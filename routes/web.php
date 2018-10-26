@@ -99,3 +99,8 @@ Route::resource('admin/coupons', 'CouponsController')->middleware('checkLogin');
 Route::post('/selectAjax', function () {
     return view('admin.products.addSelect');
 });
+
+Route::get('/getCode', function () {
+    return view('admin.categories.getCode');
+});
+Route::post('/checkCode','CouponsController@isExist');

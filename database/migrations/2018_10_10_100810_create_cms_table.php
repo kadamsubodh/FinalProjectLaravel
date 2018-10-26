@@ -20,10 +20,8 @@ class CreateCmsTable extends Migration
             $table->text('meta_title');
             $table->text('meta_description');
             $table->text('meta_keywords');
-            $table->integer('created_by');
-            
-            $table->integer('modify_by');
-         
+            $table->integer('created_by');            
+            $table->integer('modify_by');         
             $table->timestamps();
         });
     }
