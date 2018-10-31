@@ -1,6 +1,6 @@
 <div class="form-group {{ $errors->has('code') ? 'has-error' : ''}}">
     <label for="code" class="control-label">{{ 'Code' }}</label>
-    <input class="form-control" name="code" type="text" id="code" value="{{ $coupon->code or ''}}" >
+    <input class="form-control" name="code" type="text" id="code" value="{{ $coupon->code or ''}}" readonly="true"><button type='button' class="btn btn-info" onclick="getCode()">Get Code</button>
     {!! $errors->first('code', '<p class="help-block">:message</p>') !!}
 </div>
 <div class="form-group {{ $errors->has('percent_off') ? 'has-error' : ''}}">

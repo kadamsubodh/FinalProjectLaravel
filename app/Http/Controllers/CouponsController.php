@@ -125,14 +125,29 @@ class CouponsController extends Controller
         return redirect('admin/coupons')->with('flash_message', 'Coupon deleted!');
     }
 
-    public function isExist(Request $request)
-    {
-        $code=$request->code;
-        $check=DB::select('exec checkCode(?)',array($code));
-        if($check)
-        {
-            return true;
-        }
+    // public function isExist(Request $request)
+    // {
+    //     $code=$request->code;
+    //     $check=DB::select('exec checkCode(?)',array($code));
+    //     if($check)
+    //     {
+    //         return true;
+    //     }
 
+    // }
+
+    public function getCouponCode()
+    {
+        $len=8;
+        do{
+            $string = "";
+            $chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyz";
+            for($i=0;$i<$len;$i++)
+            {
+                $string.=substr($chars,rand(0,strlen($chars)),1);
+            }
+
+        }while($string == DB::table('coupons')->where('code',$string));
+        echo $string;
     }
 }

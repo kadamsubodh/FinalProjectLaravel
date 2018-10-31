@@ -132,7 +132,7 @@ class ProductController extends Controller
                     $productAttributeValueAssoc=new Product_attribute_assoc();
                     $productAttributeValueAssoc->product_id=$product->id;
                     $productAttributeValueAssoc->product_attribute_id=$request->Attribute_name[$key];
-                    $productAttributeValueAssoc->product_attribute_value_id=$attr->id;
+                    $productAttributeValueAssoc->product_attribute_value_id=$attributeValue->id;
                     $productAttributeValueAssoc->save();
                     
                 }
@@ -254,8 +254,7 @@ class ProductController extends Controller
         $product->modify_by=Auth::user()->id;
         $product->save();
         if($product)
-        {
-          
+        {          
             $productCat=DB::table('product_categories')->where('product_id', $id)->update(['category_id'=>$request->category]);;
 
             $productImage=DB::table('product_images')->where('product_id', $id)->get();
@@ -297,11 +296,11 @@ class ProductController extends Controller
                         $productAttributeValueAssoc->product_id=$product->id;
                         $productAttributeValueAssoc->product_attribute_id=
                             $request->Attribute_name[$key];
-                        $productAttributeValueAssoc->product_attribute_value_id=$attr->id;
+                        $productAttributeValueAssoc->product_attribute_value_id=$attributeValue->id;
                         $productAttributeValueAssoc->save();    
                     }
                 }
-                if($assoc) {
+                if($productAttributeValueAssoc) {
                     Session::flash('alert-success', 'Product Updated!');
                     return redirect('admin/products');
                 }

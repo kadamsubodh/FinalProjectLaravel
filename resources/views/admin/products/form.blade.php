@@ -112,10 +112,10 @@
     <div class="form-group {{ $errors->has('image_status') ? 'has-error' : ''}}">
         <label for="image_status" class="control-label">{{ 'Image Status' }}</label>
         <div class="radio">
-        <label><input name="image_status" type="radio" value="1" {{ (isset($product) && 1 == $product->image_status) ? 'checked' : '' }}> Yes</label>
+        <label><input name="image_status" type="radio" value="1" {{ (isset($product) && 1 == $product->image_status) ? 'checked' : '' }}> Active</label>
     </div>
     <div class="radio">
-        <label><input name="image_status" type="radio" value="0" @if (isset($product)) {{ (0 == $product->image_status) ? 'checked' : '' }} @else {{ 'checked' }} @endif> No</label>
+        <label><input name="image_status" type="radio" value="0" @if (isset($product)) {{ (0 == $product->image_status) ? 'checked' : '' }} @else {{ 'checked' }} @endif> Inactive</label>
     </div>
         {!! $errors->first('image_status', '<p class="help-block">:message</p>') !!}
     </div>

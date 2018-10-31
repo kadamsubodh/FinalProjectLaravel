@@ -11,16 +11,13 @@ $(document).ready(function(){
 	container.append(div);
 	var token = $('meta').attr('content');
 	$.ajax({
-			type : "POST",
-			data: {"_token": token ,"length":divlength, '_method': 'POST' },
-	                    url : '/selectAjax',
-	                    success : function(response) {
-	                    
+			type:"POST",
+			data:{"_token": token ,"length":divlength, '_method': 'POST' },
+	       	url :'/selectAjax',
+	        success : function(response) {	                    
 	                        $('#'+id).html(response);
-
-	                    }
-		});
-	
+	                 }
+	    });	
 	});
 
 	/*$("#submit").click(function(e){
@@ -49,6 +46,7 @@ $(document).ready(function(){
 					e.preventDefault();
 			}				
 	});*/
+
 });
 
 // $(document).ready(function(){
@@ -63,18 +61,14 @@ $(this).parent().parent().remove();
 
 function getCode()
 {
-	var code=Math.random().toString(36).slice(2).toUpperCase();
 	$.ajax({
-		type:"POST",
-		data:{"code": code},
-		url: "/checkCode",
-		success:function(responce){
-				alert(responce.code);
-
-		}	
-
+			type:"GET",
+			url: "/getCouponCode",
+			success:function(responce){
+					$('#code').val(responce);
+					}
 	});
-}
+};
 
 // ----------------------------------------------------------------------------
 // else{

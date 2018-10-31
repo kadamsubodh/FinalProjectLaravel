@@ -50,7 +50,6 @@
         <li class="active">Dashboard</li>
       </ol>
 @endsection
-  
 
     <!-- Main content -->
 @section('content')
@@ -555,7 +554,7 @@
 
 @endsection
 @section('scripts')
-       <script src="{{asset('bower_components/jquery/dist/jquery.min.js')}}"></script>
+<script src="{{asset('bower_components/jquery/dist/jquery.min.js')}}"></script>
 <!-- jQuery UI 1.11.4 -->
 <script src="{{asset('bower_components/jquery-ui/jquery-ui.min.js')}}"></script>
 <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
@@ -593,6 +592,5 @@
 <script src="{{asset('dist/js/demo.js')}}"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
  <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
-
 <script src="{{ asset('js/product.js') }}"></script>
 @endsection

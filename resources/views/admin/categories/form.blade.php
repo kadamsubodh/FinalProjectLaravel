@@ -5,12 +5,22 @@
 </div>
 <div class="form-group {{ $errors->has('parent_category') ? 'has-error' : ''}}">
     <label for="parent_category" class="control-label">{{ 'Parent Category' }}</label>
-	<select name="parent_category" class="form-control" id="parent_category" >
-		<option value='0'>self</option>
-	   @foreach(App\Category::all() as $category)
-	   <option value='{{$category->id}}'>{{$category->name}}</option>
-	   @endforeach
-	</select>
+    @if(isset($category))
+		<select name="parent_category" class="form-control" id="parent_category" >
+			<option value='0'>self</option>
+	   		@foreach(App\Category::all() as $Category)
+	   			<option @if($category->parent_id == $Category->id) selected @endif value='{{$Category->id}}'>{{$Category->name}}</option>
+	   		@endforeach
+		</select>
+	@else
+		<select name="parent_category" class="form-control" id="parent_category" >
+			<option value='0'>self</option>
+	   		@foreach(App\Category::all() as $category)
+	   			<option value='{{$category->id}}'>{{$category->name}}</option>
+	   		@endforeach
+		</select>
+	@endif
+
     {!! $errors->first('parent_category', '<p class="help-block">:message</p>') !!}
 </div>
 

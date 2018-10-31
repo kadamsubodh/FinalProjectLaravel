@@ -10,9 +10,43 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
-Route::get('/front', function () {
+//-x-x-x-x-x-x-x-x-x-x-x-x-x- FrontEnd Routes -x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x
+Route::get('/eshopers/home', function () {
+    return view('frontend.index');
+})->middleware('checkIsCustomer');
+Route::get('/eshopers/checkout', function () {
+    return view('frontend.checkout');
+});
+Route::get('/eshopers/contactUs', function () {
+    return view('frontend.contactUs');
+});
+Route::get('/eshopers/shop', function () {
+    return view('frontend.shop');
+});
+Route::get('/eshopers/bolgs', function () {
+    return view('frontend.blogs');
+});
+Route::get('/eshopers/singleBlog', function () {
+    return view('frontend.singleBlog');
+});
+Route::get('/eshopers/productDetails', function () {
+    return view('frontend.productDetails');
+});
+Route::get('/eshopers/cart', function () {
+    return view('frontend.cart');
+});
+Route::get('/eshopers/login', function(){
     return view('frontend.login');
 });
+Route::get('/eshopers/logout', 'front\customerLoginController@customerLogout');
+Route::post('/eshopers/signup','front\customerLoginController@customerSignUp');
+Route::post('/eshopers/signin','front\customerLoginController@customerSignIn');
+
+
+
+
+
+
 
 Route::get('/', function () {
     return view('admin.layout.login');
@@ -86,18 +120,25 @@ Route::get('/forms/editors', function () {
 Route::get('/','loginController@showLogin');
 Route::post('/doLogin','loginController@doLogin');
 Route::get('/doLogOut','loginController@doLogOut');
+//-------------------users Route----------------------------------------
 Route::resource('admin/users', 'userController')->middleware('checkLogin');
+//-------------------Config route---------------------------------------
 Route::resource('admin/configurations', 'configurationController')->middleware('checkLogin');
-
-
+//----------------------------------------------------------------------
+//banners
 Route::resource('admin/banners', 'BannerController')->middleware('checkLogin');
+//categories
 Route::resource('admin/categories', 'CategoryController')->middleware('checkLogin');
+//category tree
 Route::get('/demo', function () {
     return view('admin.categories.demo');
 });
+
 Route::resource('admin/products', 'ProductController')->middleware('checkLogin');
 Route::resource('admin/productsattributes', 'ProductAttributesController')->middleware('checkLogin');
 Route::resource('admin/coupons', 'CouponsController')->middleware('checkLogin');
+
+Route::get('/getCouponCode','CouponsController@getCouponCode')->middleware('checkLogin');
 
 Route::post('/selectAjax', function () {
     return view('admin.products.addSelect');
@@ -107,3 +148,11 @@ Route::get('/getCode', function () {
     return view('admin.categories.getCode');
 });
 Route::post('/checkCode','CouponsController@isExist');
+
+
+//--------------socialite routes------------------------------------
+
+Route::get('/auth/social/{method}','front\customerLoginController@redirectToProvider');
+Route::get('/auth/social/callback/{method}','front\customerLoginController@handleProviderCallback');
+
+//------------------------------------------------------------------
