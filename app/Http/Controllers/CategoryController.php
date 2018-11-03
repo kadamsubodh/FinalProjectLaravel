@@ -114,7 +114,7 @@ class CategoryController extends Controller
         $categories->parent_id=$request->parent_category;
         $categories->modify_by=Auth::user()->id;
         $categories->save();
-        if($category)
+        if($categories)
         {
             Session::flash('alert-success', 'Category updated!');
             return redirect('admin/categories');

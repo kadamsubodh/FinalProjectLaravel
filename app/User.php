@@ -13,5 +13,9 @@ class User extends Model implements Authenticatable
     public function role(){
     return	$this->belongsTo('Spatie\Permission\Models\Role', 'role_id');
    }
+   public function user_wish_list()
+   {
+   		return $this->hasMany('App\User_wish_list');
+   }
 
 }

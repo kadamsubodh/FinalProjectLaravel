@@ -380,6 +380,19 @@
             <li><a href="/admin/coupons/create "><i class="fa fa-circle-o"></i> Create New Coupon</a></li>
           </ul>
          </li>
+         <li class="{{str_contains(Request::path(),'admin/mailTemplate') ? 'active' : ''}} treeview">
+          <a href="#">
+            <i class="fa fa-files-o"></i>
+            <span>Mail Templates</span>
+            <span class="pull-right-container">
+              <span class="label label-primary pull-right">2</span>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+            <li><a href="/admin/mailTemplate "><i class="fa fa-circle-o"></i>Mail Template List</a></li>
+            <li><a href="/admin/mailTemplate/create "><i class="fa fa-circle-o"></i> Create New Template</a></li>
+          </ul>
+         </li>
        @endhasrole
        <li class="{{str_contains(Request::path(),'admin/productsattributes') ? 'active' : ''}} treeview">
           <a href="#">

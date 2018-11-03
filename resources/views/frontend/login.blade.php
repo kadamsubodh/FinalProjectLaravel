@@ -2,9 +2,17 @@
 @section('title','Login')
 @section('middleSection')
 	<section id="form"><!--form-->
-		<div class="container">
+		<div class="container">			
 			<div class="row">
 				<div class="col-sm-4 col-sm-offset-1">
+					<div class="flash-message">
+					    @foreach (['danger', 'warning', 'success', 'info'] as $msg)
+					      @if(Session::has('alert-' . $msg))
+
+					      <p class="alert alert-{{ $msg }}">{{ Session::get('alert-' . $msg) }} <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a></p>
+					      @endif
+					    @endforeach
+					</div>
 					<div class="login-form"><!--login form-->
 						<h2>Login to your account</h2>
 						<form action="/eshopers/signin" method="post">
@@ -13,7 +21,7 @@
 							<input type="password" placeholder="Password" name='password' />
 							<span>
 								<input type="checkbox" class="checkbox"> 
-								Keep me signed in
+								Keep me signed in &nbsp&nbsp<a href="/eshopers/forgetpassword">Forget Password</a>
 							</span>
 							<button type="submit" class="btn btn-default">Login</button>
 							<br/>

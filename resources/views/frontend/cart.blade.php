@@ -9,6 +9,7 @@
 				  <li class="active">Shopping Cart</li>
 				</ol>
 			</div>
+			<a href="/eshopers/clearCart" class="btn btn-danger">Empty Cart</a>
 			<div class="table-responsive cart_info">
 				<table class="table table-condensed">
 					<thead>
@@ -22,16 +23,18 @@
 						</tr>
 					</thead>
 					<tbody>
+						@foreach($product_ids as $id)
+						@foreach(App\Product::with('product_image')->where('id','=',$id)->get() as $product)
 						<tr>
 							<td class="cart_product">
-								<a href=""><img src="{{asset('frontend/images/cart/one.png')}}" alt=""></a>
+								<a href=""><img src="{{'/storage/uploads/'.$product->product_image['image_name']}}" alt=""></a>
 							</td>
 							<td class="cart_description">
-								<h4><a href="">Colorblock Scuba</a></h4>
-								<p>Web ID: 1089772</p>
+								<h4><a href="">{{$product->name}}</a></h4>
+								<p>{{'Web ID: 1089772'.$product->id}}</p>
 							</td>
 							<td class="cart_price">
-								<p>$59</p>
+								<p>${{$product->special_price}}</p>
 							</td>
 							<td class="cart_quantity">
 								<div class="cart_quantity_button">
@@ -41,63 +44,14 @@
 								</div>
 							</td>
 							<td class="cart_total">
-								<p class="cart_total_price">$59</p>
+								<p class="cart_total_price">${{$product->special_price}}</p>
 							</td>
 							<td class="cart_delete">
-								<a class="cart_quantity_delete" href=""><i class="fa fa-times"></i></a>
+								<a class="cart_quantity_delete" href="{{'/eshopers/removeFromCart/'.$product->id}}"><i class="fa fa-times"></i></a>
 							</td>
 						</tr>
-
-						<tr>
-							<td class="cart_product">
-								<a href=""><img src="{{asset('frontend/images/cart/two.png')}}" alt=""></a>
-							</td>
-							<td class="cart_description">
-								<h4><a href="">Colorblock Scuba</a></h4>
-								<p>Web ID: 1089772</p>
-							</td>
-							<td class="cart_price">
-								<p>$59</p>
-							</td>
-							<td class="cart_quantity">
-								<div class="cart_quantity_button">
-									<a class="cart_quantity_up" href=""> + </a>
-									<input class="cart_quantity_input" type="text" name="quantity" value="1" autocomplete="off" size="2">
-									<a class="cart_quantity_down" href=""> - </a>
-								</div>
-							</td>
-							<td class="cart_total">
-								<p class="cart_total_price">$59</p>
-							</td>
-							<td class="cart_delete">
-								<a class="cart_quantity_delete" href=""><i class="fa fa-times"></i></a>
-							</td>
-						</tr>
-						<tr>
-							<td class="cart_product">
-								<a href=""><img src="{{asset('frontend/images/cart/three.png')}}" alt=""></a>
-							</td>
-							<td class="cart_description">
-								<h4><a href="">Colorblock Scuba</a></h4>
-								<p>Web ID: 1089772</p>
-							</td>
-							<td class="cart_price">
-								<p>$59</p>
-							</td>
-							<td class="cart_quantity">
-								<div class="cart_quantity_button">
-									<a class="cart_quantity_up" href=""> + </a>
-									<input class="cart_quantity_input" type="text" name="quantity" value="1" autocomplete="off" size="2">
-									<a class="cart_quantity_down" href=""> - </a>
-								</div>
-							</td>
-							<td class="cart_total">
-								<p class="cart_total_price">$59</p>
-							</td>
-							<td class="cart_delete">
-								<a class="cart_quantity_delete" href=""><i class="fa fa-times"></i></a>
-							</td>
-						</tr>
+						@endforeach
+						@endforeach						
 					</tbody>
 				</table>
 			</div>

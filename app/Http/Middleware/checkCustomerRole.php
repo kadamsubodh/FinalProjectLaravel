@@ -1,11 +1,10 @@
 <?php
 
 namespace App\Http\Middleware;
-
-use Closure;
 use Auth;
+use Closure;
 
-class checkCustomerLogin
+class checkCustomerRole
 {
     /**
      * Handle an incoming request.
@@ -16,12 +15,18 @@ class checkCustomerLogin
      */
     public function handle($request, Closure $next)
     {
-        if(!Auth::user())
+        if(Auth::user())
         {
-            return redirect('/eshopers/login');
+            if(Auth::user()->role_id == 5)
+            {
+                return $next($request);
+            }else
+            {
+                Auth::logout();
+                return redirect('/eshopers/login');
+            }
         }
-        else
-        {
+        else{
             return $next($request);
         }
     }

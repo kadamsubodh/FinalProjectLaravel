@@ -12,7 +12,7 @@ class Category extends Model
     {
         return $this->belongsTo(self::class, 'parent_id');
     }
-    publc function product()
+    public function product()
     {
     	return $this->hasManyThrough('App\Product');
     }

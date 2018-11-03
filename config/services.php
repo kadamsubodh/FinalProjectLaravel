@@ -46,5 +46,10 @@ return [
         'client_secret' => 'MtMVlJrUWjpsuZI23_Fqsr1O',
         'redirect' => 'http://localhost:8000/auth/social/callback/google',
     ],
+    'twitter' => [
+        'client_id' => 'P2Zpnp7rSWMObPYIfShrJX4ES',
+        'client_secret' => 'hpcQRP7lI0rmUgr6f8ghSwmKlQZvS0H5st5D9qxDEOExfKAsD0',
+        'redirect' => ' twitterkit-P2Zpnp7rSWMObPYIfShrJX4ES://',
+    ],
 
 ];

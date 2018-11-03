@@ -87,9 +87,9 @@
 						<div class="shop-menu pull-right">
 							<ul class="nav navbar-nav">
 								<li><a href="#"><i class="fa fa-user"></i> @if(Auth::user()) {{Auth::user()->firstname}} {{Auth::user()->lastname}} @else Account @endif</a></li>
-								<li><a href="#"><i class="fa fa-star"></i> Wishlist</a></li>
+								<li><a href="/eshopers/wishlist"><i class="fa fa-star"></i> Wishlist ( @if(Auth::user()) {{App\User_wish_list::where('user_id','=',Auth::user()->id)->count()}} @else 0 @endif)</a></li>
 								<li><a href="/eshopers/checkout"><i class="fa fa-crosshairs"></i> Checkout</a></li>
-								<li><a href="/eshopers/cart"><i class="fa fa-shopping-cart"></i> Cart</a></li>
+								<li><a href="/eshopers/cart"><i class="fa fa-shopping-cart"></i> Cart(@if(Auth::user()) @if(isset($_COOKIE[Auth::user()->firstname.Auth::user()->id])) {{count(json_decode($_COOKIE[Auth::user()->firstname.Auth::user()->id]))}} @else 0 @endif @else 0 @endif)</a></li>
 								<li><a href= @if(Auth::user()) {{ url('/eshopers/logout') }} @else {{ url('/eshopers/login') }} @endif ><i class="fa fa-lock"></i>@if(Auth::user()) Logout({{Auth::user()->firstname}}) @else Login @endif</a></li>
 							</ul>
 						</div>
@@ -115,8 +115,7 @@
 								<li><a href="/eshopers/home" class="active">Home</a></li>
 								<li class="dropdown"><a href="#">Shop<i class="fa fa-angle-down"></i></a>
                                     <ul role="menu" class="sub-menu">
-                                        <li><a href="/eshopers/shop">Products</a></li>
-										<li><a href="/eshopers/productDetails">Product Details</a></li> 
+                                        <li><a href="/eshopers/products/all">Products</a></li>	
 										<li><a href="/eshopers/checkout">Checkout</a></li> 
 										<li><a href="/eshopers/cart">Cart</a></li> 
 										<li><a href="/eshopers/login">Login</a></li> 
@@ -127,8 +126,7 @@
                                         <li><a href="/eshopers/blogs">Blog List</a></li>
 										<li><a href="/eshopers/singleBlog">Blog Single</a></li>
                                     </ul>
-                                </li> 
-								<li><a href="404.html">404</a></li>
+                                </li>							
 								<li><a href="/eshopers/contactUs">Contact</a></li>
 							</ul>
 						</div>
@@ -142,6 +140,13 @@
 			</div>
 		</div><!--/header-bottom-->
 	</header><!--/header-->
+	<div class="flash-message">
+	    @foreach (['danger', 'warning', 'success', 'info'] as $msg)
+	      @if(Session::has('alert-' . $msg))
+	      <p class="alert alert-{{ $msg }}">{{ Session::get('alert-' . $msg) }} <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a></p>
+	      @endif
+	    @endforeach
+	</div>
 
 	@section('middleSection')
 	<section id="slider"><!--slider-->
@@ -207,7 +212,7 @@
 									<div class="panel-body">
 										<ul>
 											@foreach(DB::table('categories')->where('parent_id',$parentCategory->id)->get() as $category)
-											<li><a href="#">{{$category->name }}</a></li>
+											<li><a href="{{'/eshopers/products/'.$category->id}}">{{$category->name }}</a></li>
 											@endforeach
 										</ul>
 									</div>
@@ -215,30 +220,7 @@
 							</div>
 							<?php $i++;?>
 							@endforeach
-						</div><!--/category-products-->
-					
-						<div class="brands_products"><!--brands_products-->
-							<h2>Brands</h2>
-							<div class="brands-name">
-								<ul class="nav nav-pills nav-stacked">
-									<li><a href="#"> <span class="pull-right">(50)</span>Acne</a></li>
-									<li><a href="#"> <span class="pull-right">(56)</span>Grüne Erde</a></li>
-									<li><a href="#"> <span class="pull-right">(27)</span>Albiro</a></li>
-									<li><a href="#"> <span class="pull-right">(32)</span>Ronhill</a></li>
-									<li><a href="#"> <span class="pull-right">(5)</span>Oddmolly</a></li>
-									<li><a href="#"> <span class="pull-right">(9)</span>Boudestijn</a></li>
-									<li><a href="#"> <span class="pull-right">(4)</span>Rösch creative culture</a></li>
-								</ul>
-							</div>
-						</div><!--/brands_products-->
-						
-						<div class="price-range"><!--price-range-->
-							<h2>Price Range</h2>
-							<div class="well text-center">
-								 <input type="text" class="span2" value="" data-slider-min="0" data-slider-max="600" data-slider-step="5" data-slider-value="[250,450]" id="sl2" ><br />
-								 <b class="pull-left">$ 0</b> <b class="pull-right">$ 600</b>
-							</div>
-						</div><!--/price-range-->
+						</div><!--/category-products-->							
 						
 						<div class="shipping text-center"><!--shipping-->
 							<img src="{{asset('frontend/images/home/shipping.jpg')}}" alt="" />
@@ -406,7 +388,7 @@
 		<div class="footer-bottom">
 			<div class="container">
 				<div class="row">
-					<p class="pull-left">Copyright © 2013 E-SHOPPER Inc. All rights reserved.</p>
+					<p class="pull-left">Copyright © {{Date('Y')}} E-SHOPPER Inc. All rights reserved.</p>
 					<p class="pull-right">Designed by <span><a target="_blank" href="http://www.themeum.com">Themeum</a></span></p>
 				</div>
 			</div>

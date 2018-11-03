@@ -14,6 +14,7 @@
 Route::get('/eshopers/home', function () {
     return view('frontend.index');
 })->middleware('checkIsCustomer');
+
 Route::get('/eshopers/checkout', function () {
     return view('frontend.checkout');
 });
@@ -32,17 +33,41 @@ Route::get('/eshopers/singleBlog', function () {
 Route::get('/eshopers/productDetails', function () {
     return view('frontend.productDetails');
 });
-Route::get('/eshopers/cart', function () {
-    return view('frontend.cart');
-});
+//-----------------Cart Routes-----------------------------------------
+Route::get('/eshopers/cart', 'front\CartController@cartList')->middleware('checkCustomerLogin');
+Route::get('/eshopers/cart/{product_id}','front\CartController@addToCart')->middleware('checkCustomerLogin');
+
+Route::get('/eshopers/clearCart', 'front\CartController@emptyCart');
+Route::get('/eshopers/removeFromCart/{product_id}','front\CartController@removeFromCart');
+//-------------------------------------------------------------------------
 Route::get('/eshopers/login', function(){
     return view('frontend.login');
 });
+
+//-----------------------User Wish List------------------------------------
+Route::get('eshopers/addtowishlist/{productId}','front\userWishListController@addProductToWishlist');
+Route::get('/eshopers/wishlist',function(){
+    return view('frontend.wishlist');
+});
+//-------------------------------------------------------------------------
 Route::get('/eshopers/logout', 'front\customerLoginController@customerLogout');
 Route::post('/eshopers/signup','front\customerLoginController@customerSignUp');
 Route::post('/eshopers/signin','front\customerLoginController@customerSignIn');
 
+//--------------socialite routes------------------------------------
 
+Route::get('/auth/social/{method}','front\customerLoginController@redirectToProvider');
+Route::get('/auth/social/callback/{method}','front\customerLoginController@handleProviderCallback');
+
+
+//------------------------------------------------------------------
+
+//--------Routes for getting Products According to category---------
+Route::get('/eshopers/products/{category}','front\frontViewController@listProducts');
+Route::get('eshopers/forgetpassword', function() {
+    return view('frontend.forgetpassword');
+});
+Route::post('eshopers/sendMail','front\customerLoginController@sendPasswordByEmail');
 
 
 
@@ -114,6 +139,7 @@ Route::get('/forms/advanceForms', function () {
 Route::get('/forms/editors', function () {
     return view('admin.forms.editors');
 });
+Route::resource('/admin/email_templates','Email_templateController')->middleware('checkLogin');
 
 //---------------------login route--------------------------------------
 
@@ -150,9 +176,3 @@ Route::get('/getCode', function () {
 Route::post('/checkCode','CouponsController@isExist');
 
 
-//--------------socialite routes------------------------------------
-
-Route::get('/auth/social/{method}','front\customerLoginController@redirectToProvider');
-Route::get('/auth/social/callback/{method}','front\customerLoginController@handleProviderCallback');
-
-//------------------------------------------------------------------

@@ -10,6 +10,8 @@ use Auth;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Validator;
+use Mail;
+use App\Email_template;
 
 class customerLoginController extends Controller
 {
@@ -140,6 +142,7 @@ class customerLoginController extends Controller
         }
         else
         {
+             Session::flash('alert-danger', 'Invalid Credential');
             return redirect('/eshopers/login');
         }
     }
@@ -148,6 +151,54 @@ class customerLoginController extends Controller
     {
         Auth::logout();
         return redirect('/eshopers/home');
+    }
+
+    public function sendPasswordByEmail(Request $request)
+    {
+        $validate=$request->validate([
+            'email'=>'required|email',
+        ]);
+        $email=$request->email;
+        if (User::where('email', '=', $email)->exists())
+        {
+            $subject='';
+            $content='';
+            $template=Email_template::where('title','=','Reset Password')->get();
+            foreach($template as $email)
+            {
+                $subject=$email->subject;
+                $content=$email->content;
+            }
+            $len=8;
+            $string = "";
+            $chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyz";
+            for($i=0;$i<$len;$i++)
+            {
+                $string.=substr($chars,rand(0,strlen($chars)),1);
+            }            
+            $password=bcrypt($string);
+            $user=User::where('email', '=', $request->email);
+            $user->password=$password;      
+            $content=str_replace("##username##",$request->email,$content);
+            $content=str_replace("##password##",$string,$content);
+
+
+            Mail::send([],[], function($message) use ($content,$subject,$request)
+            {
+                $message->to($request->email)->subject($subject)->setBody($content, 'text/html');
+            });
+            // if(count(Mail::failures()) > 0) {
+            //     return false;
+            // } else {
+            //     return true;
+            // }
+            Session::flash('alert-success', 'Password is reset! Check your email & login with new password');
+            return redirect('/eshopers/login');
+        }
+        else{
+            Session::flash('alert-danger', 'Not registered email!!');
+            return redirect('admin/forgetpassword');
+        }
     }
 }
 
