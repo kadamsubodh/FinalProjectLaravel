@@ -60,7 +60,7 @@
 						<div class="logo pull-left">
 							<a href="index.html"><img src="{{asset('frontend/images/home/logo.png')}}" alt="" /></a>
 						</div>
-						<div class="btn-group pull-right">
+						<!-- <div class="btn-group pull-right">
 							<div class="btn-group">
 								<button type="button" class="btn btn-default dropdown-toggle usa" data-toggle="dropdown">
 									USA
@@ -81,7 +81,7 @@
 									<li><a href="#">Pound</a></li>
 								</ul>
 							</div>
-						</div>
+						</div> -->
 					</div>
 					<div class="col-sm-8">
 						<div class="shop-menu pull-right">
@@ -89,7 +89,7 @@
 								<li><a href="#"><i class="fa fa-user"></i> @if(Auth::user()) {{Auth::user()->firstname}} {{Auth::user()->lastname}} @else Account @endif</a></li>
 								<li><a href="/eshopers/wishlist"><i class="fa fa-star"></i> Wishlist ( @if(Auth::user()) {{App\User_wish_list::where('user_id','=',Auth::user()->id)->count()}} @else 0 @endif)</a></li>
 								<li><a href="/eshopers/checkout"><i class="fa fa-crosshairs"></i> Checkout</a></li>
-								<li><a href="/eshopers/cart"><i class="fa fa-shopping-cart"></i> Cart(@if(Auth::user()) @if(isset($_COOKIE[Auth::user()->firstname.Auth::user()->id])) {{count(json_decode($_COOKIE[Auth::user()->firstname.Auth::user()->id]))}} @else 0 @endif @else 0 @endif)</a></li>
+								<li><a href="/eshopers/cart"><i class="fa fa-shopping-cart"></i> Cart(@if(Auth::user()) @if(isset($_COOKIE[Auth::user()->firstname.Auth::user()->id])) {{count(json_decode($_COOKIE[Auth::user()->firstname.Auth::user()->id],true))}} @else 0 @endif @else 0 @endif)</a></li>
 								<li><a href= @if(Auth::user()) {{ url('/eshopers/logout') }} @else {{ url('/eshopers/login') }} @endif ><i class="fa fa-lock"></i>@if(Auth::user()) Logout({{Auth::user()->firstname}}) @else Login @endif</a></li>
 							</ul>
 						</div>

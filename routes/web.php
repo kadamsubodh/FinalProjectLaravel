@@ -49,6 +49,8 @@ Route::get('eshopers/addtowishlist/{productId}','front\userWishListController@ad
 Route::get('/eshopers/wishlist',function(){
     return view('frontend.wishlist');
 });
+Route::get('eshopers/clearWishList','front\userWishListController@emptyWishList');
+Route::get('eshopers/removeFromWishList/{product_id}','front\userWishListController@removeItemFromWishList');
 //-------------------------------------------------------------------------
 Route::get('/eshopers/logout', 'front\customerLoginController@customerLogout');
 Route::post('/eshopers/signup','front\customerLoginController@customerSignUp');
@@ -69,7 +71,9 @@ Route::get('eshopers/forgetpassword', function() {
 });
 Route::post('eshopers/sendMail','front\customerLoginController@sendPasswordByEmail');
 
-
+Route::get("/demoCookie",function(){
+return view('frontend.demoCookie');
+});
 
 
 

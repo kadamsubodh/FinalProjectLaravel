@@ -23,11 +23,11 @@
 						</tr>
 					</thead>
 					<tbody>
-						@foreach($product_ids as $id)
-						@foreach(App\Product::with('product_image')->where('id','=',$id)->get() as $product)
+						@foreach($product_ids as $product_id => $quantity)
+						@foreach(App\Product::with('product_image')->where('id','=',$product_id)->get() as $product)
 						<tr>
 							<td class="cart_product">
-								<a href=""><img src="{{'/storage/uploads/'.$product->product_image['image_name']}}" alt=""></a>
+								<a href=""><img class="img img-responsive" src="{{'/storage/uploads/'.$product->product_image['image_name']}}" alt="" style="height:100px; width: 100px"></a>
 							</td>
 							<td class="cart_description">
 								<h4><a href="">{{$product->name}}</a></h4>
@@ -39,7 +39,7 @@
 							<td class="cart_quantity">
 								<div class="cart_quantity_button">
 									<a class="cart_quantity_up" href=""> + </a>
-									<input class="cart_quantity_input" type="text" name="quantity" value="1" autocomplete="off" size="2">
+									<input class="cart_quantity_input" type="text" name="quantity" value="{{$quantity}}" autocomplete="off" size="2">
 									<a class="cart_quantity_down" href=""> - </a>
 								</div>
 							</td>
@@ -47,7 +47,7 @@
 								<p class="cart_total_price">${{$product->special_price}}</p>
 							</td>
 							<td class="cart_delete">
-								<a class="cart_quantity_delete" href="{{'/eshopers/removeFromCart/'.$product->id}}"><i class="fa fa-times"></i></a>
+								<a class="cart_quantity_delete" href="{{'/eshopers/removeFromCart/'.$product_id}}"><i class="fa fa-times"></i></a>
 							</td>
 						</tr>
 						@endforeach

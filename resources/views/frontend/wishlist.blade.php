@@ -9,6 +9,7 @@
 				  <li class="active">Wish List</li>
 				</ol>
 			</div>
+			<a href="/eshopers/clearWishList" class="btn btn-danger">Empty Wish List</a>
 			<div class="table-responsive cart_info">
 				<table class="table table-condensed">
 					<thead>
@@ -31,7 +32,7 @@
 								<p>{{'Web ID: 1089772'.$product->id}}</p>
 							</td>
 							<td class="cart_delete">
-								<a class="cart_quantity_delete" href=""><i class="fa fa-times"></i></a>
+								<a class="cart_quantity_delete" href="{{'/eshopers/removeFromWishList/'.$product->id}}" onclick="return confirm('Are you sure want to remove it from wishlist');"><i class="fa fa-times"></i></a>
 							</td>
 						</tr>
 						@endforeach

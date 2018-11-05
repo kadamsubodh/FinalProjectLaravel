@@ -22,7 +22,8 @@ class userWishListController extends Controller
             Session::flash('alert-danger', 'This product is already in your wishlist!!');
             return redirect('/eshopers/home');
         }
-        else{
+        else
+        {
             $wishLists=new User_wish_list();
             $wishLists->product_id=$productId;
             $wishLists->user_id=Auth::user()->id;
@@ -33,6 +34,20 @@ class userWishListController extends Controller
                 return redirect('/eshopers/home');
             }
         }
+    }
+
+    public function emptyWishList(Request $request)
+    {
+    	DB::table('user_wish_lists')->where('user_id','=',Auth::user()->id)->delete();
+    	return redirect()->back();
+    }
+
+    public function removeItemFromWishList(Request $request)
+    {
+    	$product_id=Route::current()->parameter('product_id');
+    	DB::table('user_wish_lists')->where('product_id','=',$product_id)->where('user_id','=', Auth::user()->id)->delete();
+    	return redirect()->back();
+
     }
    
 }
