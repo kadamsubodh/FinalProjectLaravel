@@ -5129,6 +5129,11 @@ h2.title {
   font-family: 'Roboto', sans-serif;
   font-weight: normal;
 }
+.viewImage{
+  width:80px;
+  height:auto;
+  margin:2px auto;
+}
 
 #cart_items .cart_info .table.table-condensed thead tr {
   height: 51px;
@@ -5182,11 +5187,11 @@ h2.title {
   font-size: 24px;
 }
 
-
 .cart_product {
   display: block;
   margin: 15px -70px 10px 25px;
 }
+
 .cart_quantity_button a {
   background:#F0F0E9;
   color: #696763;

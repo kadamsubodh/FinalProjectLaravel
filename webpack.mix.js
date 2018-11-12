@@ -13,4 +13,4 @@ let mix = require('laravel-mix');
 
 mix.js('resources/assets/js/app.js', 'public/js')
    .sass('resources/assets/sass/app.scss', 'public/css')
-	.styles(['public/frontend/css/prettyPhoto.css','public/frontend/css/price-range.css','public/frontend/css/animate.css','public/frontend/css/main.css','public/frontend/css/responsive.css'],'public/css/all.css');;
+	.styles(['public/frontend/css/prettyPhoto.css','public/frontend/css/price-range.css','public/frontend/css/animate.css','public/frontend/css/main.css','public/frontend/css/responsive.css'],'public/css/all.css');

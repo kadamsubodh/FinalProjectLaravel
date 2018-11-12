@@ -43305,3 +43305,56 @@ if (false) {
 
 /***/ })
 /******/ ]);
+
+$(document).ready(function(){
+$(".cart_quantity_up").click(function(){
+  var product_id=$(this).data("id");
+  var quantity=parseInt($("#quantityOfProduct"+product_id).val());
+  var token = $('meta').attr('content');
+  if(quantity==3)
+  {
+    $("#quantityOfProduct"+product_id).val(3);
+    alert('maxinum 3 quantity allowed!!')
+    return false;
+  }
+  else
+  {
+    $.ajax({
+        type:"POST",
+        data:{"_token": token ,"product_id":product_id, '_method': 'POST' },
+            url :'/eshopers/addOneQuantityOfProduct',
+            success : function(response) {                      
+                         $("#quantityOfProduct"+product_id).val(quantity+1);
+                   }
+    });
+  }
+
+});
+}); 
+
+
+$(document).ready(function(){
+$(".cart_quantity_down").click(function(){
+  var product_id=$(this).data("id");
+  var quantity=parseInt($("#quantityOfProduct"+product_id).val());
+  var token = $('meta').attr('content');
+  if(quantity==1)
+  {
+    $("#quantityOfProduct"+product_id).val(1);
+    alert('minimum 1 qauntity is required!');
+    return false;
+  }
+  else
+  {
+    $.ajax({
+        type:"POST",
+        data:{"_token": token ,"product_id":product_id, '_method': 'POST' },
+            url :'/eshopers/removeOneQuantityOfProduct',
+            success : function(response) {                      
+                         $("#quantityOfProduct"+product_id).val(quantity-1);
+
+                    }
+    });
+}
+});
+}); 

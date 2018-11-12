@@ -27,7 +27,7 @@
 						@foreach(App\Product::with('product_image')->where('id','=',$product_id)->get() as $product)
 						<tr>
 							<td class="cart_product">
-								<a href=""><img class="img img-responsive" src="{{'/storage/uploads/'.$product->product_image['image_name']}}" alt="" style="height:100px; width: 100px"></a>
+								<a href=""><img src="{{'/storage/uploads/'.$product->product_image['image_name']}}" alt="" style="height:100px; width: 100px"></a>
 							</td>
 							<td class="cart_description">
 								<h4><a href="">{{$product->name}}</a></h4>
@@ -38,9 +38,10 @@
 							</td>
 							<td class="cart_quantity">
 								<div class="cart_quantity_button">
-									<a class="cart_quantity_up" href=""> + </a>
-									<input class="cart_quantity_input" type="text" name="quantity" value="{{$quantity}}" autocomplete="off" size="2">
-									<a class="cart_quantity_down" href=""> - </a>
+									<a class="cart_quantity_down" href="javascript:void(0)" data-id="{{$product->id}}" id="{{'removeOne'.$product->id}}"> - </a>
+									{{csrf_field()}}						
+									<input class="cart_quantity_input" type="text" name="quantity" value="{{$quantity}}" autocomplete="off" size="2" id="quantityOfProduct{{$product->id}}">
+									<a class="cart_quantity_up" href="javascript:void(0)" data-id="{{$product->id}}" id="{{'addOne'.$product->id}}"> + </a>	
 								</div>
 							</td>
 							<td class="cart_total">

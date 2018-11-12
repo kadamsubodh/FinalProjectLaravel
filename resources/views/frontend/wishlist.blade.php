@@ -25,7 +25,7 @@
 							@foreach(App\Product::with('product_image')->where('id','=',$wishlistProduct->product_id)->get() as $product)
 						<tr>
 							<td class="cart_product">
-								<a href=""><img src="{{'/storage/uploads/'. $product->product_image['image_name']}}" alt=""></a>
+								<a href="{{'/eshopers/productDetails/'.$product->id}}"><img src="{{'/storage/uploads/'. $product->product_image['image_name']}}" alt=""  style="height:100px; width: 100px"></a>
 							</td>
 							<td class="cart_description">
 								<h4><a href="">{{$product->name}}</a></h4>

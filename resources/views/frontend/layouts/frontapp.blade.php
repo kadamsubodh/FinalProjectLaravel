@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>	
-    <meta charset="utf-8">
+    <meta charset="utf-8" content="{{ csrf_token() }}">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
     <meta name="author" content="">
@@ -84,13 +84,24 @@
 						</div> -->
 					</div>
 					<div class="col-sm-8">
-						<div class="shop-menu pull-right">
+						<div class="shop-menu pull-right ">
 							<ul class="nav navbar-nav">
-								<li><a href="#"><i class="fa fa-user"></i> @if(Auth::user()) {{Auth::user()->firstname}} {{Auth::user()->lastname}} @else Account @endif</a></li>
+								<li class="dropdown"><a href="#"><i class="fa fa-user"></i> @if(Auth::user()) {{Auth::user()->firstname}} {{Auth::user()->lastname}} @else Account @endif</a>
+									@if(Auth::user())
+									<ul role="menu" class="sub-menu">
+                                        <li  class="dropdown-item"><a href="/eshopers/myOrders">My Orders</a></li>	
+										<li  class="dropdown-item"><a href="/eshopers/userAddress">Address Book</a></li> 
+										<li  class="dropdown-item"><a href="/eshopers/chanegPassword">Change Password</a></li> 
+										<li><a href="/eshopers/logout" class="dropdown-item">Logout</a></li> 
+                                    </ul>
+                                    @endif
+                                </li>
 								<li><a href="/eshopers/wishlist"><i class="fa fa-star"></i> Wishlist ( @if(Auth::user()) {{App\User_wish_list::where('user_id','=',Auth::user()->id)->count()}} @else 0 @endif)</a></li>
 								<li><a href="/eshopers/checkout"><i class="fa fa-crosshairs"></i> Checkout</a></li>
 								<li><a href="/eshopers/cart"><i class="fa fa-shopping-cart"></i> Cart(@if(Auth::user()) @if(isset($_COOKIE[Auth::user()->firstname.Auth::user()->id])) {{count(json_decode($_COOKIE[Auth::user()->firstname.Auth::user()->id],true))}} @else 0 @endif @else 0 @endif)</a></li>
-								<li><a href= @if(Auth::user()) {{ url('/eshopers/logout') }} @else {{ url('/eshopers/login') }} @endif ><i class="fa fa-lock"></i>@if(Auth::user()) Logout({{Auth::user()->firstname}}) @else Login @endif</a></li>
+								@if(!Auth::user()) 
+								<li><a href= "/eshopers/login"><i class="fa fa-lock"></i> Login</a></li>
+								@endif
 							</ul>
 						</div>
 					</div>
@@ -405,6 +416,7 @@
     <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true"></script>
     <script type="text/javascript" src="{{asset('frontend/js/gmaps.js')}}"></script>
 	<script src="{{asset('frontend/js/contact.js')}}"></script>
+	<script src="{{asset('js/app.js')}}"></script>
   @show
 </body>
 </html>

@@ -39,10 +39,18 @@ Route::get('/eshopers/cart/{product_id}','front\CartController@addToCart')->midd
 
 Route::get('/eshopers/clearCart', 'front\CartController@emptyCart');
 Route::get('/eshopers/removeFromCart/{product_id}','front\CartController@removeFromCart');
+Route::post('/eshopers/addOneQuantityOfProduct','front\CartController@addOneQuantityOfProduct');
+Route::post('/eshopers/removeOneQuantityOfProduct','front\CartController@removeOneQuantityOfProduct');
+Route::post('/eshopers/cart/{product_id}','front\CartController@addToCartFromWishList');
+
+
+
 //-------------------------------------------------------------------------
 Route::get('/eshopers/login', function(){
     return view('frontend.login');
 });
+
+
 
 //-----------------------User Wish List------------------------------------
 Route::get('eshopers/addtowishlist/{productId}','front\userWishListController@addProductToWishlist');
@@ -51,18 +59,21 @@ Route::get('/eshopers/wishlist',function(){
 });
 Route::get('eshopers/clearWishList','front\userWishListController@emptyWishList');
 Route::get('eshopers/removeFromWishList/{product_id}','front\userWishListController@removeItemFromWishList');
-//-------------------------------------------------------------------------
+//-------------------------SIGN IN & LOGOUT---------------------------
 Route::get('/eshopers/logout', 'front\customerLoginController@customerLogout');
 Route::post('/eshopers/signup','front\customerLoginController@customerSignUp');
 Route::post('/eshopers/signin','front\customerLoginController@customerSignIn');
+//----------------------------USer Address-------------------------------
+
+Route::resource('/eshopers/userAddress','UserAddressController');
 
 //--------------socialite routes------------------------------------
 
 Route::get('/auth/social/{method}','front\customerLoginController@redirectToProvider');
 Route::get('/auth/social/callback/{method}','front\customerLoginController@handleProviderCallback');
 
-
-//------------------------------------------------------------------
+//---------------Product Details Route----------------------------------
+Route::get('/eshopers/productDetails/{product_id}','front\productDetailsController@getDetails');
 
 //--------Routes for getting Products According to category---------
 Route::get('/eshopers/products/{category}','front\frontViewController@listProducts');

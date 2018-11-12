@@ -17,5 +17,8 @@ class User extends Model implements Authenticatable
    {
    		return $this->hasMany('App\User_wish_list');
    }
+   public function User_address(){
+    return $this->hasMany('App\User_address');
+   } 
 
 }
