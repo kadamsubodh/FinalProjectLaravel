@@ -27,25 +27,25 @@
 						@foreach(App\Product::with('product_image')->where('id','=',$product_id)->get() as $product)
 						<tr>
 							<td class="cart_product">
-								<a href=""><img src="{{'/storage/uploads/'.$product->product_image['image_name']}}" alt="" style="height:100px; width: 100px"></a>
+								<a href="{{'/eshopers/productDetails/'.$product->id}}"><img src="{{'/storage/uploads/'.$product->product_image['image_name']}}" alt="" style="height:100px; width: 100px"></a>
 							</td>
 							<td class="cart_description">
 								<h4><a href="">{{$product->name}}</a></h4>
 								<p>{{'Web ID: 1089772'.$product->id}}</p>
 							</td>
 							<td class="cart_price">
-								<p>${{$product->special_price}}</p>
+								<p>$<spnan id="{{'priceOfProductNo'.$product->id}}">{{$product->special_price}}</spnan></p>
 							</td>
 							<td class="cart_quantity">
 								<div class="cart_quantity_button">
 									<a class="cart_quantity_down" href="javascript:void(0)" data-id="{{$product->id}}" id="{{'removeOne'.$product->id}}"> - </a>
 									{{csrf_field()}}						
-									<input class="cart_quantity_input" type="text" name="quantity" value="{{$quantity}}" autocomplete="off" size="2" id="quantityOfProduct{{$product->id}}">
+									<input class="cart_quantity_input" type="text" name="quantity" value="{{$quantity}}" autocomplete="off" size="2" id="quantityOfProduct{{$product->id}}" readonly='true'>
 									<a class="cart_quantity_up" href="javascript:void(0)" data-id="{{$product->id}}" id="{{'addOne'.$product->id}}"> + </a>	
 								</div>
 							</td>
 							<td class="cart_total">
-								<p class="cart_total_price">${{$product->special_price}}</p>
+								<p class="cart_total_price">$<spnan id="{{'totalPriceOfProductNo'.$product->id}}">{{$product->special_price * $quantity}}</spnan></p>
 							</td>
 							<td class="cart_delete">
 								<a class="cart_quantity_delete" href="{{'/eshopers/removeFromCart/'.$product_id}}"><i class="fa fa-times"></i></a>
@@ -70,66 +70,25 @@
 					<div class="chose_area">
 						<ul class="user_option">
 							<li>
-								<input type="checkbox">
-								<label>Use Coupon Code</label>
+								<label><b><h3>Use Coupon Code</h3></b></label>
 							</li>
-							<li>
-								<input type="checkbox">
-								<label>Use Gift Voucher</label>
-							</li>
-							<li>
-								<input type="checkbox">
-								<label>Estimate Shipping & Taxes</label>
-							</li>
+							<li><input type="text" name="couponCode" id ="couponCode"/> <button type="button" id="applyCoupon" class="btn btn-warning"> Apply</button></li>
 						</ul>
-						<ul class="user_info">
-							<li class="single_field">
-								<label>Country:</label>
-								<select>
-									<option>United States</option>
-									<option>Bangladesh</option>
-									<option>UK</option>
-									<option>India</option>
-									<option>Pakistan</option>
-									<option>Ucrane</option>
-									<option>Canada</option>
-									<option>Dubai</option>
-								</select>
-								
-							</li>
-							<li class="single_field">
-								<label>Region / State:</label>
-								<select>
-									<option>Select</option>
-									<option>Dhaka</option>
-									<option>London</option>
-									<option>Dillih</option>
-									<option>Lahore</option>
-									<option>Alaska</option>
-									<option>Canada</option>
-									<option>Dubai</option>
-								</select>
-							
-							</li>
-							<li class="single_field zip-field">
-								<label>Zip Code:</label>
-								<input type="text">
-							</li>
-						</ul>
-						<a class="btn btn-default update" href="">Get Quotes</a>
-						<a class="btn btn-default check_out" href="">Continue</a>
+						<span class="text-danger" id="couponText"></span>
 					</div>
 				</div>
 				<div class="col-sm-6">
 					<div class="total_area">
-						<ul>
-							<li>Cart Sub Total <span>$59</span></li>
-							<li>Eco Tax <span>$2</span></li>
-							<li>Shipping Cost <span>Free</span></li>
-							<li>Total <span>$61</span></li>
+						<ul  id="cartBill">
+							<li>Cart Sub Total <span>$ <span id="subTotal"></span></span></li>
+							<li>Eco Tax <span>$<span id="ecoTax">2</span></span></li>							
+							<li>Total <span>$ <span id="grandTotal"></span></span></li>
+							<li>Shipping Cost <span id="shippingCharges"></span></li>
 						</ul>
-							<a class="btn btn-default update" href="">Update</a>
-							<a class="btn btn-default check_out" href="">Check Out</a>
+						@if(isset($_COOKIE['checkOutData']))
+							<a class="btn btn-default update" href="/eshopers/removeCoupon">Remove Applied Coupon</a>
+						@endif
+							<a class="btn btn-default check_out" href="/eshopers/checkout">Check Out</a>
 					</div>
 				</div>
 			</div>

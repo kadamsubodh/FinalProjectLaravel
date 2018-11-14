@@ -43311,6 +43311,10 @@ $(".cart_quantity_up").click(function(){
   var product_id=$(this).data("id");
   var quantity=parseInt($("#quantityOfProduct"+product_id).val());
   var token = $('meta').attr('content');
+  var price=parseInt($('#priceOfProductNo'+product_id).text());
+  var sum=0;
+  var grandTotal=0;
+  var shippingCharges=0;
   if(quantity==3)
   {
     $("#quantityOfProduct"+product_id).val(3);
@@ -43323,8 +43327,26 @@ $(".cart_quantity_up").click(function(){
         type:"POST",
         data:{"_token": token ,"product_id":product_id, '_method': 'POST' },
             url :'/eshopers/addOneQuantityOfProduct',
-            success : function(response) {                      
-                         $("#quantityOfProduct"+product_id).val(quantity+1);
+            success : function(response) { 
+                          quantity=quantity+1;                     
+                         $("#quantityOfProduct"+product_id).val(quantity);
+                         $("#totalPriceOfProductNo"+product_id).text(parseInt(price*quantity));
+                         updateCartBill();                         
+                         // $(".cart_total").each(function(){
+                         //  sum=sum+parseInt($(this).text().substr($(this).text().indexOf("$")+1));
+                         // });
+                         // $("#subTotal").html(sum);
+                         // if(sum > 500)
+                         // {
+                         //  $("#shippingCharges").text('Free');
+                         //  $("#grandTotal").html(sum+2);
+                         // }
+                         // else
+                         // {
+                         //    $("#shippingCharges").text('$50');
+                         //    $("#grandTotal").html(sum+2);
+                         // }
+
                    }
     });
   }
@@ -43338,6 +43360,8 @@ $(".cart_quantity_down").click(function(){
   var product_id=$(this).data("id");
   var quantity=parseInt($("#quantityOfProduct"+product_id).val());
   var token = $('meta').attr('content');
+  var price=parseInt($('#priceOfProductNo'+product_id).text());
+  var sum=0;
   if(quantity==1)
   {
     $("#quantityOfProduct"+product_id).val(1);
@@ -43351,10 +43375,127 @@ $(".cart_quantity_down").click(function(){
         data:{"_token": token ,"product_id":product_id, '_method': 'POST' },
             url :'/eshopers/removeOneQuantityOfProduct',
             success : function(response) {                      
-                         $("#quantityOfProduct"+product_id).val(quantity-1);
-
+                          quantity=quantity-1;                     
+                         $("#quantityOfProduct"+product_id).val(quantity);
+                         $("#totalPriceOfProductNo"+product_id).text(parseInt(price*quantity));
+                         
+                         updateCartBill();
+                         // $(".cart_total").each(function(){
+                         //  sum=sum+parseInt($(this).text().substr($(this).text().indexOf("$")+1));
+                         // });
+                         // $("#subTotal").html(sum);
+                         // if(sum > 500)
+                         // {
+                         //  $("#shippingCharges").text('Free');
+                         //  $("#grandTotal").html(sum+2);
+                         // }
+                         // else
+                         // {
+                         //    $("#shippingCharges").text('$50');
+                         //    $("#grandTotal").html(sum+2+50);
+                         // }
                     }
     });
 }
 });
 }); 
+$(document).ready(function(){
+  var token = $('meta').attr('content');
+  var sum=0;
+  var shippingCharges=0;
+  $(".cart_total").each(function()
+  {
+    sum=sum+parseInt($(this).text().substr($(this).text().indexOf("$")+1));
+  });
+    $("#subTotal").text(sum);
+    if(sum > 500)
+    {
+      $("#shippingCharges").text('Free');
+      $("#grandTotal").text(sum+2);
+    }
+    else
+    {
+      $("#shippingCharges").text('$50');
+      $("#grandTotal").text(sum+2);
+    }
+    updateCartBill();
+
+});
+
+$(document).ready(function(){
+      $("#applyCoupon").click(function(){
+        var code=$("#couponCode").val();
+        var token = $('meta').attr('content');
+        $.ajax({
+          type:"POST",
+          data:{"_token": token ,"code":code, '_method': 'POST' },
+          url :'/eshopers/checkIsCouponUsed',
+          success : function(response) { 
+                      var result=response;
+                      if(result=="oneCouponUsed")
+                      {
+                        alert("Only one coupon is allowed per order");
+                      }
+                      else if(result=="invalid")
+                      {
+                        $("#couponText").text('Invalid Coupon Code!');                        
+                      }
+                      else if(result!=="used")
+                      { 
+                        $("#couponText").text('');
+                        applyCoupon(response); 
+                      }
+                      else
+                      {
+                         $("#couponText").text('You already used this coupon!');
+                      }
+                  }
+        });
+      });
+
+});
+
+function applyCoupon(coupon_id)
+{
+  var token = $('meta').attr('content');
+  var couponId=coupon_id;
+  var grandTotal=parseInt($("#grandTotal").text());
+  var shippingCharges=$("#shippingCharges").text();
+  var subTotal=parseInt($("#subTotal").text());
+  var ecoTax=parseInt($("#ecoTax").text());
+  if(shippingCharges!=="Free")
+  {
+    shippingCharges=parseInt($("#shippingCharges").text().substr($("#shippingCharges").text().indexOf("$")+1));
+  }
+  $.ajax({
+    type:"POST",
+    data:{"_token": token ,
+          "couponId":couponId,"subTotal":subTotal,"ecoTax":ecoTax,"grandTotal": grandTotal,'_method': 'POST',"shippingCharges":shippingCharges },
+    url:"/eshopers/applyCoupon",
+    success: function(response){
+      $("#cartBill").html(response);
+
+    }
+
+  });
+}
+
+function updateCartBill()
+{
+  var sum=0;
+  $(".cart_total").each(function(){
+                          sum=sum+parseInt($(this).text().substr($(this).text().indexOf("$")+1));
+                          });
+  var token = $('meta').attr('content');
+  var shippingCharges=0;
+  var ecoTax=parseInt($("#ecoTax").text()); 
+  $.ajax({
+    type:"POST",
+    data:{"_token": token ,"sum": sum,"ecoTax": ecoTax,'_method': 'POST'},
+    url: "/eshopers/updateCartBill",
+    success:function(response){
+      $("#cartBill li").remove();
+       $("#cartBill").append(response);
+    } 
+  });
+}

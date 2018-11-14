@@ -13,6 +13,6 @@ if(isset($_COOKIE['demo']))
 {	
 	$data=stripcslashes($_COOKIE['demo']);
 	$d=json_decode($data,true);
-	echo count($d);
+	print_r($d['key4']);
 }
 ?>

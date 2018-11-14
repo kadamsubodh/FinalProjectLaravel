@@ -34,16 +34,14 @@ Route::get('/eshopers/productDetails', function () {
     return view('frontend.productDetails');
 });
 //-----------------Cart Routes-----------------------------------------
-Route::get('/eshopers/cart', 'front\CartController@cartList')->middleware('checkCustomerLogin');
-Route::get('/eshopers/cart/{product_id}','front\CartController@addToCart')->middleware('checkCustomerLogin');
+Route::get('/eshopers/cart', 'front\CartController@cartList');
+Route::get('/eshopers/cart/{product_id}','front\CartController@addToCart');
 
 Route::get('/eshopers/clearCart', 'front\CartController@emptyCart');
 Route::get('/eshopers/removeFromCart/{product_id}','front\CartController@removeFromCart');
 Route::post('/eshopers/addOneQuantityOfProduct','front\CartController@addOneQuantityOfProduct');
 Route::post('/eshopers/removeOneQuantityOfProduct','front\CartController@removeOneQuantityOfProduct');
 Route::post('/eshopers/cart/{product_id}','front\CartController@addToCartFromWishList');
-
-
 
 //-------------------------------------------------------------------------
 Route::get('/eshopers/login', function(){
@@ -53,12 +51,12 @@ Route::get('/eshopers/login', function(){
 
 
 //-----------------------User Wish List------------------------------------
-Route::get('eshopers/addtowishlist/{productId}','front\userWishListController@addProductToWishlist');
+Route::get('eshopers/addtowishlist/{productId}','front\userWishListController@addProductToWishlist')->middleware('checkCustomerLogin');
 Route::get('/eshopers/wishlist',function(){
     return view('frontend.wishlist');
-});
-Route::get('eshopers/clearWishList','front\userWishListController@emptyWishList');
-Route::get('eshopers/removeFromWishList/{product_id}','front\userWishListController@removeItemFromWishList');
+})->middleware('checkCustomerLogin');
+Route::get('eshopers/clearWishList','front\userWishListController@emptyWishList')->middleware('checkCustomerLogin');
+Route::get('eshopers/removeFromWishList/{product_id}','front\userWishListController@removeItemFromWishList')->middleware('checkCustomerLogin');
 //-------------------------SIGN IN & LOGOUT---------------------------
 Route::get('/eshopers/logout', 'front\customerLoginController@customerLogout');
 Route::post('/eshopers/signup','front\customerLoginController@customerSignUp');
@@ -177,17 +175,18 @@ Route::get('/demo', function () {
 
 Route::resource('admin/products', 'ProductController')->middleware('checkLogin');
 Route::resource('admin/productsattributes', 'ProductAttributesController')->middleware('checkLogin');
-Route::resource('admin/coupons', 'CouponsController')->middleware('checkLogin');
-
-Route::get('/getCouponCode','CouponsController@getCouponCode')->middleware('checkLogin');
 
 Route::post('/selectAjax', function () {
     return view('admin.products.addSelect');
 });
-
+//----------------------- Coupon code Routes------------------------------------
 Route::get('/getCode', function () {
     return view('admin.categories.getCode');
 });
 Route::post('/checkCode','CouponsController@isExist');
-
-
+Route::resource('admin/coupons', 'CouponsController')->middleware('checkLogin');
+Route::get('/getCouponCode','CouponsController@getCouponCode')->middleware('checkLogin');
+Route::post('/eshopers/checkIsCouponUsed', 'CouponsController@checkIsCouponUsed');
+Route::post('/eshopers/applyCoupon', 'CouponsController@applyCoupon');
+Route::post('/eshopers/updateCartBill','CouponsController@updateCartBill');
+Route::get('eshopers/removeCoupon','CouponsController@removeCoupon');

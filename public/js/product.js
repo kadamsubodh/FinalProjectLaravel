@@ -64,8 +64,10 @@ function getCode()
 	$.ajax({
 			type:"GET",
 			url: "/getCouponCode",
-			success:function(responce){
-					$('#code').val(responce);
+			success:function(response){
+				var result=response;
+				alert(response);
+					
 					}
 	});
 };

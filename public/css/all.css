@@ -3755,7 +3755,7 @@ a#scrollUp i{
 
 
 .shop-menu ul li a {
-  background: #FFFFFF;
+ 
   color: #696763;
   font-family: 'Roboto', sans-serif;
   font-size: 14px;
@@ -4809,7 +4809,7 @@ h2.title {
   color: #FE980F;
   float: left;
   font-family: 'Roboto', sans-serif;
-  font-size: 30px;
+  font-size: 28px;
   font-weight: 700;
   margin-right: 20px;
   margin-top: 0px;
@@ -5202,6 +5202,7 @@ h2.title {
   text-align: center;
   width: 35px;
   float: left;
+  text-decoration: none;
 }
 
 
@@ -5957,7 +5958,7 @@ h2.title {
   background:#FE980F;
   border: 0 none;
   border-radius: 0;
-  margin-top: 16px;
+  margin-top: 0px;
 }
 
 .blank-arrow {

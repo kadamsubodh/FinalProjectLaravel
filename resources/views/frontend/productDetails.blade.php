@@ -20,7 +20,7 @@
 				<span>
 					<span>US ${{$product->special_price}}</span>
 					<label>Quantity:</label>
-					<input type="text" value="" name='quantity' placeholder="qty" />
+					<input type="text" value="{{$quantity}}" name='quantity' placeholder="qty" />
 					<button type="submit" class="btn btn-fefault cart">
 						<i class="fa fa-shopping-cart"></i>
 						Add to cart
