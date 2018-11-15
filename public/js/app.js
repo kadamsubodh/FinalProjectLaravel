@@ -43377,8 +43377,7 @@ $(".cart_quantity_down").click(function(){
             success : function(response) {                      
                           quantity=quantity-1;                     
                          $("#quantityOfProduct"+product_id).val(quantity);
-                         $("#totalPriceOfProductNo"+product_id).text(parseInt(price*quantity));
-                         
+                         $("#totalPriceOfProductNo"+product_id).text(parseInt(price*quantity));                         
                          updateCartBill();
                          // $(".cart_total").each(function(){
                          //  sum=sum+parseInt($(this).text().substr($(this).text().indexOf("$")+1));
@@ -43484,8 +43483,8 @@ function updateCartBill()
 {
   var sum=0;
   $(".cart_total").each(function(){
-                          sum=sum+parseInt($(this).text().substr($(this).text().indexOf("$")+1));
-                          });
+    sum=sum+parseInt($(this).text().substr($(this).text().indexOf("$")+1));
+  });
   var token = $('meta').attr('content');
   var shippingCharges=0;
   var ecoTax=parseInt($("#ecoTax").text()); 
@@ -43498,4 +43497,49 @@ function updateCartBill()
        $("#cartBill").append(response);
     } 
   });
+}
+
+$(document).ready(function(){
+  $("#cartCheckOutLogin").css({"display":"none"});
+  $('input[type=radio]').change(function(){
+    if($(this).val()=="user")
+    {
+       $("#cartCheckOutLogin").css({"display":"inline"});
+       $(".shopper-informations").css({"display":"none"})
+    }
+    else if($(this).val()=="register")
+    {
+      $("#cartCheckOutLogin").css({"display":"none"});
+      $(".shopper-informations").css({"display":"inline"})
+      $("#password, #confirm_password").css({"display":"inline"});
+    }
+    else{
+      $("#cartCheckOutLogin").css({"display":"none"});
+      $(".shopper-informations").css({"display":"inline"})
+      $("#password,#confirm_password").css({"display":"none"});     
+    }
+  });
+  $('input[type=radio][name=paymentMode]').change(function(){
+    if($(this).val()=="cod")
+    {
+      $("#paymentBy").text('cash on delivery')
+    }
+    else
+    {
+       $("#paymentBy").text('payPal')
+    }
+
+    }); 
+});
+
+function isShippingAddressIsSame()
+{
+  if($("#isShippingAddressIsSame").is(":checked"))
+ {
+    $("#shippingAddress").css({"display":"none"});
+ }
+ else
+ {
+    $("#shippingAddress").css({"display":"inline"});
+ }
 }

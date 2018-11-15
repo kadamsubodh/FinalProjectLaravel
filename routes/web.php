@@ -15,9 +15,7 @@ Route::get('/eshopers/home', function () {
     return view('frontend.index');
 })->middleware('checkIsCustomer');
 
-Route::get('/eshopers/checkout', function () {
-    return view('frontend.checkout');
-});
+Route::get('/eshopers/checkout','front\CheckoutController@checkoutList');
 Route::get('/eshopers/contactUs', function () {
     return view('frontend.contactUs');
 });
@@ -42,6 +40,11 @@ Route::get('/eshopers/removeFromCart/{product_id}','front\CartController@removeF
 Route::post('/eshopers/addOneQuantityOfProduct','front\CartController@addOneQuantityOfProduct');
 Route::post('/eshopers/removeOneQuantityOfProduct','front\CartController@removeOneQuantityOfProduct');
 Route::post('/eshopers/cart/{product_id}','front\CartController@addToCartFromWishList');
+
+//------------------------checkOut-------------------
+Route::post("/eshopers/placeOrder", function(){
+return "hello";
+});
 
 //-------------------------------------------------------------------------
 Route::get('/eshopers/login', function(){

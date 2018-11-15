@@ -242,7 +242,7 @@ class CouponsController extends Controller
         $checkOutData['shippingCharges']=$shippingCharges;
         $checkOutData['subTotal']=$subTotal;
         $checkOutData['ecoTax']=$ecoTax;
-        $checkOutData['percent_off']=$percent_off;
+        $checkOutData['percent_off']=$percent_off;       
         setcookie("checkOutData",json_encode($checkOutData));
         echo "<li>Cart Sub Total <span>$ <span id='subTotal'>".$subTotal."</span></span></li>
                             <li>Eco Tax <span>$<span id='ecoTax'>".$ecoTax."</span></span></li>                            
@@ -313,8 +313,7 @@ class CouponsController extends Controller
                             <li>Eco Tax <span>$<span id='ecoTax'>".$ecoTax."</span></span></li>                            
                             <li>Total <span>$ <span id='grandTotal'>".$grandTotal."</span></span></li>
                             <li>Coupon Discount <span><span id='percent_off'>".$percent_off." %</span></span></li>
-             <li>Shipping Cost <span><span id='shippingCharges'>".$shippingCharges."</sapn></span></li><li>Final Ammount <span>$ <span id='finalAmmount'>".$grandTotalAfterCouponApply."</span></span></li>";
-            
+             <li>Shipping Cost <span><span id='shippingCharges'>".$shippingCharges."</sapn></span></li><li>Final Ammount <span>$ <span id='finalAmmount'>".$grandTotalAfterCouponApply."</span></span></li>";            
             }
         }
         else
@@ -334,14 +333,14 @@ class CouponsController extends Controller
             echo "<li>Cart Sub Total <span>$ <span id='subTotal'>".$subTotal."</span></span></li>
                             <li>Eco Tax <span>$<span id='ecoTax'>".$ecoTax."</span></span></li>                            
                             <li>Total <span>$ <span id='grandTotal'>".$grandTotal."</span></span></li>                            
-            <li>Shipping Cost <span><span id='shippingCharges'>  $".$shippingCharges."</sapn></span></li><li>Final Ammount <span>$ <span id='finalAmmount'>".$grandTotalAfterCouponApply."</span></span></li>";
+            <li>Shipping Cost <span>$<span id='shippingCharges'>".$shippingCharges."</sapn></span></li><li>Final Ammount <span>$ <span id='finalAmmount'>".$grandTotalAfterCouponApply."</span></span></li>";
         }
     }
 
     public function removeCoupon(Request $request)
     {
         setcookie('checkOutData',null,time()-3600);
-        return redirect('eshopers/cart');
+        return redirect($_SERVER['HTTP_REFERER']);
     }
 
 }

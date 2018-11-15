@@ -97,7 +97,6 @@
                                     @endif
                                 </li>
 								<li><a href="/eshopers/wishlist"><i class="fa fa-star"></i> Wishlist ( @if(Auth::user()) {{App\User_wish_list::where('user_id','=',Auth::user()->id)->count()}} @else 0 @endif)</a></li>
-								<li><a href="/eshopers/checkout"><i class="fa fa-crosshairs"></i> Checkout</a></li>
 								<li><a href="/eshopers/cart"><i class="fa fa-shopping-cart"></i> Cart(@if(Auth::user()) @if(isset($_COOKIE[Auth::user()->firstname.Auth::user()->id])) {{count(json_decode($_COOKIE[Auth::user()->firstname.Auth::user()->id],true))}} @else 0 @endif @elseif(isset($_COOKIE['cartItems'])) {{count(json_decode($_COOKIE['cartItems'],true))}} @endif)</a></li>
 								@if(!Auth::user()) 
 								<li><a href= "/eshopers/login"><i class="fa fa-lock"></i> Login</a></li>
@@ -127,17 +126,15 @@
 								<li class="dropdown"><a href="#">Shop<i class="fa fa-angle-down"></i></a>
                                     <ul role="menu" class="sub-menu">
                                         <li><a href="/eshopers/products/all">Products</a></li>	
-										<li><a href="/eshopers/checkout">Checkout</a></li> 
-										<li><a href="/eshopers/cart">Cart</a></li> 
-										<li><a href="/eshopers/login">Login</a></li> 
+										<li><a href="/eshopers/cart">Cart</a></li>
                                     </ul>
                                 </li> 
-								<li class="dropdown"><a href="#">Blog<i class="fa fa-angle-down"></i></a>
+								<!-- <li class="dropdown"><a href="#">Blog<i class="fa fa-angle-down"></i></a>
                                     <ul role="menu" class="sub-menu">
                                         <li><a href="/eshopers/blogs">Blog List</a></li>
 										<li><a href="/eshopers/singleBlog">Blog Single</a></li>
                                     </ul>
-                                </li>							
+                                </li> -->							
 								<li><a href="/eshopers/contactUs">Contact</a></li>
 							</ul>
 						</div>

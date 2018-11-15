@@ -37,6 +37,52 @@ class customerLoginController extends Controller
         if($userObj)
         {
             Auth::loginUsingId($userObj->id);
+            if(isset($_COOKIE['cartItems']))
+            {
+                $cookieDataBeforeLogin=stripcslashes($_COOKIE['cartItems']);
+                $productsInCartBeforeLogin=json_decode($cookieDataBeforeLogin,true);   
+                $user=Auth::user()->firstname.Auth::user()->id;
+                    // $product_id=Route::current()->parameter('product_id');
+                if(isset($_COOKIE[$user]))
+                {
+                    $cookiedata=stripcslashes($_COOKIE[$user]);
+                    $product_ids= json_decode($cookiedata,true);
+                    $id=Route::current()->parameter('product_id');
+                    foreach($productsInCartBeforeLogin as $key=>$value)
+                    {
+                       if(array_key_exists($key,$product_ids))
+                        {
+                            if($product_ids[$key]+$productsInCartBeforeLogin[$key] > 3)
+                            {
+                                $product_ids[$key]=3;
+                                Session::flash('alert-danger', 'Quanitiy limited to 3 per product'); //quanitiy limited to 3 per product
+                            }
+                            else
+                            {
+                                $product_ids[$key]=$product_ids[$key]+$productsInCartBeforeLogin[$key];
+                            }
+                        }
+                        else
+                        {
+                            $product_ids[$key]=$value;
+                        } 
+                    }
+                    setcookie($user, json_encode($product_ids,true),time()+60*60*24*365,'/');
+                    setcookie('cartItems',null,time()-3600,'/');
+                    return redirect('/eshopers/home');                     
+                }
+                else
+                {   
+                    $product_ids=[];
+                    foreach($productsInCartBeforeLogin as $key=>$value)
+                    {
+                        $product_ids[$key]=$value;                          
+                    }
+                    setcookie($user, json_encode($product_ids,true),time()+60*60*24*365,'/');
+                    setcookie('cartItems',null,time()-3600,'/');
+                    return redirect('/eshopers/home');                                
+                }
+            }
             return redirect('/eshopers/home');
         }
         else
@@ -70,7 +116,53 @@ class customerLoginController extends Controller
         {   
             Auth::loginUsingId($userDetails->id);
             if(Auth::user()->role_id == '5')
-            {            
+            {
+                if(isset($_COOKIE['cartItems']))
+                {
+                    $cookieDataBeforeLogin=stripcslashes($_COOKIE['cartItems']);
+                    $productsInCartBeforeLogin=json_decode($cookieDataBeforeLogin,true);   
+                    $user=Auth::user()->firstname.Auth::user()->id;
+                        // $product_id=Route::current()->parameter('product_id');
+                    if(isset($_COOKIE[$user]))
+                    {
+                        $cookiedata=stripcslashes($_COOKIE[$user]);
+                        $product_ids= json_decode($cookiedata,true);
+                        $id=Route::current()->parameter('product_id');
+                        foreach($productsInCartBeforeLogin as $key=>$value)
+                        {
+                           if(array_key_exists($key,$product_ids))
+                            {
+                                if($product_ids[$key]+$productsInCartBeforeLogin[$key] > 3)
+                                {
+                                    $product_ids[$key]=3;
+                                    Session::flash('alert-danger', 'Quanitiy limited to 3 per product'); //quanitiy limited to 3 per product
+                                }
+                                else
+                                {
+                                    $product_ids[$key]=$product_ids[$key]+$productsInCartBeforeLogin[$key];
+                                }
+                            }
+                            else
+                            {
+                                $product_ids[$key]=$value;
+                            } 
+                        }
+                        setcookie($user, json_encode($product_ids,true),time()+60*60*24*365,'/');
+                        setcookie('cartItems',null,time()-3600,'/');
+                        return redirect('/eshopers/home');                     
+                    }
+                    else
+                    {   
+                        $product_ids=[];
+                        foreach($productsInCartBeforeLogin as $key=>$value)
+                        {
+                            $product_ids[$key]=$value;                          
+                        }
+                        setcookie($user, json_encode($product_ids,true),time()+60*60*24*365,'/');
+                        setcookie('cartItems',null,time()-3600,'/');
+                        return redirect('/eshopers/home');                                
+                    }
+                }          
             return redirect('/eshopers/home');
             }
             else
@@ -117,6 +209,52 @@ class customerLoginController extends Controller
             if($userObj)
             {
                 Auth::loginUsingId($userObj->id);
+                if(isset($_COOKIE['cartItems']))
+                {
+                    $cookieDataBeforeLogin=stripcslashes($_COOKIE['cartItems']);
+                    $productsInCartBeforeLogin=json_decode($cookieDataBeforeLogin,true);   
+                    $user=Auth::user()->firstname.Auth::user()->id;
+                        // $product_id=Route::current()->parameter('product_id');
+                    if(isset($_COOKIE[$user]))
+                    {
+                        $cookiedata=stripcslashes($_COOKIE[$user]);
+                        $product_ids= json_decode($cookiedata,true);
+                        $id=Route::current()->parameter('product_id');
+                        foreach($productsInCartBeforeLogin as $key=>$value)
+                        {
+                           if(array_key_exists($key,$product_ids))
+                            {
+                                if($product_ids[$key]+$productsInCartBeforeLogin[$key] > 3)
+                                {
+                                    $product_ids[$key]=3;
+                                    Session::flash('alert-danger', 'Quanitiy limited to 3 per product'); //quanitiy limited to 3 per product
+                                }
+                                else
+                                {
+                                    $product_ids[$key]=$product_ids[$key]+$productsInCartBeforeLogin[$key];
+                                }
+                            }
+                            else
+                            {
+                                $product_ids[$key]=$value;
+                            } 
+                        }
+                        setcookie($user, json_encode($product_ids,true),time()+60*60*24*365,'/');
+                        setcookie('cartItems',null,time()-3600,'/');
+                        return redirect('/eshopers/home');                     
+                    }
+                    else
+                    {   
+                        $product_ids=[];
+                        foreach($productsInCartBeforeLogin as $key=>$value)
+                        {
+                            $product_ids[$key]=$value;                          
+                        }
+                        setcookie($user, json_encode($product_ids,true),time()+60*60*24*365,'/');
+                        setcookie('cartItems',null,time()-3600,'/');
+                        return redirect('/eshopers/home');                                
+                    }
+                }
                 return redirect('/eshopers/home');
             }
             else
@@ -128,6 +266,7 @@ class customerLoginController extends Controller
 
     public function customerSignIn(Request $request)
     {
+        $pageReferer=$_SERVER['HTTP_REFERER'];        
         $validate=$request->validate([
             'email'=>'required|email',
             'password'=>'required'
@@ -168,7 +307,14 @@ class customerLoginController extends Controller
                         }
                         setcookie($user, json_encode($product_ids,true),time()+60*60*24*365,'/');
                         setcookie('cartItems',null,time()-3600,'/');
-                        return redirect('/eshopers/home');                     
+                        if($pageReferer=='http://localhost:8000/eshopers/checkout')
+                        {
+                            return redirect('/eshopers/checkout');
+                        }
+                        else
+                        {
+                            return redirect('/eshopers/home');
+                        }                    
                     }
                     else
                     {   
@@ -197,6 +343,7 @@ class customerLoginController extends Controller
 
     public function customerLogout()
     {
+        setcookie('checkOutData',null,time()-3600);
         Auth::logout();
         return redirect('/eshopers/home');
     }

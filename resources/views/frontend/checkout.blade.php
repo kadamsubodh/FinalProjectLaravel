@@ -2,6 +2,8 @@
 @section('title','Checkout')
 @section('middleSection')
 <section id="cart_items">
+		<form name="chekOutForm" action="/eshopers/placeOrder" method="post">
+					{{csrf_field()}}
 		<div class="container">
 			<div class="breadcrumbs">
 				<ol class="breadcrumb">
@@ -9,102 +11,178 @@
 				  <li class="active">Check out</li>
 				</ol>
 			</div><!--/breadcrums-->
-
-			<div class="step-one">
-				<h2 class="heading">Step1</h2>
-			</div>
+						
+				<div class="step-one">
+					<h2 class="heading">Checkout</h2>
+				</div>
+				@if(Auth::user())
+					@php
+						$userAddresses=App\UserAddress::where('user_id','=',Auth::user()->id)->get();
+					@endphp
+					@if(count($userAddresses)>0)
+						<div class="container-fluid">
+							<div class="row">
+								<p><h3>Bill To:</h3></p>
+							</div>
+							<div class="row">
+								@foreach($userAddresses as $userAddress)
+									<div class="col-md-3 step-one">
+										<table class="heading table-responsive">
+											<tr>
+												<td><input type="radio" name="address" value="{{$userAddress->id}}"/></td>
+												<td><h3><b>{{$userAddress->address_1}}</b><br>
+													{{$userAddress->address_2}},<br>
+													{{$userAddress->city}}, {{$userAddress->state}},<br>
+													{{$userAddress->country}}- {{$userAddress->zipcode}}
+													</h3>
+												</td>
+											</tr>
+										</table>
+									</div>
+								@endforeach
+							</div>
+							<a href="/eshopers/userAddress/create" class="btn btn-default update">Add New Address</a>
+						</div>
+					@else					
+					<div class="row">							
+						<div class="col-sm-5 clearfix">
+							<div class="bill-to">
+								<p>Bill To</p>
+								<div class="form-one">
+									<form name="checkOutForm">											
+										<input type="text" placeholder="First Name *">
+										<input type="text" placeholder="Last Name *">
+										<input type="text" placeholder="Email*">					
+									</form>
+								</div>
+								<div class="form-two">
+									<form name="checkOutForm">
+										<input type="text" placeholder="Address 1 *">
+										<input type="text" placeholder="Address 2">				
+										<input type="text" placeholder="city*">
+										<input type="text" placeholder="state*">
+										<input type="text" placeholder="country*">
+										<input type="text" placeholder="zipcode*">				
+									</form>											
+								</div>
+							</div>
+						</div>
+					</div>
+				@endif		
+			@else
 			<div class="checkout-options">
 				<h3>New User</h3>
 				<p>Checkout options</p>
 				<ul class="nav">
 					<li>
-						<label><input type="checkbox"> Register Account</label>
+						<label><input type="radio" value="register" name="checkOutOption" class="checkOutOption" checked> Register Account</label>
 					</li>
 					<li>
-						<label><input type="checkbox"> Guest Checkout</label>
+						<label><input type="radio" value="guest" name="checkOutOption" class="checkOutOption"> Guest Checkout</label>
+					</li>
+					<li>
+						<label><input type="radio" value="user" name="checkOutOption" class="checkOutOption">Sign In</label>
 					</li>
 					<li>
 						<a href=""><i class="fa fa-times"></i>Cancel</a>
 					</li>
 				</ul>
-			</div><!--/checkout-options-->
-
+			</div><!--/checkout-options-->			
 			<div class="register-req">
-				<p>Please use Register And Checkout to easily get access to your order history, or use Checkout as Guest</p>
+				<p>If you already have an account please sign in or use Register And Checkout to easily get access to your order history, or use Checkout as Guest </p>
 			</div><!--/register-req-->
-
-			<div class="shopper-informations">
+			@endif
+			<div class="container-fluid" id="cartCheckOutLogin">
 				<div class="row">
-					<div class="col-sm-3">
-						<div class="shopper-info">
-							<p>Shopper Information</p>
-							<form>
-								<input type="text" placeholder="Display Name">
-								<input type="text" placeholder="User Name">
-								<input type="password" placeholder="Password">
-								<input type="password" placeholder="Confirm password">
-							</form>
-							<a class="btn btn-primary" href="">Get Quotes</a>
-							<a class="btn btn-primary" href="">Continue</a>
-						</div>
+					<div class="login-form col=md-offset-6 col-md-6"><!--login form-->
+						<h2>Login to your account</h2>
+						<form action="/eshopers/signin" method="post" name="loginform">
+							{{csrf_field()}}
+							<input type="email" placeholder="Email" name='email' form="loginform" />
+							<input type="password" placeholder="Password" name='password' form="loginform" />
+							<span>
+								<input type="checkbox" class="checkbox" form="loginform"> 
+								Keep me signed in &nbsp&nbsp<a href="/eshopers/forgetpassword">Forget Password</a>
+							</span>
+							<button type="submit" class="btn btn-default" form="loginform">Login</button>
+							<br/>
+							<div calss="row">
+								<div class="col-sm-3">
+									<a href="/auth/social/facebook" class="btn btn-info"> Facebook <i class="fa fa-facebook"></i></a>
+								</div>
+								<div class='col-sm-1'></div>
+								<div class="col-sm-3">
+									<a href="/auth/social/google" class="btn btn-danger"> Google <i class="fa fa-google-plus"></i></a>
+								</div>
+								<div class='col-sm-1'></div>
+								<div class="col-sm-3">
+									<a href="/auth/social/twitter" class="btn btn-info"> Twitter <i class="fa fa-twitter"></i></a>
+								</div>
+								<div class='col-sm-1'></div>
+							</div>
+						</form>
 					</div>
+				</div>
+			</div>
+			<div class="shopper-informations">	
+			@if(!Auth::user())						
+				<div class="row">							
 					<div class="col-sm-5 clearfix">
 						<div class="bill-to">
 							<p>Bill To</p>
 							<div class="form-one">
-								<form>
-									<input type="text" placeholder="Company Name">
-									<input type="text" placeholder="Email*">
-									<input type="text" placeholder="Title">
+								<form name="checkOutForm">											
 									<input type="text" placeholder="First Name *">
-									<input type="text" placeholder="Middle Name">
 									<input type="text" placeholder="Last Name *">
-									<input type="text" placeholder="Address 1 *">
-									<input type="text" placeholder="Address 2">
+									<input type="text" placeholder="Email*">
+									<input type="password" placeholder="Password" id="password">		
+									<input type="password" placeholder="Confirm password" id="confirm_password">
 								</form>
 							</div>
 							<div class="form-two">
-								<form>
-									<input type="text" placeholder="Zip / Postal Code *">
-									<select>
-										<option>-- Country --</option>
-										<option>United States</option>
-										<option>Bangladesh</option>
-										<option>UK</option>
-										<option>India</option>
-										<option>Pakistan</option>
-										<option>Ucrane</option>
-										<option>Canada</option>
-										<option>Dubai</option>
-									</select>
-									<select>
-										<option>-- State / Province / Region --</option>
-										<option>United States</option>
-										<option>Bangladesh</option>
-										<option>UK</option>
-										<option>India</option>
-										<option>Pakistan</option>
-										<option>Ucrane</option>
-										<option>Canada</option>
-										<option>Dubai</option>
-									</select>
-									<input type="password" placeholder="Confirm password">
-									<input type="text" placeholder="Phone *">
-									<input type="text" placeholder="Mobile Phone">
-									<input type="text" placeholder="Fax">
-								</form>
+								<form name="checkOutForm">
+									<input type="text" placeholder="Address 1 *">
+									<input type="text" placeholder="Address 2">					
+									<input type="text" placeholder="city*">
+									<input type="text" placeholder="state*">
+									<input type="text" placeholder="country*">
+									<input type="text" placeholder="zipcode*">					
+								</form>											
 							</div>
 						</div>
 					</div>
-					<div class="col-sm-4">
-						<div class="order-message">
-							<p>Shipping Order</p>
-							<textarea name="message"  placeholder="Notes about your order, Special Notes for Delivery" rows="16"></textarea>
-							<label><input type="checkbox"> Shipping to bill address</label>
-						</div>	
-					</div>					
 				</div>
-			</div>
+			@endif
+				<div class="row">
+					<label><input type="checkbox" id="isShippingAddressIsSame" value="same" name="isShippingAddressIsSame" onclick="isShippingAddressIsSame()"> Shipping to bill address</label>	
+				</div>
+				<div class="row">
+					<div class="col-sm-5">
+						<div class="order-message">
+							<div class="bill-to" id="shippingAddress">
+								<p>Shipped To</p>
+								<div class="form-one">
+									<form name="checkOutForm">											
+										<input type="text" placeholder="First Name *">
+										<input type="text" placeholder="Last Name *">
+										<input type="text" placeholder="Email*">				
+									</form>
+								</div>
+								<div class="form-two">
+									<form name="checkOutForm">
+										<input type="text" placeholder="Address 1 *">
+										<input type="text" placeholder="Address 2">				
+										<input type="text" placeholder="city*">
+										<input type="text" placeholder="state*">
+										<input type="text" placeholder="country*">
+										<input type="text" placeholder="zipcode*">
+									</form>											
+								</div>
+							</div>				
+						</div>	
+					</div>						
+				</div>						
+			</div>			
 			<div class="review-payment">
 				<h2>Review & Payment</h2>
 			</div>
@@ -122,119 +200,65 @@
 						</tr>
 					</thead>
 					<tbody>
+						@foreach($product_ids as $product_id => $quantity)
+						@foreach(App\Product::with('product_image')->where('id','=',$product_id)->get() as $product)
 						<tr>
 							<td class="cart_product">
-								<a href=""><img src="{{asset('frontend/images/cart/one.png')}}" alt=""></a>
+								<a href="{{'/eshopers/productDetails/'.$product->id}}"><img src="{{'/storage/uploads/'.$product->product_image['image_name']}}" alt="" style="height:100px; width: 100px"></a>
 							</td>
 							<td class="cart_description">
-								<h4><a href="">Colorblock Scuba</a></h4>
-								<p>Web ID: 1089772</p>
+								<h4><a href="">{{$product->name}}</a></h4>
+								<p>{{'Web ID: 1089772'.$product->id}}</p>
 							</td>
 							<td class="cart_price">
-								<p>$59</p>
+								<p>$<spnan id="{{'priceOfProductNo'.$product->id}}">{{$product->special_price}}</spnan></p>
 							</td>
 							<td class="cart_quantity">
 								<div class="cart_quantity_button">
-									<a class="cart_quantity_up" href=""> + </a>
-									<input class="cart_quantity_input" type="text" name="quantity" value="1" autocomplete="off" size="2">
-									<a class="cart_quantity_down" href=""> - </a>
+									<a class="cart_quantity_down" href="javascript:void(0)" data-id="{{$product->id}}" id="{{'removeOne'.$product->id}}"> - </a>
+									{{csrf_field()}}						
+									<input class="cart_quantity_input" type="text" name="quantity" value="{{$quantity}}" autocomplete="off" size="2" id="quantityOfProduct{{$product->id}}" readonly='true'>
+									<a class="cart_quantity_up" href="javascript:void(0)" data-id="{{$product->id}}" id="{{'addOne'.$product->id}}"> + </a>	
 								</div>
 							</td>
 							<td class="cart_total">
-								<p class="cart_total_price">$59</p>
+								<p class="cart_total_price">$<spnan id="{{'totalPriceOfProductNo'.$product->id}}">{{$product->special_price * $quantity}}</spnan></p>
 							</td>
 							<td class="cart_delete">
-								<a class="cart_quantity_delete" href=""><i class="fa fa-times"></i></a>
+								<a class="cart_quantity_delete" href="{{'/eshopers/removeFromCart/'.$product_id}}"><i class="fa fa-times"></i></a>
 							</td>
 						</tr>
-
-						<tr>
-							<td class="cart_product">
-								<a href=""><img src="{{asset('frontend/images/cart/two.png')}}" alt=""></a>
-							</td>
-							<td class="cart_description">
-								<h4><a href="">Colorblock Scuba</a></h4>
-								<p>Web ID: 1089772</p>
-							</td>
-							<td class="cart_price">
-								<p>$59</p>
-							</td>
-							<td class="cart_quantity">
-								<div class="cart_quantity_button">
-									<a class="cart_quantity_up" href=""> + </a>
-									<input class="cart_quantity_input" type="text" name="quantity" value="1" autocomplete="off" size="2">
-									<a class="cart_quantity_down" href=""> - </a>
-								</div>
-							</td>
-							<td class="cart_total">
-								<p class="cart_total_price">$59</p>
-							</td>
-							<td class="cart_delete">
-								<a class="cart_quantity_delete" href=""><i class="fa fa-times"></i></a>
-							</td>
-						</tr>
-						<tr>
-							<td class="cart_product">
-								<a href=""><img src="{{asset('frontend/images/cart/three.png')}}" alt=""></a>
-							</td>
-							<td class="cart_description">
-								<h4><a href="">Colorblock Scuba</a></h4>
-								<p>Web ID: 1089772</p>
-							</td>
-							<td class="cart_price">
-								<p>$59</p>
-							</td>
-							<td class="cart_quantity">
-								<div class="cart_quantity_button">
-									<a class="cart_quantity_up" href=""> + </a>
-									<input class="cart_quantity_input" type="text" name="quantity" value="1" autocomplete="off" size="2">
-									<a class="cart_quantity_down" href=""> - </a>
-								</div>
-							</td>
-							<td class="cart_total">
-								<p class="cart_total_price">$59</p>
-							</td>
-							<td class="cart_delete">
-								<a class="cart_quantity_delete" href=""><i class="fa fa-times"></i></a>
-							</td>
-						</tr>
-						<tr>
-							<td colspan="4">&nbsp;</td>
-							<td colspan="2">
-								<table class="table table-condensed total-result">
-									<tr>
-										<td>Cart Sub Total</td>
-										<td>$59</td>
-									</tr>
-									<tr>
-										<td>Exo Tax</td>
-										<td>$2</td>
-									</tr>
-									<tr class="shipping-cost">
-										<td>Shipping Cost</td>
-										<td>Free</td>										
-									</tr>
-									<tr>
-										<td>Total</td>
-										<td><span>$61</span></td>
-									</tr>
-								</table>
-							</td>
-						</tr>
+						@endforeach
+						@endforeach						
 					</tbody>
 				</table>
 			</div>
+			<div class="col-sm-6">
+				<div class="total_area">
+					<ul  id="cartBill">
+						<li>Cart Sub Total <span>$ <span id="subTotal"></span></span></li>
+						<li>Eco Tax <span>$<span id="ecoTax">2</span></span></li>				
+						<li>Total <span>$ <span id="grandTotal"></span></span></li>
+						<li>Shipping Cost <span id="shippingCharges"></span></li>				
+					</ul>
+					<ul>
+						<li>Payment Mode <span id="paymentBy">Cash on Delivery</span></li>
+					</ul>
+					@if(isset($_COOKIE['checkOutData']))
+						<a class="btn btn-default update" href="/eshopers/removeCoupon">Remove Applied Coupon</a>
+					@endif
+						<input type="submit" class="btn btn-default check_out" value="Place Order"/>				</div>
+			</div>				
 			<div class="payment-options">
-					<span>
-						<label><input type="checkbox"> Direct Bank Transfer</label>
-					</span>
-					<span>
-						<label><input type="checkbox"> Check Payment</label>
-					</span>
-					<span>
-						<label><input type="checkbox"> Paypal</label>
-					</span>
-				</div>
-		</div>
+				<span>
+					<label><input type="radio" value="cod" name="paymentMode" checked> Cash on Delievery</label>
+				</span>					
+				<span>
+					<label><input type="radio" value="payPal" name="paymentMode"> Paypal</label>
+				</span>
+			</div>
+		
+	</div>
+	</form>
 	</section> <!--/#cart_items-->
 	@endsection

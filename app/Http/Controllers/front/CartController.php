@@ -98,7 +98,7 @@ class CartController extends Controller
                         Session::flash('alert-success', "Item removed from cart!!");
                         if($countCartItem > 0)
                         {
-                        return redirect('/eshopers/cart');
+                        return redirect($_SERVER['HTTP_REFERER']);
                         }
                         else
                         {
@@ -161,6 +161,7 @@ class CartController extends Controller
     {	
         if(!Auth::user())
         {
+            setcookie('checkOutData',null,time()-3600);
             setcookie('cartItems',null,time()-3600,'/');
             return redirect('eshopers/home');
         }
@@ -218,9 +219,7 @@ class CartController extends Controller
                 Session::flash('alert-danger', "You don't have any product in your cart!!");
                 return redirect()->back();
             }
-        }
-  
-        
+        }        
     }
 
     public function addOneQuantityOfProduct(Request $request)
