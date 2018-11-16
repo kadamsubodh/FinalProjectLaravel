@@ -25,7 +25,7 @@
 					<tbody>
 						@foreach($product_ids as $product_id => $quantity)
 						@foreach(App\Product::with('product_image')->where('id','=',$product_id)->get() as $product)
-						<tr>
+						<tr class="user">
 							<td class="cart_product">
 								<a href="{{'/eshopers/productDetails/'.$product->id}}"><img src="{{'/storage/uploads/'.$product->product_image['image_name']}}" alt="" style="height:100px; width: 100px"></a>
 							</td>
@@ -40,12 +40,12 @@
 								<div class="cart_quantity_button">
 									<a class="cart_quantity_down" href="javascript:void(0)" data-id="{{$product->id}}" id="{{'removeOne'.$product->id}}"> - </a>
 									{{csrf_field()}}						
-									<input class="cart_quantity_input" type="text" name="quantity" value="{{$quantity}}" autocomplete="off" size="2" id="quantityOfProduct{{$product->id}}" readonly='true'>
+									<input class="cart_quantity_input quantityOfProduct{{$product->id}}"" type="text" name="quantity" value="{{$quantity}}" autocomplete="off" size="2"  readonly='true'>
 									<a class="cart_quantity_up" href="javascript:void(0)" data-id="{{$product->id}}" id="{{'addOne'.$product->id}}"> + </a>	
 								</div>
 							</td>
 							<td class="cart_total">
-								<p class="cart_total_price">$<spnan id="{{'totalPriceOfProductNo'.$product->id}}">{{$product->special_price * $quantity}}</spnan></p>
+								<p class="cart_total_price">$<spnan class="{{'totalPriceOfProductNo'.$product->id}}">{{$product->special_price * $quantity}}</spnan></p>
 							</td>
 							<td class="cart_delete">
 								<a class="cart_quantity_delete" href="{{'/eshopers/removeFromCart/'.$product_id}}"><i class="fa fa-times"></i></a>
@@ -79,7 +79,7 @@
 				</div>
 				<div class="col-sm-6">
 					<div class="total_area">
-						<ul  id="cartBill">
+						<ul  class="cartBill">
 							<li>Cart Sub Total <span>$ <span id="subTotal"></span></span></li>
 							<li>Eco Tax <span>$<span id="ecoTax">2</span></span></li>							
 							<li>Total <span>$ <span id="grandTotal"></span></span></li>

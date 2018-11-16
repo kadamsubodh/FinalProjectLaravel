@@ -43,7 +43,9 @@ Route::post('/eshopers/cart/{product_id}','front\CartController@addToCartFromWis
 
 //------------------------checkOut-------------------
 Route::post("/eshopers/placeOrder", function(){
-return "hello";
+    var_dump(get_defined_vars());
+return extract($_POST);
+
 });
 
 //-------------------------------------------------------------------------

@@ -277,12 +277,12 @@ class customerLoginController extends Controller
             {
                 if(isset($_COOKIE['cartItems']))
                 {
+                    $cookieDataBeforeLogin=stripcslashes($_COOKIE['cartItems']);
+                        $productsInCartBeforeLogin=json_decode($cookieDataBeforeLogin,true);
                     $user=Auth::user()->firstname.Auth::user()->id;
                         // $product_id=Route::current()->parameter('product_id');
                     if(isset($_COOKIE[$user]))
-                    {
-                        $cookieDataBeforeLogin=stripcslashes($_COOKIE['cartItems']);
-                        $productsInCartBeforeLogin=json_decode($cookieDataBeforeLogin,true);
+                    {                        
                         $cookiedata=stripcslashes($_COOKIE[$user]);
                         $product_ids= json_decode($cookiedata,true);
                         $id=Route::current()->parameter('product_id');

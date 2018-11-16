@@ -5462,10 +5462,10 @@ h2.title {
 }
 
 
-.shopper-info > form > input, 
-.form-two > form > select, 
-.form-two > form > input, 
-.form-one > form > input {
+ 
+.form-two >select, 
+.form-two >input, 
+.form-one > input {
   background:#F0F0E9;
   border: 0 none;
   margin-bottom:10px;
@@ -5474,7 +5474,7 @@ h2.title {
   font-weight: 300
 }
 
-.form-two > form > select {
+.form-two > select {
   padding:10px 5px
 }
 

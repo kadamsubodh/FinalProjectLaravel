@@ -49,8 +49,7 @@ class CouponsController extends Controller
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
     public function store(Request $request)
-    {
-        
+    {        
        $validate=$request->validate([
         'code'=>'required|alphaNum|min:4|max:8',
         'percent_off'=>'required|regex:/^\d*(\.\d{2})?$/',

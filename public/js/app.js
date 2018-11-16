@@ -43309,7 +43309,7 @@ if (false) {
 $(document).ready(function(){
 $(".cart_quantity_up").click(function(){
   var product_id=$(this).data("id");
-  var quantity=parseInt($("#quantityOfProduct"+product_id).val());
+  var quantity=parseInt($(".quantityOfProduct"+product_id).val());
   var token = $('meta').attr('content');
   var price=parseInt($('#priceOfProductNo'+product_id).text());
   var sum=0;
@@ -43317,7 +43317,7 @@ $(".cart_quantity_up").click(function(){
   var shippingCharges=0;
   if(quantity==3)
   {
-    $("#quantityOfProduct"+product_id).val(3);
+    $(".quantityOfProduct"+product_id).val(3);
     alert('maxinum 3 quantity allowed!!')
     return false;
   }
@@ -43329,8 +43329,8 @@ $(".cart_quantity_up").click(function(){
             url :'/eshopers/addOneQuantityOfProduct',
             success : function(response) { 
                           quantity=quantity+1;                     
-                         $("#quantityOfProduct"+product_id).val(quantity);
-                         $("#totalPriceOfProductNo"+product_id).text(parseInt(price*quantity));
+                         $(".quantityOfProduct"+product_id).val(quantity);
+                         $(".totalPriceOfProductNo"+product_id).text(parseInt(price*quantity));
                          updateCartBill();                         
                          // $(".cart_total").each(function(){
                          //  sum=sum+parseInt($(this).text().substr($(this).text().indexOf("$")+1));
@@ -43358,13 +43358,13 @@ $(".cart_quantity_up").click(function(){
 $(document).ready(function(){
 $(".cart_quantity_down").click(function(){
   var product_id=$(this).data("id");
-  var quantity=parseInt($("#quantityOfProduct"+product_id).val());
+  var quantity=parseInt($(".quantityOfProduct"+product_id).val());
   var token = $('meta').attr('content');
   var price=parseInt($('#priceOfProductNo'+product_id).text());
   var sum=0;
   if(quantity==1)
   {
-    $("#quantityOfProduct"+product_id).val(1);
+    $(".quantityOfProduct"+product_id).val(1);
     alert('minimum 1 qauntity is required!');
     return false;
   }
@@ -43376,8 +43376,8 @@ $(".cart_quantity_down").click(function(){
             url :'/eshopers/removeOneQuantityOfProduct',
             success : function(response) {                      
                           quantity=quantity-1;                     
-                         $("#quantityOfProduct"+product_id).val(quantity);
-                         $("#totalPriceOfProductNo"+product_id).text(parseInt(price*quantity));                         
+                         $(".quantityOfProduct"+product_id).val(quantity);
+                         $(".totalPriceOfProductNo"+product_id).text(parseInt(price*quantity));                         
                          updateCartBill();
                          // $(".cart_total").each(function(){
                          //  sum=sum+parseInt($(this).text().substr($(this).text().indexOf("$")+1));
@@ -43397,29 +43397,119 @@ $(".cart_quantity_down").click(function(){
     });
 }
 });
-}); 
+});
+
 $(document).ready(function(){
-  var token = $('meta').attr('content');
-  var sum=0;
-  var shippingCharges=0;
-  $(".cart_total").each(function()
-  {
-    sum=sum+parseInt($(this).text().substr($(this).text().indexOf("$")+1));
-  });
-    $("#subTotal").text(sum);
-    if(sum > 500)
+  $("#signIn").css({"display":"none"});
+  $("#guest").css({"display":"none"});
+  $("#newRegister").css({"display":"inline"});
+  $('input[type=radio][name=checkOutOption]').change(function(){
+    if($(this).val()==="newRegister")
     {
-      $("#shippingCharges").text('Free');
-      $("#grandTotal").text(sum+2);
+      $("#signIn").css({"display":"none"});
+      $("#newRegister").css({"display":"inline"});
+      $("#guest").css({"display":"none"});
+      cartBill();
+    }
+    else if($(this).val()==="guest")
+    {
+      $("#signIn").css({"display":"none"});
+      $("#newRegister").css({"display":"none"});
+      $("#guest").css({"display":"inline"}); 
+      cartBill(); 
     }
     else
     {
-      $("#shippingCharges").text('$50');
-      $("#grandTotal").text(sum+2);
+      $("#signIn").css({"display":"inline"});
+      $("#newRegister").css({"display":"none"});
+      $("#guest").css({"display":"none"});
     }
-    updateCartBill();
+  });
 
+
+  $('input[type=radio][name=paymentMode]').change(function(){
+    if($("#newRegister").css("display")=='inline')
+    {
+      if($(this).val()=="cod")
+      {
+        $(".register li #paymentBy").text('cash on delivery');
+      }
+      else
+      {
+         $(".register li #paymentBy").text('payPal');
+      }
+    }
+    else if($("#guest").css("display")=='inline')
+    {
+      if($(this).val()=="cod")
+      {
+        $(".guest li #paymentBy").text('cash on delivery');
+      }
+      else
+      {
+         $(".guest li #paymentBy").text('payPal');
+      }
+    }
+    else
+    {
+      if($(this).val()=="cod")
+      {
+        $(".register li #paymentBy").text('cash on delivery');
+      }
+      else
+      {
+         $(".register li #paymentBy").text('payPal');
+      }
+    }
+}); 
 });
+
+
+$(document).ready(function(){
+  cartBill();
+});
+
+function cartBill(){
+  var token = $('meta').attr('content');
+  var sum=0;
+  var shippingCharges=0;
+  if($("#newRegister").css("display")=='inline')
+  { 
+    $(".register .cart_total").each(function(){
+      sum=sum+parseInt($(this).text().substr($(this).text().indexOf("$")+1));
+    });
+  }
+  else if($("#guest").css("display")=="inline")
+  { 
+    $(".guest .cart_total").each(function(){
+      sum=sum+parseInt($(this).text().substr($(this).text().indexOf("$")+1)); 
+    });
+  }
+  else if($("#signIn").css("display")=="inline")
+  {
+     $(".user .cart_total").each(function(){
+      sum=sum+parseInt($(this).text().substr($(this).text().indexOf("$")+1)); 
+      });
+  }
+  else
+  {
+     $(".user .cart_total").each(function(){
+      sum=sum+parseInt($(this).text().substr($(this).text().indexOf("$")+1)); 
+      });
+  }
+  $("#subTotal").text(sum);
+  if(sum > 500)
+  {
+    $("#shippingCharges").text('Free');
+    $("#grandTotal").text(sum+2);
+  }
+  else
+  {
+    $("#shippingCharges").text('$50');
+    $("#grandTotal").text(sum+2);
+  }
+  updateCartBill();
+}
 
 $(document).ready(function(){
       $("#applyCoupon").click(function(){
@@ -43451,7 +43541,6 @@ $(document).ready(function(){
                   }
         });
       });
-
 });
 
 function applyCoupon(coupon_id)
@@ -43472,7 +43561,7 @@ function applyCoupon(coupon_id)
           "couponId":couponId,"subTotal":subTotal,"ecoTax":ecoTax,"grandTotal": grandTotal,'_method': 'POST',"shippingCharges":shippingCharges },
     url:"/eshopers/applyCoupon",
     success: function(response){
-      $("#cartBill").html(response);
+      $(".cartBill").html(response);
 
     }
 
@@ -43482,9 +43571,32 @@ function applyCoupon(coupon_id)
 function updateCartBill()
 {
   var sum=0;
-  $(".cart_total").each(function(){
-    sum=sum+parseInt($(this).text().substr($(this).text().indexOf("$")+1));
-  });
+  if($("#newRegister").css("display")=='inline')
+  { 
+    $(".register .cart_total").each(function(){
+      sum=sum+parseInt($(this).text().substr($(this).text().indexOf("$")+1));
+    });   
+  }
+  else if($("#guest").css("display")=="inline")
+  {
+     $(".guest .cart_total").each(function(){
+      sum=sum+parseInt($(this).text().substr($(this).text().indexOf("$")+1)); 
+      });
+      
+  }
+  else if($("#signIn").css("display")=="inline")
+  {
+     $(".user .cart_total").each(function(){
+      sum=sum+parseInt($(this).text().substr($(this).text().indexOf("$")+1)); 
+      });
+      
+  }  
+  else
+  {
+    $(".user .cart_total").each(function(){
+      sum=sum+parseInt($(this).text().substr($(this).text().indexOf("$")+1));
+    });     
+  }
   var token = $('meta').attr('content');
   var shippingCharges=0;
   var ecoTax=parseInt($("#ecoTax").text()); 
@@ -43493,44 +43605,11 @@ function updateCartBill()
     data:{"_token": token ,"sum": sum,"ecoTax": ecoTax,'_method': 'POST'},
     url: "/eshopers/updateCartBill",
     success:function(response){
-      $("#cartBill li").remove();
-       $("#cartBill").append(response);
+      $(".cartBill li").remove();
+       $(".cartBill").append(response);
     } 
   });
 }
-
-$(document).ready(function(){
-  $("#cartCheckOutLogin").css({"display":"none"});
-  $('input[type=radio]').change(function(){
-    if($(this).val()=="user")
-    {
-       $("#cartCheckOutLogin").css({"display":"inline"});
-       $(".shopper-informations").css({"display":"none"})
-    }
-    else if($(this).val()=="register")
-    {
-      $("#cartCheckOutLogin").css({"display":"none"});
-      $(".shopper-informations").css({"display":"inline"})
-      $("#password, #confirm_password").css({"display":"inline"});
-    }
-    else{
-      $("#cartCheckOutLogin").css({"display":"none"});
-      $(".shopper-informations").css({"display":"inline"})
-      $("#password,#confirm_password").css({"display":"none"});     
-    }
-  });
-  $('input[type=radio][name=paymentMode]').change(function(){
-    if($(this).val()=="cod")
-    {
-      $("#paymentBy").text('cash on delivery')
-    }
-    else
-    {
-       $("#paymentBy").text('payPal')
-    }
-
-    }); 
-});
 
 function isShippingAddressIsSame()
 {

@@ -98,10 +98,11 @@ class CartController extends Controller
                         Session::flash('alert-success', "Item removed from cart!!");
                         if($countCartItem > 0)
                         {
-                        return redirect($_SERVER['HTTP_REFERER']);
+                            return redirect($_SERVER['HTTP_REFERER']);
                         }
                         else
                         {
+                            setcookie('cartItems',null,time()-60*60*24*365,'/');
                             return redirect('eshopers/home');
                         }
                     }
@@ -135,7 +136,7 @@ class CartController extends Controller
     	    			Session::flash('alert-success', "Item removed from cart!!");
     	    			if($countCartItem > 0)
     	    			{
-    	    			return redirect('/eshopers/cart');
+    	    			return redirect ($_SERVER['HTTP_REFERER']);
     	    			}
     	    			else
     	    			{
