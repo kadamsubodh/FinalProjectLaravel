@@ -23,9 +23,9 @@ class UserAddressController extends Controller
         $perPage = 25;
 
         if (!empty($keyword)) {
-            $useraddress = UserAddress::latest()->paginate($perPage);
+            $useraddress = UserAddress::where('user_id','=',Auth::user()->id)->latest()->paginate($perPage);
         } else {
-            $useraddress = UserAddress::latest()->paginate($perPage);
+            $useraddress = UserAddress::where('user_id','=',Auth::user()->id)->latest()->paginate($perPage);
         }
 
         return view('frontend.user-address.index', compact('useraddress'));

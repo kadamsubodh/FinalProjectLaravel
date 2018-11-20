@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Validator;
 use Mail;
 use App\Email_template;
-
+use Hash;
 class customerLoginController extends Controller
 {
      public function customerSignUp(Request $request)
@@ -393,6 +393,30 @@ class customerLoginController extends Controller
         else{
             Session::flash('alert-danger', 'Not registered email!!');
             return redirect('admin/forgetpassword');
+        }
+    }
+
+    public function changePassword(Request $request)
+    {
+        $validate=$request->validate([
+            "current_password"=>"required",
+            "new_password"=>"required|alphaNum|min:6|max:12",
+            "confirm_password"=>"required|alphaNum|min:6|max:12|same:new_password"
+        ]);
+       
+        if(Hash::check($request->current_password,Auth::user()->password))
+        {
+            $user=User::find(Auth::user()->id);
+            $user->password=bcrypt($request->new_password);
+            $user->save();
+            Auth::logout();
+            Session::flash('alert-danger', 'Password changed!! Please Login with new Password');
+            return redirect('/eshopers/home');
+        }
+        else
+        {
+            Session::flash('alert-danger', 'Current Password is Inccorect!!');
+            return redirect()->back();
         }
     }
 }

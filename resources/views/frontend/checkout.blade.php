@@ -8,13 +8,20 @@
 				  <li><a href="#">Home</a></li>
 				  <li class="active">Check out</li>
 				</ol>
-			</div><!--/breadcrums-->						
+			</div><!--/breadcrums-->
+			 @if ($errors->any())
+                <ul class="alert alert-danger">
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            @endif						
 			<div class="step-one">
 				<h2 class="heading">Checkout</h2>
 			</div>			
 			@if(Auth::user())
 			<div class="container-fluid">
-				<form action="/eshopers/placeOrder" name="checkOutForm" method="POST" class="login-form1">
+				<form action="/eshopers/placeOrder" name="checkOutForm" method="POST" class="login-form1" id="checkOutForm">
 				{{csrf_field()}}
 				@php
 					$userAddresses=App\UserAddress::where('user_id','=',Auth::user()->id)->get();
@@ -28,7 +35,7 @@
 							<div class="col-md-3 step-one">
 								<table class="heading table-responsive">
 									<tr>
-										<td><input type="radio" name="address" value="{{$userAddress->id}}" form="checkOutForm"/></td>
+										<td><input type="radio" name="address" value="{{$userAddress->id}}"/></td>
 										<td><h3><b>{{$userAddress->address_1}}</b><br>
 											{{$userAddress->address_2}},<br>
 											{{$userAddress->city}}, {{$userAddress->state}},<br>
@@ -46,28 +53,25 @@
 						<div class="col-sm-5 clearfix">
 							<div class="bill-to">
 								<p>Bill To</p>
-								<div class="form-one">
-																						
-										<input type="text" placeholder="First Name *" form="checkOutForm" name="billedTO_firstname">
-										<input type="text" placeholder="Last Name *" form="checkOutForm" name="billedTO_lastname">
-										<input type="text" placeholder="Email*" form="checkOutForm" name="billedTO_email">
-									
+								<div class="form-one">											
+									<input type="text" placeholder="First Name *" name="billedTo_firstname">
+									<input type="text" placeholder="Last Name *" name="billedTo_lastname">									
 								</div>
 								<div class="form-two">
 									
-										<input type="text" placeholder="Address 1 *" form="checkOutForm" name="billedTO_address_1">
-										<input type="text" placeholder="Address 2" form="checkOutForm" name="billedTO_address_2">				
-										<input type="text" placeholder="city*" form="checkOutForm" name="billedTO_city">
-										<input type="text" placeholder="state*" form="checkOutForm" name="billedTO_state">
-										<input type="text" placeholder="country*" form="checkOutForm" name="billedTO_country">
-										<input type="text" placeholder="zipcode*" form="checkOutForm" name="billedTO_zipcode">	
+										<input type="text" placeholder="Address 1 *" name="billedTo_address_1">
+										<input type="text" placeholder="Address 2" name="billedTo_address_2">				
+										<input type="text" placeholder="city*" name="billedTo_city">
+										<input type="text" placeholder="state*" name="billedTo_state">
+										<input type="text" placeholder="country*" name="billedTo_country">
+										<input type="text" placeholder="zipcode*" name="billedTo_zipcode">	
 								</div>
 							</div>
 						</div>
 					</div>
 				@endif
 				<div class="row">
-					<label><input type="checkbox" id="isShippingAddressIsSame" value="same" name="isShippingAddressIsSame" onclick="isShippingAddressIsSame()" form="checkOutForm"> Shipping to bill address</label>	
+					<label>Shipping to bill address: <input type="radio" class="isShippingAddressIsSame" value="yes" name="isShippingAddressIsSame"> Yes <input type="radio" class="isShippingAddressIsSame" value="no" name="isShippingAddressIsSame" checked>No </label>	
 				</div>
 				<div class="row">
 					<div class="col-sm-5">
@@ -75,17 +79,16 @@
 							<div class="bill-to" id="shippingAddress">
 								<p>Shipped To</p>
 								<div class="form-one">									
-										<input type="text" placeholder="First Name *" form="checkOutForm" name="shippedTo_firstname">
-										<input type="text" placeholder="Last Name *" form="checkOutForm"  name="shippedTo_lastname">
-										<input type="text" placeholder="Email*" form="checkOutForm"  name="shippedTo_email">				
+										<input type="text" placeholder="First Name *" name="shippedTo_firstname">
+										<input type="text" placeholder="Last Name *" name="shippedTo_lastname">									
 								</div>
 								<div class="form-two">									
-										<input type="text" placeholder="Address 1 *" form="checkOutForm"  name="shippedTo_address_1">
-										<input type="text" placeholder="Address 2" form="checkOutForm"  name="shippedTo_address_2">				
-										<input type="text" placeholder="city*" form="checkOutForm"  name="shippedTo_city">
-										<input type="text" placeholder="state*"  form="checkOutForm"  name="shippedTo_state">
-										<input type="text" placeholder="country*"form="checkOutForm"  name="shippedTo_country">
-										<input type="text" placeholder="zipcode*" form="checkOutForm"  name="shippedTo_zipcode">			
+										<input type="text" placeholder="Address 1 *"  name="shippedTo_address_1">
+										<input type="text" placeholder="Address 2"  name="shippedTo_address_2">				
+										<input type="text" placeholder="city*" name="shippedTo_city">
+										<input type="text" placeholder="state*" name="shippedTo_state">
+										<input type="text" placeholder="country*" name="shippedTo_country">
+										<input type="text" placeholder="zipcode*" name="shippedTo_zipcode">			
 								</div>
 							</div>				
 						</div>	
@@ -148,69 +151,69 @@
 							<li>Total <span>$ <span id="grandTotal"></span></span></li>
 							<li>Shipping Cost <span id="shippingCharges"></span></li>
 						</ul>
-						<ul>				
+						<ul class="signIn">				
 							<li>Payment Mode <span id="paymentBy">Cash on Delivery</span></li>
 						</ul>
 						@if(isset($_COOKIE['checkOutData']))
 							<a class="btn btn-default update" href="/eshopers/removeCoupon">Remove Applied Coupon</a>
 						@endif
-							<input type="submit" class="btn btn-default check_out" value="Place Order"/>				</div>
+							<input type="submit" class="btn btn-default check_out place_order" value="Place Order"/>				</div>
 				</div>				
 				<div class="payment-options">
+					@foreach(App\Payment_gateway::all() as $payementGateway)
 					<span>
-						<label><input type="radio" value="cod" name="paymentMode" checked> Cash on Delievery</label>
-					</span>					
-					<span>
-						<label><input type="radio" value="payPal" name="paymentMode"> Paypal</label>
+						<label><input type="radio" value="{{$payementGateway->id}}" name="paymentMode"> {{$payementGateway->name}}</label>
 					</span>
+					@endforeach					
+					<!-- <span>
+						<label><input type="radio" value="payPal" name="paymentMode"> Paypal</label>
+					</span> -->
 				</div>
 			</form>
 			</div>				
 			@else
-				<div class="checkout-options">
-					<h3>New User</h3>
-					<p>Checkout options</p>
-					<ul class="nav">
-						<li>
-							<label><input type="radio" value="newRegister" name="checkOutOption" class="checkOutOption" form="checkOutForm" checked> Register Account</label>
-						</li>
-						<li>
-							<label><input type="radio" value="guest" name="checkOutOption" form="checkOutForm" class="checkOutOption"> Guest Checkout</label>
-						</li>
-						<li>
-							<label><input type="radio" value="signIn"  form="checkOutForm" name="checkOutOption" class="checkOutOption">Sign In</label>
-						</li>
-						<li>
-							<a href=""><i class="fa fa-times"></i>Cancel</a>
-						</li>
-					</ul>
-				</div><!--/checkout-options-->			
-				<div class="register-req">
-					<p>If you already have an account please sign in or use Register And Checkout to easily get access to your order history, or use Checkout as Guest </p>
-				</div><!--/register-req-->
 				<div class="container-fluid" id="newRegister">
-					<form action="/eshopers/placeOrder" name="checkOutForm" method="POST" class="login-form1">
+					<form action="/eshopers/placeOrder" name="newRegister" method="POST" class="login-form1" id="newRegisterForm">
 					{{csrf_field()}}
+						<div class="checkout-options">
+							<h3>New User</h3>
+							<p>Checkout options</p>
+							<ul class="nav">
+								<li>
+									<label><input type="radio" value="newRegister" name="checkOutOption" class="checkOutOption" checked> Register Account</label>
+								</li>
+								<li>
+									<label><input type="radio" value="guest" name="checkOutOption" class="checkOutOption"> Guest Checkout</label>
+								</li>
+								<li>
+									<label><input type="radio" value="signIn" name="checkOutOption" class="checkOutOption">Sign In</label>
+								</li>
+								<li>
+									<a href=""><i class="fa fa-times"></i>Cancel</a>
+								</li>
+							</ul>
+						</div><!--/checkout-options-->			
+						<div class="register-req">
+							<p>If you already have an account please sign in or use Register And Checkout to easily get access to your order history, or use Checkout as Guest </p>
+						</div><!--/register-req-->
 						<div class="row">							
 							<div class="col-sm-5 clearfix">
 								<div class="bill-to">
 									<p>Bill To</p>
 									<div class="form-one">											
-											<input type="text" placeholder="First Name *" form="checkOutForm">
-											<input type="text" placeholder="Last Name *" form="checkOutForm">
-											<input type="text" placeholder="Email*">
-											<input type="password" placeholder="Password" id="password" form="checkOutForm">		
-											<input type="password" placeholder="Confirm password" id="confirm_password" form="checkOutForm">								
-										
+											<input type="text" placeholder="First Name *" name="billedTo_firstname">
+											<input type="text" placeholder="Last Name *" name="billedTo_lastname">
+											<input type="text" placeholder="Email*" name="billedTo_email">
+											<input type="password" placeholder="Password" id="password" name="billedTo_password">		
+											<input type="password" placeholder="Confirm password" id="confirm_password" name="billedTo_confirm_password">		
 									</div>
-									<div class="form-two">														
-											<input type="text" placeholder="Address 1 *" form="checkOutForm">
-											<input type="text" placeholder="Address 2" form="checkOutForm">					
-											<input type="text" placeholder="city*" form="checkOutForm">
-											<input type="text" placeholder="state*" form="checkOutForm">
-											<input type="text" placeholder="country*" form="checkOutForm">
-											<input type="text" placeholder="zipcode*" form="checkOutForm">
-									
+									<div class="form-two">											
+											<input type="text" placeholder="Address 1 *" name="billedTo_address_1"> 
+											<input type="text" placeholder="Address 2" name="billedTo_address_2">					
+											<input type="text" placeholder="city*" name="billedTo_city">
+											<input type="text" placeholder="state*" name="billedTo_state">
+											<input type="text" placeholder="country*" name="billedTo_country">
+											<input type="text" placeholder="zipcode*" name="billedTo_zipcode">								
 									</div>
 								</div>
 							</div>
@@ -220,18 +223,17 @@
 								<div class="order-message">
 									<div class="bill-to" id="shippingAddress">
 										<p>Shipped To</p>
-										<div class="form-one">								
-												<input type="text" placeholder="First Name *" form="checkOutForm">
-												<input type="text" placeholder="Last Name *" form="checkOutForm">
-												<input type="text" placeholder="Email*" form="checkOutForm">
+										<div class="form-one">									
+											<input type="text" placeholder="First Name *" name="shippedTo_firstname">
+											<input type="text" placeholder="Last Name *" name="shippedTo_lastname">									
 										</div>
-										<div class="form-two">										
-												<input type="text" placeholder="Address 1 *" form="checkOutForm">
-												<input type="text" placeholder="Address 2" form="checkOutForm">				
-												<input type="text" placeholder="city*" form="checkOutForm">
-												<input type="text" placeholder="state*"  form="checkOutForm">
-												<input type="text" placeholder="country*"form="checkOutForm">
-												<input type="text" placeholder="zipcode*" form="checkOutForm">
+										<div class="form-two">									
+											<input type="text" placeholder="Address 1 *"  name="shippedTo_address_1">
+											<input type="text" placeholder="Address 2"  name="shippedTo_address_2">				
+											<input type="text" placeholder="city*" name="shippedTo_city">
+											<input type="text" placeholder="state*" name="shippedTo_state">
+											<input type="text" placeholder="country*" name="shippedTo_country">
+											<input type="text" placeholder="zipcode*" name="shippedTo_zipcode">			
 										</div>
 									</div>				
 								</div>	
@@ -300,40 +302,59 @@
 								@if(isset($_COOKIE['checkOutData']))
 									<a class="btn btn-default update" href="/eshopers/removeCoupon">Remove Applied Coupon</a>
 								@endif
-								<input type="submit" class="btn btn-default check_out" value="Place Order"/>	
+								<input type="submit" class="btn btn-default check_out place_order" value="Place Order"/>	
 							</div>
 						</div>				
 						<div class="payment-options">
+							@foreach(App\Payment_gateway::all() as $payementGateway)
 							<span>
-								<label><input type="radio" value="cod" name="paymentMode" checked> Cash on Delievery</label>
-							</span>					
-							<span>
-								<label><input type="radio" value="payPal" name="paymentMode"> Paypal</label>
+								<label><input type="radio" value="{{$payementGateway->id}}" name="paymentMode"> {{$payementGateway->name}}</label>
 							</span>
+							@endforeach	
 						</div>
 					</form>						
 				</div>
-				<div class="container-fluid" id="guest">
-					<form action="/eshopers/placeOrder" name="checkOutForm" method="POST" class="login-form1">
+				<div class="container-fluid" id="guest" style="display: none">
+					<form action="/eshopers/placeOrder" name="guest" method="POST" class="login-form1" id="guestForm">
 					{{csrf_field()}}
+					<div class="checkout-options">
+					<h3>New User</h3>
+					<p>Checkout options</p>
+					<ul class="nav">
+						<li>
+							<label><input type="radio" value="newRegister" name="checkOutOption" class="checkOutOption" checked> Register Account</label>
+						</li>
+						<li>
+							<label><input type="radio" value="guest" name="checkOutOption" class="checkOutOption"> Guest Checkout</label>
+						</li>
+						<li>
+							<label><input type="radio" value="signIn" name="checkOutOption" class="checkOutOption">Sign In</label>
+						</li>
+						<li>
+							<a href=""><i class="fa fa-times"></i>Cancel</a>
+						</li>
+					</ul>
+				</div><!--/checkout-options-->			
+				<div class="register-req">
+					<p>If you already have an account please sign in or use Register And Checkout to easily get access to your order history, or use Checkout as Guest </p>
+				</div><!--/register-req-->
 						<div class="row">							
 							<div class="col-sm-5 clearfix">
 								<div class="bill-to">
 									<p>Bill To</p>
-									<div class="form-one">
-																		
-											<input type="text" placeholder="First Name *" form="checkOutForm">
-											<input type="text" placeholder="Last Name *" form="checkOutForm">
-											<input type="text" placeholder="Email*">	
-										
+									<div class="form-one">											
+											<input type="text" placeholder="First Name *" name="billedTo_firstname">
+											<input type="text" placeholder="Last Name *" name="billedTo_lastname">
+											<input type="text" placeholder="Email*" name="billedTo_email">					
 									</div>
-									<div class="form-two">									
-											<input type="text" placeholder="Address 1 *" form="checkOutForm">
-											<input type="text" placeholder="Address 2" form="checkOutForm">	
-											<input type="text" placeholder="city*" form="checkOutForm">
-											<input type="text" placeholder="state*" form="checkOutForm">
-											<input type="text" placeholder="country*" form="checkOutForm">
-											<input type="text" placeholder="zipcode*" form="checkOutForm">
+									<div class="form-two">														
+											<input type="text" placeholder="Address 1 *" name="billedTo_address_1"> 
+											<input type="text" placeholder="Address 2" name="billedTo_address_2">					
+											<input type="text" placeholder="city*" name="billedTo_city">
+											<input type="text" placeholder="state*" name="billedTo_state">
+											<input type="text" placeholder="country*" name="billedTo_country">
+											<input type="text" placeholder="zipcode*" name="billedTo_zipcode">
+									
 									</div>
 								</div>
 							</div>
@@ -344,17 +365,16 @@
 									<div class="bill-to" id="shippingAddress">
 										<p>Shipped To</p>
 										<div class="form-one">									
-												<input type="text" placeholder="First Name *" form="checkOutForm">
-												<input type="text" placeholder="Last Name *" form="checkOutForm">
-												<input type="text" placeholder="Email*" form="checkOutForm">
+											<input type="text" placeholder="First Name *" name="shippedTo_firstname">
+											<input type="text" placeholder="Last Name *" name="shippedTo_lastname">								
 										</div>
-										<div class="form-two">										
-												<input type="text" placeholder="Address 1 *" form="checkOutForm">
-												<input type="text" placeholder="Address 2" form="checkOutForm">				
-												<input type="text" placeholder="city*" form="checkOutForm">
-												<input type="text" placeholder="state*"  form="checkOutForm">
-												<input type="text" placeholder="country*"form="checkOutForm">
-												<input type="text" placeholder="zipcode*" form="checkOutForm">
+										<div class="form-two">									
+											<input type="text" placeholder="Address 1 *"  name="shippedTo_address_1">
+											<input type="text" placeholder="Address 2"  name="shippedTo_address_2">				
+											<input type="text" placeholder="city*" name="shippedTo_city">
+											<input type="text" placeholder="state*" name="shippedTo_state">
+											<input type="text" placeholder="country*" name="shippedTo_country">
+											<input type="text" placeholder="zipcode*" name="shippedTo_zipcode">			
 										</div>
 									</div>				
 								</div>	
@@ -423,32 +443,31 @@
 								@if(isset($_COOKIE['checkOutData']))
 									<a class="btn btn-default update" href="/eshopers/removeCoupon">Remove Applied Coupon</a>
 								@endif
-								<input type="submit" class="btn btn-default check_out" value="Place Order"/>	
+								<input type="submit" class="btn btn-default check_out place_order" value="Place Order" />	
 							</div>
 						</div>				
 						<div class="payment-options">
+							@foreach(App\Payment_gateway::all() as $payementGateway)
 							<span>
-								<label><input type="radio" value="cod" name="paymentMode" checked> Cash on Delievery</label>
-							</span>					
-							<span>
-								<label><input type="radio" value="payPal" name="paymentMode"> Paypal</label>
+								<label><input type="radio" value="{{$payementGateway->id}}" name="paymentMode"> {{$payementGateway->name}}</label>
 							</span>
+							@endforeach
 						</div>
 					</form>						
 				</div>
-				<div class="container-fluid" id="signIn">
+				<div class="container-fluid" id="signIn" style="display: none">
 					<div class="row">
 						<div class="login-form col=md-offset-6 col-md-6"><!--login form-->
 							<h2>Login to your account</h2>
-							<form action="/eshopers/signin" method="post" name="loginform">
+							<form action="/eshopers/signin" method="post">
 								{{csrf_field()}}
-								<input type="email" placeholder="Email" name='email' form="loginform" />
-								<input type="password" placeholder="Password" name='password' form="loginform" />
+								<input type="email" placeholder="Email" name='email'/>
+								<input type="password" placeholder="Password" name='password'/>
 								<span>
-									<input type="checkbox" class="checkbox" form="loginform"> 
+									<input type="checkbox" class="checkbox"> 
 									Keep me signed in &nbsp&nbsp<a href="/eshopers/forgetpassword">Forget Password</a>
 								</span>
-								<button type="submit" class="btn btn-default update" form="loginform">Login</button>
+								<input type="submit" class="btn btn-default update" value="Login"/>
 								<br/>
 								<div calss="row">
 									<div class="col-sm-3">

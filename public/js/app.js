@@ -43403,12 +43403,14 @@ $(document).ready(function(){
   $("#signIn").css({"display":"none"});
   $("#guest").css({"display":"none"});
   $("#newRegister").css({"display":"inline"});
+  // $(".nav li label input.checkOutOption").attr("form","newRegister"); 
   $('input[type=radio][name=checkOutOption]').change(function(){
     if($(this).val()==="newRegister")
     {
       $("#signIn").css({"display":"none"});
       $("#newRegister").css({"display":"inline"});
       $("#guest").css({"display":"none"});
+      // $(".nav li label input.checkOutOption").attr("form","newRegister"); 
       cartBill();
     }
     else if($(this).val()==="guest")
@@ -43416,6 +43418,7 @@ $(document).ready(function(){
       $("#signIn").css({"display":"none"});
       $("#newRegister").css({"display":"none"});
       $("#guest").css({"display":"inline"}); 
+      // $(".nav li label input.checkOutOption").attr("form","guest");     
       cartBill(); 
     }
     else
@@ -43423,14 +43426,15 @@ $(document).ready(function(){
       $("#signIn").css({"display":"inline"});
       $("#newRegister").css({"display":"none"});
       $("#guest").css({"display":"none"});
-    }
+    }  
+
   });
 
 
   $('input[type=radio][name=paymentMode]').change(function(){
     if($("#newRegister").css("display")=='inline')
     {
-      if($(this).val()=="cod")
+      if($(this).val()==="1")
       {
         $(".register li #paymentBy").text('cash on delivery');
       }
@@ -43441,7 +43445,7 @@ $(document).ready(function(){
     }
     else if($("#guest").css("display")=='inline')
     {
-      if($(this).val()=="cod")
+      if($(this).val()==="1")
       {
         $(".guest li #paymentBy").text('cash on delivery');
       }
@@ -43452,16 +43456,28 @@ $(document).ready(function(){
     }
     else
     {
-      if($(this).val()=="cod")
+      if($(this).val()==="1")
       {
-        $(".register li #paymentBy").text('cash on delivery');
+        $(".signIn li #paymentBy").text('cash on delivery');
       }
       else
       {
-         $(".register li #paymentBy").text('payPal');
+         $(".signIn li #paymentBy").text('payPal');
       }
     }
-}); 
+});
+$('input[type=radio][name=isShippingAddressIsSame]').change(function(){
+      if($(this).val()==="yes")
+      {
+
+        $("#shippingAddress").css({"display":"none"});
+      }
+      else
+      {
+        $("#shippingAddress").css({"display":"inline"});
+      }
+    });
+$("input[type=radio][name=paymentMode]:first").attr("checked",true); 
 });
 
 
@@ -43611,14 +43627,67 @@ function updateCartBill()
   });
 }
 
-function isShippingAddressIsSame()
-{
-  if($("#isShippingAddressIsSame").is(":checked"))
- {
-    $("#shippingAddress").css({"display":"none"});
- }
- else
- {
-    $("#shippingAddress").css({"display":"inline"});
- }
-}
+$(document).ready(function(){
+  $(".place_order").click(function(e){
+    e.preventDefault();   
+    var token = $('meta').attr('content');
+    var grandTotal=$("#finalAmmount").text();
+    var shippingCharges=$("#shippingCharges").text();
+    var cartSubTotal=$("#subTotal").text();
+    var ecoTax=$("#ecoTax").text();
+    var total=$("#grandTotal").text();
+    $.ajax({
+      type:"POST",
+      data:{"_token": token,
+          "grandTotal": grandTotal,
+          "shippingCharges": shippingCharges,
+          "cartSubTotal":cartSubTotal,
+          "ecoTax":ecoTax,
+          "total":total,
+          '_method': 'POST'},
+      url:"/eshopers/setFinalCheckOutData"     
+
+    });
+    $(this).closest('form').submit();
+
+  });
+
+
+});
+
+$(document).ready(function(){
+  $("#trackOrderBtn").click(function(){
+    var email=$("#trackOrderEmail").val();
+    var orderId=$("#trackOrderOrderId").val();
+    var token = $('meta').attr('content');
+    var emailRegex=/^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+    if(email=="" || !emailRegex.test(email))
+    {
+      alert("Invalid email Format");
+      return false;
+    }
+    else if(orderId=="" || !/^[0-9]+$/g.test(orderId))
+    {
+      alert("Invalid Order Id! Only numbers allowed!");
+      return false;
+
+    }
+    else
+    {
+      $.ajax({
+        type:"POST",
+        data:{"_token": token, '_method': 'POST',
+         "email": email, "orderId": orderId},
+         url:"/eshopers/getMyOrderStatus",
+         success: function(response)
+         {
+          $("#trackOrderStatus").empty();
+          $("#trackOrderStatus").append(response);
+         }
+      });
+    }
+  });
+});
+
+
+ 

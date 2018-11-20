@@ -10,7 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Auth;
 
-class Email_templateController extends Controller
+class EmailTemplateController extends Controller
 {
     /**
      * Display a listing of the resource.

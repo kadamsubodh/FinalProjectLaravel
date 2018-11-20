@@ -88,10 +88,11 @@
 							<ul class="nav navbar-nav">
 								<li class="dropdown"><a href="#"><i class="fa fa-user"></i> @if(Auth::user()) {{Auth::user()->firstname}} {{Auth::user()->lastname}} @else Account @endif</a>
 									@if(Auth::user())
-									<ul role="menu" class="sub-menu">
-                                        <li  class="dropdown-item"><a href="/eshopers/myOrders">My Orders</a></li>	
-										<li  class="dropdown-item"><a href="/eshopers/userAddress">Address Book</a></li> 
-										<li  class="dropdown-item"><a href="/eshopers/chanegPassword">Change Password</a></li> 
+									<ul role="menu" class="sub-menu">				
+                                        <li class="dropdown-item"><a href="/eshopers/myOrders">My Orders</a></li>
+                                        <li class="dropdown-item"><a href="/eshopers/myProfile">My Profile</a></li>	
+										<li class="dropdown-item"><a href="/eshopers/userAddress">Address Book</a></li> 
+										<li class="dropdown-item"><a href="/eshopers/passwordChange">Change Password</a></li> 
 										<li><a href="/eshopers/logout" class="dropdown-item">Logout</a></li> 
                                     </ul>
                                     @endif
@@ -136,6 +137,7 @@
                                     </ul>
                                 </li> -->							
 								<li><a href="/eshopers/contactUs">Contact</a></li>
+								<li><a href="/eshopers/trackOrderView">Track Order</a></li>
 							</ul>
 						</div>
 					</div>

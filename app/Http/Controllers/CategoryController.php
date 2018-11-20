@@ -52,15 +52,25 @@ class CategoryController extends Controller
             'parent_category'   =>'required'
         ]);
         $category= new Category();
-        $category->name=$request->name;
-        $category->parent_id=$request->parent_category;
-        $category->created_by=Auth::user()->id;
-        $category->modify_by=Auth::user()->id;
-        $category->save();
-        if($category)
+        $isExist=Category::where('name','like',$request->name)->where('parent_id','=',$request->parent_category)->get();
+       
+        if(count($isExist)>0)
         {
-            Session::flash('alert-success', 'Category added!');
-            return redirect('admin/categories');
+            Session::flash('alert-danger', 'Category already exists!');
+            return redirect()->back();
+        }
+        else
+        {
+            $category->name=$request->name;
+            $category->parent_id=$request->parent_category;
+            $category->created_by=Auth::user()->id;
+            $category->modify_by=Auth::user()->id;
+            $category->save();
+            if($category)
+            {
+                Session::flash('alert-success', 'Category added!');
+                return redirect('admin/categories');
+            }
         }
         // $requestData = $request->all();
         
@@ -110,14 +120,25 @@ class CategoryController extends Controller
                 'parent_category'=>'required'
         ]);       
         $categories = Category::findOrFail($id);
-        $categories->name=$request->name;
-        $categories->parent_id=$request->parent_category;
-        $categories->modify_by=Auth::user()->id;
-        $categories->save();
-        if($categories)
+        $isExist=Category::where('name','like',$request->name)->where('parent_id','=',$request->parent_category)->get();
+        if(count($isExist)>0)
         {
+            return count($isExist);
+            exit();
+            Session::flash('alert-danger', 'Category already exists!');
+            return redirect()->back();
+        }
+        else
+        {
+            $categories->name=$request->name;
+            $categories->parent_id=$request->parent_category;
+            $categories->modify_by=Auth::user()->id;
+            $categories->save();
+            if($categories)
+            {
             Session::flash('alert-success', 'Category updated!');
             return redirect('admin/categories');
+            }
         }
     }
 

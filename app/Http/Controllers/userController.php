@@ -5,6 +5,7 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\User;
 use DB;
+use Auth;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
@@ -211,4 +212,52 @@ class userController extends Controller
         Session::flash('alert-success', 'User deleted!');
         return redirect('admin/users');
     }
+
+    public function updateMyInfo(Request $request)
+    {
+       $validate=$request->validate([
+       "firstname"=>"required",
+       "lastname"=>"required",
+       "email"=>"required|email",
+       ]);
+       $firstname='';
+       $lastname='';
+       $email='';
+       foreach(User::where("id",'=',Auth::user()->id)->get() as $user)
+       {
+        $firstname=$user->firstname;
+        $lastname=$user->lastname;
+        $email=$user->email;
+       }
+
+       $oldEmail=Auth::user()->email;       
+       if($firstname!=$request->firstname)
+       {
+            $user=Auth::user()->firstname.Auth::user()->id;
+            $newUser=$request->firstname.Auth::user()->id;            
+            if(isset($_COOKIE[$user]))
+            {
+                $cookiedata=stripcslashes($_COOKIE[$user]);
+                $product_ids= json_decode($cookiedata,true);
+                setcookie($user,null,time()-3600);
+                setcookie($newUser,json_encode($product_ids,true),time()+60*60*24*90);
+            }                     
+        } 
+        $user=User::findOrFail(Auth::user()->id);
+        $user->firstname=$request->firstname;
+        $user->lastname=$request->lastname;
+        $user->email=$request->email;
+        $user->save();            
+        if($user->email!= $oldEmail)
+        {
+            Session::flash('alert-danger', 'Email ID changed! please sign in again');
+            Auth::logout();
+            return redirect('/eshopers/login');
+        }
+        else
+        {
+            return redirect("/eshopers/myProfile");
+        }
+    } 
+    
 }

@@ -393,6 +393,18 @@
             <li><a href="/admin/mailTemplate/create "><i class="fa fa-circle-o"></i> Create New Template</a></li>
           </ul>
          </li>
+         <li class="{{str_contains(Request::path(),'admin/contactUs') ? 'active' : ''}} treeview">
+          <a href="#">
+            <i class="fa fa-files-o"></i>
+            <span>Recieved Queries</span>
+            <span class="pull-right-container">
+              <span class="label label-primary pull-right">1</span>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+            <li><a href="/admin/contactUs "><i class="fa fa-circle-o"></i>Query List</a></li>           
+          </ul>
+         </li>
        @endhasrole
        <li class="{{str_contains(Request::path(),'admin/productsattributes') ? 'active' : ''}} treeview">
           <a href="#">

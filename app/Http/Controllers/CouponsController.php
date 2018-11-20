@@ -242,12 +242,13 @@ class CouponsController extends Controller
         $checkOutData['subTotal']=$subTotal;
         $checkOutData['ecoTax']=$ecoTax;
         $checkOutData['percent_off']=$percent_off;       
-        setcookie("checkOutData",json_encode($checkOutData));
+        setcookie("checkOutData",json_encode($checkOutData));        
         echo "<li>Cart Sub Total <span>$ <span id='subTotal'>".$subTotal."</span></span></li>
                             <li>Eco Tax <span>$<span id='ecoTax'>".$ecoTax."</span></span></li>                            
                             <li>Total <span>$ <span id='grandTotal'>".$grandTotal."</span></span></li>
                             <li>Coupon Discount <span><span id='percent_off'>".$percent_off." %</span></span></li>
           <li>Shipping Cost <span><span id='shippingCharges'>".$shippingCharges."</sapn></span></li><li>Final Ammount <span>$ <span id='finalAmmount'>".$grandTotalAfterCouponApply."</span></span></li>";
+          
 
     }
 

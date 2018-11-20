@@ -15,10 +15,6 @@ Route::get('/eshopers/home', function () {
     return view('frontend.index');
 })->middleware('checkIsCustomer');
 
-Route::get('/eshopers/checkout','front\CheckoutController@checkoutList');
-Route::get('/eshopers/contactUs', function () {
-    return view('frontend.contactUs');
-});
 Route::get('/eshopers/shop', function () {
     return view('frontend.shop');
 });
@@ -42,10 +38,12 @@ Route::post('/eshopers/removeOneQuantityOfProduct','front\CartController@removeO
 Route::post('/eshopers/cart/{product_id}','front\CartController@addToCartFromWishList');
 
 //------------------------checkOut-------------------
-Route::post("/eshopers/placeOrder", function(){
-    var_dump(get_defined_vars());
-return extract($_POST);
-
+Route::post("/eshopers/placeOrder",'front\CheckoutController@placeOrder');
+Route::get('/eshopers/checkout','front\CheckoutController@checkoutList');
+Route::post("/eshopers/setFinalCheckOutData",'front\CheckoutController@setCookieForFinalCheckOutData');
+//--------------------my orders------
+Route::get("eshopers/myOrders", function(){
+    return view('frontend.myOrders');
 });
 
 //-------------------------------------------------------------------------
@@ -53,6 +51,11 @@ Route::get('/eshopers/login', function(){
     return view('frontend.login');
 });
 
+//---------------------- Track Order ----------------------
+Route::get("/eshopers/trackOrderView", function(){
+    return view('frontend.trackOrderView');
+});
+Route::post("eshopers/getMyOrderStatus",'UserOrderController@checkOrderStatus');
 
 
 //-----------------------User Wish List------------------------------------
@@ -70,6 +73,28 @@ Route::post('/eshopers/signin','front\customerLoginController@customerSignIn');
 
 Route::resource('/eshopers/userAddress','UserAddressController');
 
+//---------------------------change password-------------
+Route::post("/eshopers/changePassword","front\customerLoginController@changePassword");
+Route::get('/eshopers/passwordChange',function(){
+return view('frontend.changePassword');
+});
+
+//-----------------my profile----------------------
+Route::get("/eshopers/myProfile",function(){
+return view('frontend.myProfile');
+});
+Route::get("/eshopers/editMyInfo", function(){
+    return view('frontend.updateMyInfo');
+});
+Route::post("/eshopers/updateMyInfo","userController@updateMyInfo");
+
+//------------------contactUs
+Route::get('/eshopers/contactUs', function () {
+    return view('frontend.contactUs');
+});
+Route::post('/eshopers/contactAdmin','ContactAdminController@contactAdmin');
+
+Route::resource('admin/contactUs','ContactUsController');
 //--------------socialite routes------------------------------------
 
 Route::get('/auth/social/{method}','front\customerLoginController@redirectToProvider');
@@ -88,7 +113,6 @@ Route::post('eshopers/sendMail','front\customerLoginController@sendPasswordByEma
 Route::get("/demoCookie",function(){
 return view('frontend.demoCookie');
 });
-
 
 
 Route::get('/', function () {
@@ -157,7 +181,7 @@ Route::get('/forms/advanceForms', function () {
 Route::get('/forms/editors', function () {
     return view('admin.forms.editors');
 });
-Route::resource('/admin/email_templates','Email_templateController')->middleware('checkLogin');
+Route::resource('/admin/mailTemplate','EmailTemplateController')->middleware('checkLogin');
 
 //---------------------login route--------------------------------------
 
