@@ -10,6 +10,8 @@
         "laravel/framework": "5.5.*",
         "laravel/socialite": "^3.2",
         "laravel/tinker": "~1.0",
+        "paypal/rest-api-sdk-php": "^1.13",
+        "spatie/laravel-newsletter": "^4.2",
         "spatie/laravel-permission": "^2.23"
     },
     "require-dev": {

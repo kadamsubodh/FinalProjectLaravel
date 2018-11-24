@@ -66,7 +66,7 @@ class EmailTemplateController extends Controller
         if($emailTemplate)
         {
             Session::flash('alert-success', 'Product added!');
-            return redirect('admin/email_templates');
+            return redirect('admin/mailTemplate');
         }        
     }
 
@@ -109,7 +109,7 @@ class EmailTemplateController extends Controller
     public function update(Request $request, $id)
     {
         
-       $validate=$rerquest->validate([
+       $validate=$request->validate([
             'title'=>'required',
             'subject'=>"required|max:250",
             'content'=>'required|max:1000'
@@ -122,11 +122,11 @@ class EmailTemplateController extends Controller
         if($emailTemplate)
         {
             Session::flash('alert-success', 'Product added!');
-            return redirect('admin/email_templates');
+            return redirect('admin/mailTemplate');
         }
        
 
-        return redirect('admin/email_templates')->with('flash_message', 'Email_template updated!');
+        return redirect('admin/mailTemplate')->with('flash_message', 'Email_template updated!');
     }
 
     /**
@@ -140,6 +140,6 @@ class EmailTemplateController extends Controller
     {
         Email_template::destroy($id);
 
-        return redirect('admin/email_templates')->with('flash_message', 'Email_template deleted!');
+        return redirect('admin/mailTemplate')->with('flash_message', 'Email_template deleted!');
     }
 }

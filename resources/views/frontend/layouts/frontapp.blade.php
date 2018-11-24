@@ -136,7 +136,7 @@
 										<li><a href="/eshopers/singleBlog">Blog Single</a></li>
                                     </ul>
                                 </li> -->							
-								<li><a href="/eshopers/contactUs">Contact</a></li>
+								<li><a href="/eshopers/contactUs">Contact Us</a></li>
 								<li><a href="/eshopers/trackOrderView">Track Order</a></li>
 							</ul>
 						</div>
@@ -383,9 +383,10 @@
 					<div class="col-sm-3 col-sm-offset-1">
 						<div class="single-widget">
 							<h2>About Shopper</h2>
-							<form action="#" class="searchform">
-								<input type="text" placeholder="Your email address" />
-								<button type="submit" class="btn btn-default"><i class="fa fa-arrow-circle-o-right"></i></button>
+							<form action="/eshopers/subscribeNewsletter" class="searchform" method="POST" id="subscribe">
+								{{csrf_field()}}
+								<input type="text" placeholder="Your email address" name="subscriberEmail" form="subscribe"/>
+								<button type="submit" class="btn btn-default"><i class="fa fa-arrow-circle-o-right" form="subscribe"></i></button>
 								<p>Get the most recent updates from <br />our site and be updated your self...</p>
 							</form>
 						</div>

@@ -35,10 +35,7 @@
 				            </div>				            
 				            <div class="form-group col-md-12">
 				                <textarea name="message" id="message" required="required" class="form-control" rows="8" placeholder="Your Message Here"></textarea>
-				            </div>
-				            <div class="form-group col-md-12">
-				                <input type="text" name="note_admin" class="form-control" required="required" placeholder="Note_Admin">
-				            </div>                        
+				            </div>				                               
 				            <div class="form-group col-md-12">
 				                <input type="submit" name="submit" class="btn btn-primary pull-right" value="Submit">
 				            </div>

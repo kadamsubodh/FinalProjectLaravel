@@ -15,7 +15,7 @@
 @section('content')
     <div class="container">
         <div class="row">         
-            <div class="col-md-9">
+            <div class="col-md-10">
                 <div class="card">
                     <div class="card-header">Contactus</div>
                     <div class="card-body">
@@ -40,7 +40,7 @@
                             <table class="table">
                                 <thead>
                                     <tr>
-                                        <th>#</th><th>Name</th><th>Email</th><th>Contact No</th><th>message</th><th>Note</th><th>Actions</th>
+                                        <th>#</th><th>Name</th><th>Email</th><th>Contact No</th><th>message</th><th>My Comment</th><th>Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -51,9 +51,9 @@
                                         <td>{{ $item->email }}</td>
                                         <td>{{ $item->contact_no }}</td>
                                         <td>{{$item->message}}</td>
-                                        <td>{{$item->note_admin}}</td>
+                                        <td>@if($item->note_admin == null)Not yet replied @else {{$item->note_admin}} @endif</td>
                                         <td>
-                                            <a href="{{ url('/admin/contactUs/' . $item->id) }}" title="View contactU"><button class="btn btn-info btn-sm"><i class="fa fa-eye" aria-hidden="true"></i> View</button></a>
+                                            <a href="{{ url('/admin/contactUs/' . $item->id) }}" title="View contactU"><button class="btn btn-info btn-sm"><i class="fa fa-eye" aria-hidden="true"></i> View & Reply</button></a>
                                          <!--    <a href="{{ url('/admin/contactUs/' . $item->id . '/edit') }}" title="Edit contactU"><button class="btn btn-primary btn-sm"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit</button></a> -->
 
                                             <form method="POST" action="{{ url('/admin/contactUs' . '/' . $item->id) }}" accept-charset="UTF-8" style="display:inline">

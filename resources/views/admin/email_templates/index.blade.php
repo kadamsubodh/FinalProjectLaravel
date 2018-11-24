@@ -49,10 +49,10 @@
                                         <td>{{ $loop->iteration or $item->id }}</td>
                                         <td>{{ $item->title }}</td><td>{{ $item->subject }}</td><td>{{ $item->content }}</td>
                                         <td>
-                                            <a href="{{ url('/admin/email_templates/' . $item->id) }}" title="View Email_template"><button class="btn btn-info btn-sm"><i class="fa fa-eye" aria-hidden="true"></i> View</button></a>
-                                            <a href="{{ url('/admin/email_templates/' . $item->id . '/edit') }}" title="Edit Email_template"><button class="btn btn-primary btn-sm"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit</button></a>
+                                            <a href="{{ url('/admin/mailTemplate/' . $item->id) }}" title="View Email_template"><button class="btn btn-info btn-sm"><i class="fa fa-eye" aria-hidden="true"></i> View</button></a>
+                                            <a href="{{ url('/admin/mailTemplate/' . $item->id . '/edit') }}" title="Edit Email_template"><button class="btn btn-primary btn-sm"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit</button></a>
 
-                                            <form method="POST" action="{{ url('/admin/email_templates' . '/' . $item->id) }}" accept-charset="UTF-8" style="display:inline">
+                                            <form method="POST" action="{{ url('/admin/mailTemplate' . '/' . $item->id) }}" accept-charset="UTF-8" style="display:inline">
                                                 {{ method_field('DELETE') }}
                                                 {{ csrf_field() }}
                                                 <button type="submit" class="btn btn-danger btn-sm" title="Delete Email_template" onclick="return confirm(&quot;Confirm delete?&quot;)"><i class="fa fa-trash-o" aria-hidden="true"></i> Delete</button>

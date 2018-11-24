@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Mail;
+use App\Email_template;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
@@ -53,7 +55,7 @@ class ContactUsController extends Controller
         
         Contact_us::create($requestData);
 
-        return redirect('admin/contact-us')->with('flash_message', 'Contact_us added!');
+        return redirect('admin/contactUs')->with('flash_message', 'Contact_us added!');
     }
 
     /**
@@ -100,7 +102,7 @@ class ContactUsController extends Controller
         $contactus = Contact_us::findOrFail($id);
         $contactus->update($requestData);
 
-        return redirect('admin/contact-us')->with('flash_message', 'Contact_us updated!');
+        return redirect('admin/contactUs')->with('flash_message', 'Contact_us updated!');
     }
 
     /**
@@ -114,6 +116,56 @@ class ContactUsController extends Controller
     {
         Contact_us::destroy($id);
 
-        return redirect('admin/contact-us')->with('flash_message', 'Contact_us deleted!');
+        return redirect('admin/contactUs')->with('flash_message', 'Contact_us deleted!');
+    }
+
+    public function replyToCustomer(Request $request)
+    {
+        $validate=$request->validate([           
+            "adminComment"=>"required",
+        ]);
+        $emailId=$request->customerEmail;       
+        $contactus=Contact_us::findOrFail($request->id);
+        $contactus->note_admin=$request->adminComment;
+        $contactus->save();
+        if($contactus)
+        {
+            $subject="";
+            $content="";
+            $ipAddress=$this->getRealIpAddr();
+            $template=Email_template::where('title','=','adminComment')->get();
+            foreach($template as $email)
+            {
+                $subject=$email->subject;
+                $content=$email->content;
+            }
+            $content=str_replace("{customerName}",$contactus->name,$content);
+            $content=str_replace("{customerEmail}",$contactus->email,$content);
+            $content=str_replace("{customerContact}",$contactus->contact_no,$content);
+            $content=str_replace("{customerMessage}",$contactus->message,$content);
+            $content=str_replace("{adminComment}",$request->adminComment,$content);
+            $content=str_replace("{ip}",$ipAddress,$content);
+            Mail::send([],[], function($message) use ($content,$subject,$request,$emailId)
+            {
+                $message->to($emailId)->subject($subject)->setBody($content, 'text/html');
+            });
+            return redirect('admin/contactUs');
+        }
+    }
+    public function getRealIpAddr()
+    {
+        if (!empty($_SERVER['HTTP_CLIENT_IP']))   //check ip from share internet
+        {
+          $ip=$_SERVER['HTTP_CLIENT_IP'];
+        }
+        elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR']))   //to check ip is pass from proxy
+        {
+          $ip=$_SERVER['HTTP_X_FORWARDED_FOR'];
+        }
+        else
+        {
+          $ip=$_SERVER['REMOTE_ADDR'];
+        }
+        return $ip;
     }
 }

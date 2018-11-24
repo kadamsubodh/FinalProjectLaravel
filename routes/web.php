@@ -11,6 +11,8 @@
 |
 */
 //-x-x-x-x-x-x-x-x-x-x-x-x-x- FrontEnd Routes -x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x
+
+Route::get('/admin/check','UserOrderController@checkEmailView');
 Route::get('/eshopers/home', function () {
     return view('frontend.index');
 })->middleware('checkIsCustomer');
@@ -95,6 +97,7 @@ Route::get('/eshopers/contactUs', function () {
 Route::post('/eshopers/contactAdmin','ContactAdminController@contactAdmin');
 
 Route::resource('admin/contactUs','ContactUsController');
+Route::post('/admin/replyToCustomer','ContactUsController@replyToCustomer');
 //--------------socialite routes------------------------------------
 
 Route::get('/auth/social/{method}','front\customerLoginController@redirectToProvider');
@@ -102,6 +105,10 @@ Route::get('/auth/social/callback/{method}','front\customerLoginController@handl
 
 //---------------Product Details Route----------------------------------
 Route::get('/eshopers/productDetails/{product_id}','front\productDetailsController@getDetails');
+
+//-------------newsletter Route----------------------------------------
+
+Route::resource('/eshopers/subscribeNewsletter','NewsletterController');
 
 //--------Routes for getting Products According to category---------
 Route::get('/eshopers/products/{category}','front\frontViewController@listProducts');

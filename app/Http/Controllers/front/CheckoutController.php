@@ -2,19 +2,38 @@
 
 namespace App\Http\Controllers\front;
 
-use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
-use App\User;
+use DB;
+use URL;
+use Mail;
 use Auth;
+use Config;
+use App\User;
+use App\Product;
 use App\User_order;
 use App\Coupon_used;
-use App\Order_detail;
 use App\UserAddress;
-use App\Product;
+use App\Order_detail;
+use App\Email_template;
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Session;
+use PayPal\Auth\OAuthTokenCredential;
+use PayPal\Api\PaymentExecution;
+use PayPal\Api\RedirectUrls;
+use PayPal\Rest\ApiContext;
+use PayPal\Api\Transaction;
+use PayPal\Api\ItemList;
+use PayPal\Api\Details;
+use PayPal\Api\Payment;
+use PayPal\Api\Amount;
+use PayPal\Api\Payer;
+use PayPal\Api\Item;
+use PayPal\Api\Cost;
+
+
 
 class CheckoutController extends Controller
 {
@@ -69,6 +88,7 @@ class CheckoutController extends Controller
     }
     public function setCookieForFinalCheckOutData(Request $request)
     {
+
         $cartSubTotal="";
         $ecoTax="";
         $total="";
@@ -99,6 +119,7 @@ class CheckoutController extends Controller
                 $grandTotal=$request->grandTotal;
                 $coupon_id=1;
             }
+
             $finalData=[];
             $finalData["cartSubTotal"]=$cartSubTotal;
             $finalData["ecoTax"]=$ecoTax;
@@ -131,7 +152,8 @@ class CheckoutController extends Controller
     }
 
     public function placeOrder(Request $request)
-    {
+    {     
+
         $billedTo_firstname="";
         $billedTo_lastname="";
         $billedTo_email="";
@@ -159,10 +181,28 @@ class CheckoutController extends Controller
         $shipping_method="";
         $payment_gatewayId=$request->paymentMode;
         $user_id=0;
+        $ecoTax=0;
+        $percent_off=0;
+        $cartSubTotal=0;
+        $orderSummaryForEmail="";
+        $paymentMethod="";
+        $emailId="";
+        $subject="";
+        $content="";
+        if($payment_gatewayId==="1")
+        {
+            $paymentMethod="Cash on delivery";
+        }
+        else
+        {
+            $paymentMethod="payPal";
+        }
+
 
         if(Auth::user())
         {
             $user_id=Auth::user()->id;
+            $emailId=Auth::user()->email;
             $user=Auth::user()->firstname.Auth::user()->id;
             $addressCount=UserAddress::where('user_id','=',Auth::user()->id)->get();          
             if(isset($_COOKIE[$user]))
@@ -177,15 +217,21 @@ class CheckoutController extends Controller
                 $grandTotal=$checkOutData['grandTotalAfterCouponApply'];
                 $shippingCharges=$checkOutData['shippingCharges'];
                 $coupon_id=$checkOutData['coupon_id'];
-          
+                $percent_off=$checkOutData['percent_off'];
+                $total=$checkOutData['subTotal']+$checkOutData['ecoTax'];
+                $subTotal=$checkOutData['subTotal'];
+                $ecoTax=$checkOutData['ecoTax'];           
+           
                 if($shippingCharges=="Free")
                 {
                     $shipping_method="Free";
+                    $shippingCharges=0;
                 }
                 else
                 {
                     $shipping_method="charged";
                 }
+                $orderSummaryForEmail="<tr><td> subtotal</td><td>$".$subTotal."</td></tr><tr><td>ecoTax</td><td>$".$ecoTax."</td></tr><tr><td>Total</td><td>". $total."</td></tr><tr><td>Discount</td><td>".$percent_off."%</td></tr><tr><td>shipping Charges</td><td>$".$shippingCharges."</td><tr><td>Final ammount</td><td>$".$grandTotal."</td></tr>";
             }
             else
             {
@@ -194,15 +240,19 @@ class CheckoutController extends Controller
                 $grandTotal=$checkOutData1['grandTotal'];
                 $shippingCharges=$checkOutData1['shippingCharges'];
                 $coupon_id=$checkOutData1['coupon_id'];
-             
+                $ecoTax=$checkOutData1['ecoTax'];
+                $cartSubTotal=$checkOutData1['cartSubTotal'];
+                $total=$cartSubTotal+$ecoTax;                             
                 if($shippingCharges==="Free")
                 {
                     $shipping_method="Free";
+                    $shippingCharges=0;
                 }
                 else
                 {
                     $shipping_method="charged";
                 }
+                $orderSummaryForEmail="<tr><td>subtotal</td><td>$".$cartSubTotal."</td></tr><tr><td>ecoTax</td><td>$".$ecoTax."</td></tr><tr><td>Total</td><td>$". $total."</td></tr><tr><td>shipping Charges</td><td> $".$shippingCharges."</td></tr><tr><td>Final ammount</td><td>$".$grandTotal."</td></tr>";  
             }           
 
             if(count($addressCount)>0)
@@ -274,21 +324,28 @@ class CheckoutController extends Controller
                 "billedTo_country"=>"required",
                 "billedTo_zipcode"=>"required",
                 ]);
+                $emailId=$request->billedTo_email;
                 if(isset($_COOKIE['checkOutData']))
                 {
                     $cookiedata=stripcslashes($_COOKIE['checkOutData']);
                     $Data1= json_decode($cookiedata,true);
                     $grandTotal=$Data1['grandTotalAfterCouponApply'];
-                        $shippingCharges=$Data1['shippingCharges'];
-                        $coupon_id=$Data1['coupon_id'];
+                    $shippingCharges=$Data1['shippingCharges'];
+                    $coupon_id=$Data1['coupon_id'];
+                    $percent_off=$checkOutData['percent_off'];
+                    $total=$checkOutData['subTotal']+$checkOutData['ecoTax'];
+                    $subTotal=$checkOutData['subTotal'];
+                    $ecoTax=$checkOutData['ecoTax'];                    
                     if($shippingCharges=="Free")
                     {
                         $shipping_method="Free";
+                        $shippingCharges=0;
                     }
                     else
                     {
                         $shipping_method="charged";
                     }
+                    $orderSummaryForEmail="<tr><td> subtotal</td><td>$".$subTotal."</td></tr><tr><td>ecoTax</td><td>$".$ecoTax."</td></tr><tr><td>Total</td><td>". $total."</td></tr><tr><td>Discount</td><td>".$percent_off."%</td></tr><tr><td>shipping Charges</td><td>$".$shippingCharges."</td><tr><td>Final ammount</td><td>$".$grandTotal."</td></tr>";
                 }
                 else
                 {
@@ -297,14 +354,19 @@ class CheckoutController extends Controller
                     $grandTotal=$checkOutData1['grandTotal'];
                     $shippingCharges=$checkOutData1['shippingCharges'];
                     $coupon_id=$checkOutData1['coupon_id'];
+                    $ecoTax=$checkOutData1['ecoTax'];
+                    $cartSubTotal=$checkOutData1['cartSubTotal'];
+                    $total=$cartSubTotal+$ecoTax;                    
                     if($shippingCharges==="Free")
                     {
                         $shipping_method="Free";
+                        $shippingCharges=0;
                     }
                     else
                     {
                         $shipping_method="charged";
                     }
+                    $orderSummaryForEmail="<tr><td> subtotal</td><td>$".$cartSubTotal."</td></tr><tr><td>ecoTax</td>$".$ecoTax."</td></tr><tr><td>Total</td><td>$".$total."</td></tr><tr><td>shipping Charges</td><td>$".$shippingCharges."</td><tr><td>Final ammount</td><td>$".$grandTotal."</td></tr>";
                 } 
 
                 if(isset($_COOKIE["cartItems"]))
@@ -334,6 +396,7 @@ class CheckoutController extends Controller
                 $userObj->created_date=date("Y-m-d H:i:s");            
                 $userObj->role_id=5;
                 $userObj->save();
+
                 if($userObj)
                 {
                     $user_id=$userObj->id;
@@ -362,6 +425,7 @@ class CheckoutController extends Controller
                 "billedTo_country"=>"required",
                 "billedTo_zipcode"=>"required",
                 ]);
+                $emailId=$request->billedTo_email;
 
                 if(isset($_COOKIE["cartItems"]))
                 {
@@ -369,7 +433,7 @@ class CheckoutController extends Controller
                     $product_ids= json_decode($cookiedata,true);
                 }
                 $billedTo_firstname= $request->billedTo_firstname;
-                $billedTo_lastname=$request->billedTo_lastname;                         
+                $billedTo_lastname=$request->billedTo_lastname;                        
                 $billedTo_address_1=$request->billedTo_address_1;
                 $billedTo_address_2=$request->billedTo_address_2;
                 $billedTo_city=$request->billedTo_city;
@@ -379,7 +443,8 @@ class CheckoutController extends Controller
 
                 $userObj=new User();
                 $userObj->firstname=$request->billedTo_firstname;
-                $userObj->lastname=$request->billedTo_lastname;               
+                $userObj->lastname=$request->billedTo_lastname; 
+                $userObj->email=$request->billedTo_email;              
                 $userObj->password=bcrypt("password123");
                 $userObj->status=1;
                 $userObj->registration_method='n';
@@ -392,17 +457,17 @@ class CheckoutController extends Controller
                 } 
             }
         }
-        if($request->isShippingAddressIsSame=="yes") //is shipping address is same as
-                                                 //billing address
+        //is shipping address is same as billing address
+        if($request->isShippingAddressIsSame=="yes") 
         {
             $shippedTo_firstname= $billedTo_firstname;
             $shippedTo_lastname=$billedTo_lastname;                   
-            $shippedTo_address_1=$shippedTo_address_1;
-            $shippedTo_address_2=$shippedTo_address_2;
-            $shippedTo_city=$shippedTo_city;
-            $shippedTo_state=$shippedTo_state;
-            $shippedTo_country=$shippedTo_country;
-            $shippedTo_zipcode=$shippedTo_zipcode;
+            $shippedTo_address_1=$billedTo_address_1;
+            $shippedTo_address_2=$billedTo_address_2;
+            $shippedTo_city=$billedTo_city;
+            $shippedTo_state=$billedTo_state;
+            $shippedTo_country=$billedTo_country;
+            $shippedTo_zipcode=$billedTo_zipcode;
 
         }
         else
@@ -463,6 +528,7 @@ class CheckoutController extends Controller
         $userOrder->save();
         if($userOrder)
         {
+            $cartDetails="";
             if($coupon_id!=1)
             {
                 $coupon_used= new Coupon_used();
@@ -471,8 +537,9 @@ class CheckoutController extends Controller
                 $coupon_used->coupon_id=$coupon_id;
                 $coupon_used->save();
             }
+             $i=1;
             foreach($product_ids as $product_id => $quantity)
-            {
+            {                 
                 foreach(Product::where('id','=',$product_id)->get() as $product)
                 {
                     $orderDetails= new Order_detail();
@@ -481,20 +548,55 @@ class CheckoutController extends Controller
                     $orderDetails->quantity=$quantity;
                     $orderDetails->ammount=$quantity*$product->special_price;
                     $orderDetails->save();
+                    DB::table('products')->where('id',$product->id)->decrement('quantity',$quantity);
+
+                    $cartDetails.="<tr><td>".$i."</td><td>".$product->name."</td><td>".$product->special_price."</td><td>".$quantity."</td><td>".$quantity*$product->special_price."</td></tr>";
                 }
-            } 
-            setcookie('cartItems',null,time()-3600);
+                $i++;
+            }
+
+            $orderDetailsView="<table border='1' style='border-collapse: collapse; width:80%; align:center'><tr><td>Sr.No.</td><td>Item</td><td>Price</td><td>Quantity</td><td>Total</td></tr>".$cartDetails."</table>";
+
+
+            $billingAddress="<b>".$billedTo_firstname. " " .$billedTo_lastname."<b><br>".$billedTo_address_1.",<br>".$billedTo_address_2.",<br>".
+            $billedTo_city.", ".$billedTo_state.",<br>".$billedTo_country.", ".$billedTo_zipcode;
+
+            $shippingAddress="<b>".$shippedTo_firstname. " " .$shippedTo_lastname."<b><br>".$shippedTo_address_1."<b>,<br>".$shippedTo_address_2.",<br>".
+            $shippedTo_city.", ".$shippedTo_state.",<br>".$shippedTo_country.", ".$shippedTo_zipcode;
+
+            $orderSummaryForEmailView="<table border='1' style='border-collapse: collapse; align:right'>".$orderSummaryForEmail."</table>"; 
+
+            //send email notification of order to customer
+            $template=Email_template::where('title','=','orderDetails')->get();
+            foreach($template as $email)
+            {
+                $subject=$email->subject;
+                $content=$email->content;
+            }
+            $content=str_replace("{id}",$userOrder->id,$content);
+            $content=str_replace("{date}",date("Y-m-d H:i:s"),$content);
+            $content=str_replace("{orderDetails}",$orderDetailsView,$content);
+            $content=str_replace("{total}",$orderSummaryForEmailView,$content);
+            $content=str_replace("{billed_to}",$billingAddress,$content);
+            $content=str_replace("{shipped_to}",$shippingAddress,$content);
+            $content=str_replace("{paymentMethod}",$paymentMethod,$content);
+
+            Mail::send([],[], function($message) use ($content,$subject,$request,$emailId)
+            {
+                $message->to($emailId)->cc('eshopersnoreply@gmail.com')->subject($subject)->setBody($content, 'text/html');
+            });
+            setcookie('checkOutData',null,time()-3600);
             if(Auth::user())
             {
-                setcookie(Auth::user()->firstname.Auth::user()->id,null,time()-3600);
+                setcookie(Auth::user()->firstname.Auth::user()->id,null,time()-3600,'/');
             }
             else
             {
-                setcookie("cartItems",null,time()-3600);
+                setcookie("cartItems",null,time()-3600,'/');
             }
             Session::flash('alert-success', "Order successfully placed!! Thank you.");
-            return redirect("/eshopers/home");           
+            return redirect("/eshopers/home"); 
         }
     }
-
 }
+

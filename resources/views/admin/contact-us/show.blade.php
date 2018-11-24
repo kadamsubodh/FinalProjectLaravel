@@ -51,11 +51,21 @@
                                     </tr>
                                     <tr>
                                         <th> Meesage</th>
-                                        <td> {{ $contactus->message }} </td>
+                                        <td>
+                                            <textarea readonly>{{ $contactus->message }}</textarea>
+                                        </td>
                                     </tr>
                                     <tr>
                                         <th>Note to Admin </th>
-                                        <td> {{ $contactus->note_admin }} </td>
+                                        <td> 
+                                            <form action="/admin/replyToCustomer" method="POST">
+                                                {{csrf_field()}}
+                                            <input type="hidden" name="customerEmail" value="{{$contactus->email}}"/>
+                                            <input type="hidden" name="id" value="{{$contactus->id}}">
+                                            <textarea name="adminComment"></textarea>
+                                            <input type="submit" value="Add Comment"/>
+                                            </form>
+                                        </td>
                                     </tr>
                                 </tbody>
                             </table>

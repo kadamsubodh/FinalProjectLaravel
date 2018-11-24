@@ -18,7 +18,7 @@
             @endif						
 			<div class="step-one">
 				<h2 class="heading">Checkout</h2>
-			</div>			
+			</div>					
 			@if(Auth::user())
 			<div class="container-fluid">
 				<form action="/eshopers/placeOrder" name="checkOutForm" method="POST" class="login-form1" id="checkOutForm">
@@ -54,17 +54,17 @@
 							<div class="bill-to">
 								<p>Bill To</p>
 								<div class="form-one">											
-									<input type="text" placeholder="First Name *" name="billedTo_firstname">
-									<input type="text" placeholder="Last Name *" name="billedTo_lastname">									
+									<input type="text" placeholder="First Name *" name="billedTo_firstname" value="{{old('billedTo_firstname')}}">
+									<input type="text" placeholder="Last Name *" name="billedTo_lastname" value="{{old('billedTo_lastname')}}">									
 								</div>
 								<div class="form-two">
 									
-										<input type="text" placeholder="Address 1 *" name="billedTo_address_1">
-										<input type="text" placeholder="Address 2" name="billedTo_address_2">				
-										<input type="text" placeholder="city*" name="billedTo_city">
-										<input type="text" placeholder="state*" name="billedTo_state">
-										<input type="text" placeholder="country*" name="billedTo_country">
-										<input type="text" placeholder="zipcode*" name="billedTo_zipcode">	
+										<input type="text" placeholder="Address 1 *" name="billedTo_address_1" value="{{old('billedTo_address_1')}}">
+										<input type="text" placeholder="Address 2" name="billedTo_address_2" value="{{old('billedTo_address_2')}}">				
+										<input type="text" placeholder="city*" name="billedTo_city" value="{{old('billedTo_city')}}">
+										<input type="text" placeholder="state*" name="billedTo_state" value="{{old('billedTo_state')}}">
+										<input type="text" placeholder="country*" name="billedTo_country" value="{{old('billedTo_country')}}">
+										<input type="text" placeholder="zipcode*" name="billedTo_zipcode" value="{{old('billedTo_zipcode')}}">	
 								</div>
 							</div>
 						</div>
@@ -76,19 +76,19 @@
 				<div class="row">
 					<div class="col-sm-5">
 						<div class="order-message">
-							<div class="bill-to" id="shippingAddress">
+							<div class="bill-to shippingAddress">
 								<p>Shipped To</p>
 								<div class="form-one">									
-										<input type="text" placeholder="First Name *" name="shippedTo_firstname">
-										<input type="text" placeholder="Last Name *" name="shippedTo_lastname">									
+										<input type="text" placeholder="First Name *" name="shippedTo_firstname" value="{{old('shippedTo_firstname')}}">
+										<input type="text" placeholder="Last Name *" name="shippedTo_lastname" value="{{old('shippedTo_lastname')}}">									
 								</div>
 								<div class="form-two">									
-										<input type="text" placeholder="Address 1 *"  name="shippedTo_address_1">
-										<input type="text" placeholder="Address 2"  name="shippedTo_address_2">				
-										<input type="text" placeholder="city*" name="shippedTo_city">
-										<input type="text" placeholder="state*" name="shippedTo_state">
-										<input type="text" placeholder="country*" name="shippedTo_country">
-										<input type="text" placeholder="zipcode*" name="shippedTo_zipcode">			
+										<input type="text" placeholder="Address 1 *"  name="shippedTo_address_1" value="{{old('shippedTo_address_1')}}">
+										<input type="text" placeholder="Address 2"  name="shippedTo_address_2" value="{{old('shippedTo_address_2')}}">				
+										<input type="text" placeholder="city*" name="shippedTo_city" value="{{old('shippedTo_city')}}">
+										<input type="text" placeholder="state*" name="shippedTo_state" value="{{old('shippedTo_state')}}">
+										<input type="text" placeholder="country*" name="shippedTo_country" value="{{old('shippedTo_country')}}">
+										<input type="text" placeholder="zipcode*" name="shippedTo_zipcode" value="{{old('shippedTo_zipcode')}}">			
 								</div>
 							</div>				
 						</div>	
@@ -157,12 +157,14 @@
 						@if(isset($_COOKIE['checkOutData']))
 							<a class="btn btn-default update" href="/eshopers/removeCoupon">Remove Applied Coupon</a>
 						@endif
-							<input type="submit" class="btn btn-default check_out place_order" value="Place Order"/>				</div>
+							<button class="btn btn-default check_out place_order">Place Order</button>				
+						</div>
 				</div>				
 				<div class="payment-options">
 					@foreach(App\Payment_gateway::all() as $payementGateway)
 					<span>
 						<label><input type="radio" value="{{$payementGateway->id}}" name="paymentMode"> {{$payementGateway->name}}</label>
+						
 					</span>
 					@endforeach					
 					<!-- <span>
@@ -172,27 +174,27 @@
 			</form>
 			</div>				
 			@else
+			<div class="checkout-options">
+				<h3>New User</h3>
+				<p>Checkout options</p>
+				<ul class="nav">
+					<li>
+						<label><input type="radio" value="newRegister" name="checkOutOption" class="checkOutOption" form="newRegisterForm" checked> Register Account</label>
+					</li>
+					<li>
+						<label><input type="radio" value="guest" name="checkOutOption" class="checkOutOption" form="newRegisterForm"> Guest Checkout</label>
+					</li>
+					<li>
+						<label><input type="radio" value="signIn" name="checkOutOption" class="checkOutOption" form="newRegisterForm">Sign In</label>
+					</li>
+					<li>
+						<a href=""><i class="fa fa-times"></i>Cancel</a>
+					</li>
+				</ul>
+			</div><!--/checkout-options-->	
 				<div class="container-fluid" id="newRegister">
 					<form action="/eshopers/placeOrder" name="newRegister" method="POST" class="login-form1" id="newRegisterForm">
-					{{csrf_field()}}
-						<div class="checkout-options">
-							<h3>New User</h3>
-							<p>Checkout options</p>
-							<ul class="nav">
-								<li>
-									<label><input type="radio" value="newRegister" name="checkOutOption" class="checkOutOption" checked> Register Account</label>
-								</li>
-								<li>
-									<label><input type="radio" value="guest" name="checkOutOption" class="checkOutOption"> Guest Checkout</label>
-								</li>
-								<li>
-									<label><input type="radio" value="signIn" name="checkOutOption" class="checkOutOption">Sign In</label>
-								</li>
-								<li>
-									<a href=""><i class="fa fa-times"></i>Cancel</a>
-								</li>
-							</ul>
-						</div><!--/checkout-options-->			
+					{{csrf_field()}}									
 						<div class="register-req">
 							<p>If you already have an account please sign in or use Register And Checkout to easily get access to your order history, or use Checkout as Guest </p>
 						</div><!--/register-req-->
@@ -201,39 +203,44 @@
 								<div class="bill-to">
 									<p>Bill To</p>
 									<div class="form-one">											
-											<input type="text" placeholder="First Name *" name="billedTo_firstname">
-											<input type="text" placeholder="Last Name *" name="billedTo_lastname">
-											<input type="text" placeholder="Email*" name="billedTo_email">
+											<input type="text" placeholder="First Name *" name="billedTo_firstname" value="{{old('billedTo_firstname')}}">
+											<input type="text" placeholder="Last Name *" name="billedTo_lastname" value="{{old('billedTo_lastname')}}">
+											<input type="text" placeholder="Email*" name="billedTo_email" value="{{old('billedTo_email')}}">
 											<input type="password" placeholder="Password" id="password" name="billedTo_password">		
 											<input type="password" placeholder="Confirm password" id="confirm_password" name="billedTo_confirm_password">		
 									</div>
 									<div class="form-two">											
-											<input type="text" placeholder="Address 1 *" name="billedTo_address_1"> 
-											<input type="text" placeholder="Address 2" name="billedTo_address_2">					
-											<input type="text" placeholder="city*" name="billedTo_city">
-											<input type="text" placeholder="state*" name="billedTo_state">
-											<input type="text" placeholder="country*" name="billedTo_country">
-											<input type="text" placeholder="zipcode*" name="billedTo_zipcode">								
+											<input type="text" placeholder="Address 1 *" name="billedTo_address_1" value="{{old('billedTo_address_1')}}"> 
+											<input type="text" placeholder="Address 2" name="billedTo_address_2" value="{{old('billedTo_address_2')}}">					
+											<input type="text" placeholder="city*" name="billedTo_city" value="{{old('billedTo_city')}}">
+											<input type="text" placeholder="state*" name="billedTo_state" value="{{old('billedTo_state')}}">
+											<input type="text" placeholder="country*" name="billedTo_country" value="{{old('billedTo_country')}}">
+											<input type="text" placeholder="zipcode*" name="billedTo_zipcode" value="{{old('billedTo_zipcode')}}">								
 									</div>
 								</div>
 							</div>
 						</div>
 						<div class="row">
+							<label>Shipping to bill address:
+							 <input type="radio" class="isShippingAddressIsSame" value="yes" name="isShippingAddressIsSame"> Yes 
+							 <input type="radio" class="isShippingAddressIsSame" value="no" name="isShippingAddressIsSame" checked>No </label>	
+						</div>
+						<div class="row">
 							<div class="col-sm-5">
 								<div class="order-message">
-									<div class="bill-to" id="shippingAddress">
+									<div class="bill-to shippingAddress">
 										<p>Shipped To</p>
 										<div class="form-one">									
-											<input type="text" placeholder="First Name *" name="shippedTo_firstname">
-											<input type="text" placeholder="Last Name *" name="shippedTo_lastname">									
+											<input type="text" placeholder="First Name *" name="shippedTo_firstname" value="{{old('shippedTo_firstname')}}">
+											<input type="text" placeholder="Last Name *" name="shippedTo_lastname" value="{{old('shippedTo_lastname')}}">									
 										</div>
 										<div class="form-two">									
-											<input type="text" placeholder="Address 1 *"  name="shippedTo_address_1">
-											<input type="text" placeholder="Address 2"  name="shippedTo_address_2">				
-											<input type="text" placeholder="city*" name="shippedTo_city">
-											<input type="text" placeholder="state*" name="shippedTo_state">
-											<input type="text" placeholder="country*" name="shippedTo_country">
-											<input type="text" placeholder="zipcode*" name="shippedTo_zipcode">			
+											<input type="text" placeholder="Address 1 *"  name="shippedTo_address_1" value="{{old('shippedTo_address_1')}}">
+											<input type="text" placeholder="Address 2"  name="shippedTo_address_2" value="{{old('shippedTo_address_2')}}">				
+											<input type="text" placeholder="city*" name="shippedTo_city" value="{{old('shippedTo_city')}}">
+											<input type="text" placeholder="state*" name="shippedTo_state" value="{{old('shippedTo_state')}}">
+											<input type="text" placeholder="country*" name="shippedTo_country" value="{{old('shippedTo_country')}}">
+											<input type="text" placeholder="zipcode*" name="shippedTo_zipcode" value="{{old('shippedTo_zipcode')}}">			
 										</div>
 									</div>				
 								</div>	
@@ -302,7 +309,7 @@
 								@if(isset($_COOKIE['checkOutData']))
 									<a class="btn btn-default update" href="/eshopers/removeCoupon">Remove Applied Coupon</a>
 								@endif
-								<input type="submit" class="btn btn-default check_out place_order" value="Place Order"/>	
+								<button class="btn btn-default check_out place_order">Place Order</button>		
 							</div>
 						</div>				
 						<div class="payment-options">
@@ -316,25 +323,7 @@
 				</div>
 				<div class="container-fluid" id="guest" style="display: none">
 					<form action="/eshopers/placeOrder" name="guest" method="POST" class="login-form1" id="guestForm">
-					{{csrf_field()}}
-					<div class="checkout-options">
-					<h3>New User</h3>
-					<p>Checkout options</p>
-					<ul class="nav">
-						<li>
-							<label><input type="radio" value="newRegister" name="checkOutOption" class="checkOutOption" checked> Register Account</label>
-						</li>
-						<li>
-							<label><input type="radio" value="guest" name="checkOutOption" class="checkOutOption"> Guest Checkout</label>
-						</li>
-						<li>
-							<label><input type="radio" value="signIn" name="checkOutOption" class="checkOutOption">Sign In</label>
-						</li>
-						<li>
-							<a href=""><i class="fa fa-times"></i>Cancel</a>
-						</li>
-					</ul>
-				</div><!--/checkout-options-->			
+					{{csrf_field()}}								
 				<div class="register-req">
 					<p>If you already have an account please sign in or use Register And Checkout to easily get access to your order history, or use Checkout as Guest </p>
 				</div><!--/register-req-->
@@ -343,38 +332,41 @@
 								<div class="bill-to">
 									<p>Bill To</p>
 									<div class="form-one">											
-											<input type="text" placeholder="First Name *" name="billedTo_firstname">
-											<input type="text" placeholder="Last Name *" name="billedTo_lastname">
-											<input type="text" placeholder="Email*" name="billedTo_email">					
+											<input type="text" placeholder="First Name *" name="billedTo_firstname" value="{{old('billedTo_firstname')}}">
+											<input type="text" placeholder="Last Name *" name="billedTo_lastname" value="{{old('billedTo_lastname')}}">
+											<input type="text" placeholder="Email*" name="billedTo_email" value="{{old('billedTo_email')}}">					
 									</div>
 									<div class="form-two">														
-											<input type="text" placeholder="Address 1 *" name="billedTo_address_1"> 
-											<input type="text" placeholder="Address 2" name="billedTo_address_2">					
-											<input type="text" placeholder="city*" name="billedTo_city">
-											<input type="text" placeholder="state*" name="billedTo_state">
-											<input type="text" placeholder="country*" name="billedTo_country">
-											<input type="text" placeholder="zipcode*" name="billedTo_zipcode">
+											<input type="text" placeholder="Address 1 *" name="billedTo_address_1" value="{{old('billedTo_address_1')}}"> 
+											<input type="text" placeholder="Address 2" name="billedTo_address_2" value="{{old('billedTo_address_2')}}">					
+											<input type="text" placeholder="city*" name="billedTo_city" value="{{old('billedTo_city')}}">
+											<input type="text" placeholder="state*" name="billedTo_state" value="{{old('billedTo_state')}}">
+											<input type="text" placeholder="country*" name="billedTo_country" value="{{old('billedTo_country')}}">
+											<input type="text" placeholder="zipcode*" name="billedTo_zipcode" value="{{old('billedTo_zipcode')}}">
 									
 									</div>
 								</div>
 							</div>
 						</div>
 						<div class="row">
+							<label>Shipping to bill address: <input type="radio" class="isShippingAddressIsSame" value="yes" name="isShippingAddressIsSame"> Yes <input type="radio" class="isShippingAddressIsSame" value="no" name="isShippingAddressIsSame" checked>No </label>	
+						</div>
+						<div class="row">
 							<div class="col-sm-5">
 								<div class="order-message">
-									<div class="bill-to" id="shippingAddress">
+									<div class="bill-to shippingAddress">
 										<p>Shipped To</p>
 										<div class="form-one">									
-											<input type="text" placeholder="First Name *" name="shippedTo_firstname">
-											<input type="text" placeholder="Last Name *" name="shippedTo_lastname">								
+											<input type="text" placeholder="First Name *" name="shippedTo_firstname" value="{{old('shippedTo_firstname')}}">
+											<input type="text" placeholder="Last Name *" name="shippedTo_lastname" value="{{old('shippedTo_lastname')}}">								
 										</div>
 										<div class="form-two">									
-											<input type="text" placeholder="Address 1 *"  name="shippedTo_address_1">
-											<input type="text" placeholder="Address 2"  name="shippedTo_address_2">				
-											<input type="text" placeholder="city*" name="shippedTo_city">
-											<input type="text" placeholder="state*" name="shippedTo_state">
-											<input type="text" placeholder="country*" name="shippedTo_country">
-											<input type="text" placeholder="zipcode*" name="shippedTo_zipcode">			
+											<input type="text" placeholder="Address 1 *"  name="shippedTo_address_1" value="{{old('shippedTo_address_1')}}">
+											<input type="text" placeholder="Address 2"  name="shippedTo_address_2" value="{{old('shippedTo_address_2')}}">				
+											<input type="text" placeholder="city*" name="shippedTo_city" value="{{old('shippedTo_city')}}">
+											<input type="text" placeholder="state*" name="shippedTo_state" value="{{old('shippedTo_state')}}">
+											<input type="text" placeholder="country*" name="shippedTo_country" value="{{old('shippedTo_country')}}">
+											<input type="text" placeholder="zipcode*" name="shippedTo_zipcode" value="{{old('shippedTo_zipcode')}}">			
 										</div>
 									</div>				
 								</div>	
@@ -443,7 +435,7 @@
 								@if(isset($_COOKIE['checkOutData']))
 									<a class="btn btn-default update" href="/eshopers/removeCoupon">Remove Applied Coupon</a>
 								@endif
-								<input type="submit" class="btn btn-default check_out place_order" value="Place Order" />	
+								<button class="btn btn-default check_out place_order">Place Order</button>		
 							</div>
 						</div>				
 						<div class="payment-options">
@@ -455,7 +447,7 @@
 						</div>
 					</form>						
 				</div>
-				<div class="container-fluid" id="signIn" style="display: none">
+				<div class="container-fluid" id="signIn" style="display: none">		
 					<div class="row">
 						<div class="login-form col=md-offset-6 col-md-6"><!--login form-->
 							<h2>Login to your account</h2>
@@ -467,7 +459,7 @@
 									<input type="checkbox" class="checkbox"> 
 									Keep me signed in &nbsp&nbsp<a href="/eshopers/forgetpassword">Forget Password</a>
 								</span>
-								<input type="submit" class="btn btn-default update" value="Login"/>
+								<button type="submit" class="btn btn-default update"> Login</button>
 								<br/>
 								<div calss="row">
 									<div class="col-sm-3">

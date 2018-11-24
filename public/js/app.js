@@ -43315,10 +43315,10 @@ $(".cart_quantity_up").click(function(){
   var sum=0;
   var grandTotal=0;
   var shippingCharges=0;
-  if(quantity==3)
+  if(quantity==5)
   {
-    $(".quantityOfProduct"+product_id).val(3);
-    alert('maxinum 3 quantity allowed!!')
+    $(".quantityOfProduct"+product_id).val(5);
+    alert('maxinum  5 quantity allowed!!')
     return false;
   }
   else
@@ -43402,15 +43402,16 @@ $(".cart_quantity_down").click(function(){
 $(document).ready(function(){
   $("#signIn").css({"display":"none"});
   $("#guest").css({"display":"none"});
-  $("#newRegister").css({"display":"inline"});
-  // $(".nav li label input.checkOutOption").attr("form","newRegister"); 
+   $("#newRegister").css({"display":"inline"});
+  $(".nav li label input.checkOutOption").attr("form","newRegisterForm"); 
   $('input[type=radio][name=checkOutOption]').change(function(){
     if($(this).val()==="newRegister")
     {
       $("#signIn").css({"display":"none"});
       $("#newRegister").css({"display":"inline"});
       $("#guest").css({"display":"none"});
-      // $(".nav li label input.checkOutOption").attr("form","newRegister"); 
+     
+      $(".nav li label input.checkOutOption").attr("form","newRegisterForm"); 
       cartBill();
     }
     else if($(this).val()==="guest")
@@ -43418,7 +43419,8 @@ $(document).ready(function(){
       $("#signIn").css({"display":"none"});
       $("#newRegister").css({"display":"none"});
       $("#guest").css({"display":"inline"}); 
-      // $(".nav li label input.checkOutOption").attr("form","guest");     
+    
+      $(".nav li label input.checkOutOption").attr("form","guestForm");     
       cartBill(); 
     }
     else
@@ -43426,6 +43428,7 @@ $(document).ready(function(){
       $("#signIn").css({"display":"inline"});
       $("#newRegister").css({"display":"none"});
       $("#guest").css({"display":"none"});
+      $(".nav li label input.checkOutOption").attr("form","signInForm"); 
     }  
 
   });
@@ -43465,19 +43468,22 @@ $(document).ready(function(){
          $(".signIn li #paymentBy").text('payPal');
       }
     }
-});
-$('input[type=radio][name=isShippingAddressIsSame]').change(function(){
+  });
+  $('input[type=radio][name=isShippingAddressIsSame]').change(function(){
       if($(this).val()==="yes")
       {
 
-        $("#shippingAddress").css({"display":"none"});
+        $(".shippingAddress").css({"display":"none"});
       }
       else
       {
-        $("#shippingAddress").css({"display":"inline"});
+        $(".shippingAddress").css({"display":"inline"});
       }
     });
-$("input[type=radio][name=paymentMode]:first").attr("checked",true); 
+
+  $(".payment-options").each(function(){
+    $(this).find("span label input[type=radio][name=paymentMode]:first").attr("checked",true);
+    });
 });
 
 
@@ -43629,7 +43635,7 @@ function updateCartBill()
 
 $(document).ready(function(){
   $(".place_order").click(function(e){
-    e.preventDefault();   
+    e.preventDefault();       
     var token = $('meta').attr('content');
     var grandTotal=$("#finalAmmount").text();
     var shippingCharges=$("#shippingCharges").text();

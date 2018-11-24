@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Validator;
 use Mail;
 use App\Email_template;
 use Hash;
+
 class customerLoginController extends Controller
 {
      public function customerSignUp(Request $request)
@@ -36,6 +37,35 @@ class customerLoginController extends Controller
         $userObj->save();
         if($userObj)
         {
+            $subject="";
+            $content="";
+            $template=Email_template::where('title','=','userSignUpNotificationToUser')->get();
+            foreach($template as $email)
+            {
+                $subject=$email->subject;
+                $content=$email->content;
+            }
+            $content=str_replace("{email}",$request->email,$content);
+            $content=str_replace("{password}",$request->password,$content);
+            Mail::send([],[], function($message) use ($content,$subject,$request)
+            {
+                $message->to($request->email)->subject($subject)->setBody($content, 'text/html');
+            });
+            $template2=Email_template::where('title','=','userSignUpNotificationToAdmin')->get();
+            foreach($template2 as $email)
+            {
+                $subject=$email->subject;
+                $content=$email->content;
+            }
+            $content=str_replace("{email}",$request->email,$content);
+            $content=str_replace("{password}",$request->password,$content);
+
+            Mail::send([],[], function($message) use ($content,$subject,$request)
+            {
+                $message->to('eshopersnoreply@gmail.com')->subject($subject)->setBody($content, 'text/html');
+            });
+
+
             Auth::loginUsingId($userObj->id);
             if(isset($_COOKIE['cartItems']))
             {
@@ -52,10 +82,10 @@ class customerLoginController extends Controller
                     {
                        if(array_key_exists($key,$product_ids))
                         {
-                            if($product_ids[$key]+$productsInCartBeforeLogin[$key] > 3)
+                            if($product_ids[$key]+$productsInCartBeforeLogin[$key] > 5)
                             {
-                                $product_ids[$key]=3;
-                                Session::flash('alert-danger', 'Quanitiy limited to 3 per product'); //quanitiy limited to 3 per product
+                                $product_ids[$key]=5;
+                                //quanitiy limited to 5 per product
                             }
                             else
                             {
@@ -372,8 +402,9 @@ class customerLoginController extends Controller
                 $string.=substr($chars,rand(0,strlen($chars)),1);
             }            
             $password=bcrypt($string);
-            $user=User::where('email', '=', $request->email);
-            $user->password=$password;      
+            $user=User::where('email', '=', $request->email)->first();
+            $user->password=$password;
+            $user->save();    
             $content=str_replace("##username##",$request->email,$content);
             $content=str_replace("##password##",$string,$content);
 
