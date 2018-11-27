@@ -226,3 +226,10 @@ Route::post('/eshopers/checkIsCouponUsed', 'CouponsController@checkIsCouponUsed'
 Route::post('/eshopers/applyCoupon', 'CouponsController@applyCoupon');
 Route::post('/eshopers/updateCartBill','CouponsController@updateCartBill');
 Route::get('eshopers/removeCoupon','CouponsController@removeCoupon');
+
+//------------------------Order Management---------------------
+Route::resource('admin/orderManagement','OrderManagementController');
+Route::post("admin/changeOrderStatus/{order_id}","OrderManagementController@changeOrderStatus");
+
+//---------------------------CMS Controller-----------------------------------
+Route::resource('admin/cms','CmsController');

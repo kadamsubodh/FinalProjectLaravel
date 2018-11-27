@@ -13,7 +13,8 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        "App\Console\Commands\cronEmail"
+        "App\Console\Commands\cronEmail",
+        "App\Console\Commands\weeklyWishlistReport",
     ];
 
     /**
@@ -24,8 +25,8 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command('dailyOrdersReport:email')
-                 ->dailyAt('23:59:59');
+        $schedule->command('dailyOrdersReport:email')->dailyAt("10:00");
+        $schedule->command('weeklyWishlistReport:email');
     }
 
     /**

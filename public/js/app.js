@@ -43657,8 +43657,6 @@ $(document).ready(function(){
     $(this).closest('form').submit();
 
   });
-
-
 });
 
 $(document).ready(function(){
@@ -43695,5 +43693,3 @@ $(document).ready(function(){
   });
 });
 
-
- 

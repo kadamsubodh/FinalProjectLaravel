@@ -10,4 +10,9 @@ class User_order extends Model
     {
     	return $this->belongsTo("App\User");
     }
+
+    public function order_detail()
+    {
+    	return $this->hasMany("App\Order_detail",'order_id');
+    }
 }

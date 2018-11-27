@@ -10,8 +10,9 @@ class User_wish_list extends Model
    {
    	return $this->belongsTo('App\User');
    }
+   
    public function product()
    {
-   	return $this->hasMany('App\Product');
+   	return $this->belongsTo('App\Product');
    }
 }

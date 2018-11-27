@@ -12,7 +12,8 @@
         "laravel/tinker": "~1.0",
         "paypal/rest-api-sdk-php": "^1.13",
         "spatie/laravel-newsletter": "^4.2",
-        "spatie/laravel-permission": "^2.23"
+        "spatie/laravel-permission": "^2.23",
+        "unisharp/laravel-ckeditor": "^4.7"
     },
     "require-dev": {
         "appzcoder/crud-generator": "^3.0",

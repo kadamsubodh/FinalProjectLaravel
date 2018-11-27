@@ -55,7 +55,7 @@ class cronEmail extends Command
         foreach($todaysOrders as $todaysOrder)
         {
             
-                $userName=$todaysOrder->user['firstname']." ".$todaysOrder->user['lastname'];
+            $userName=$todaysOrder->user['firstname']." ".$todaysOrder->user['lastname'];
             
             if($todaysOrder->status=='p')
             {
@@ -80,10 +80,9 @@ class cronEmail extends Command
             $totalRevenue=$totalRevenue+$todaysOrder->grand_total;
 
         }
+
         $todaysOrderTableView="<table border='1' style='border-collapse:collapse;'><tr><th>Order ID</th><th>Customer Name</th><th>Customer Address</th><th>Ammount</th><th>Status</th></tr>".$todaysOrderDetails."</table>";
         $orderSummary="<table border='1' style='border-collapse:collapse;'><tr><th>Total Orders</th><th>Revenue</th></tr><tr><td>".$totalOrderCount."</td><td>$".$totalRevenue."</td></tr></table>";
-        echo $todaysOrderTableView."<br><br>";
-        echo $orderSummary;
         $template=Email_template::where('title','=','todaysAllOrder')->get();
         foreach($template as $email)
         {
@@ -91,13 +90,12 @@ class cronEmail extends Command
             $content=$email->content;
         }
         $content=str_replace("{todaysOrderDetails} ",$todaysOrderTableView,$content);
-        $content=str_replace("{todaysOrderSummary}",$orderSummary;,$content);
-        Mail::send([],[], function($message) use ($content,$subject,$request,$emailId)
-            {
-                $message->to('eshopersnoreply@gmail.com')->subject($subject)->setBody($content, 'text/html');
-            });
+        $content=str_replace("{todaysOrderSummary}",$orderSummary,$content);
+
+        Mail::send([],[], function($message) use ($content,$subject)
+        {
+            $message->to('eshopersnoreply@gmail.com')->subject($subject)->setBody($content, 'text/html');
+        });
         
-
-
     }
 }

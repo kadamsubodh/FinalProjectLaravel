@@ -1,4 +1,4 @@
-@@extends('admin.dashboard.index')
+@extends('admin.dashboard.index')
 @section('contentHeader')
     <h1>
         Mail Template
