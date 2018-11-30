@@ -13,11 +13,6 @@
     <input class="form-control" name="meta_title" type="text" id="meta_title" value="{{ $cm->meta_title or ''}}" >
     {!! $errors->first('meta_title', '<p class="help-block">:message</p>') !!}
 </div>
-<div class="form-group {{ $errors->has('meta_title') ? 'has-error' : ''}}">
-    <label for="meta_title" class="control-label">{{ 'Meta Title' }}</label>
-    <textarea class="form-control" rows="5" name="meta_title" type="textarea" id="meta_title" >{{ $cm->meta_title or ''}}</textarea>
-    {!! $errors->first('meta_title', '<p class="help-block">:message</p>') !!}
-</div>
 <div class="form-group {{ $errors->has('meta_description') ? 'has-error' : ''}}">
     <label for="meta_description" class="control-label">{{ 'Meta Description' }}</label>
     <textarea class="form-control" rows="5" name="meta_description" type="textarea" id="meta_description" >{{ $cm->meta_description or ''}}</textarea>
@@ -39,5 +34,6 @@
     <script src="/vendor/unisharp/laravel-ckeditor/adapters/jquery.js"></script>
     <script>
         $('#content').ckeditor();
+        $('#meta_description').ckeditor();
         // $('.textarea').ckeditor(); // if class is prefered.
     </script>

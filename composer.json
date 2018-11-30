@@ -13,7 +13,8 @@
         "paypal/rest-api-sdk-php": "^1.13",
         "spatie/laravel-newsletter": "^4.2",
         "spatie/laravel-permission": "^2.23",
-        "unisharp/laravel-ckeditor": "^4.7"
+        "unisharp/laravel-ckeditor": "^4.7",
+        "yajra/laravel-datatables-oracle": "^8.13"
     },
     "require-dev": {
         "appzcoder/crud-generator": "^3.0",

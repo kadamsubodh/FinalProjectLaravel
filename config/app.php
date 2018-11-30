@@ -179,6 +179,7 @@ return [
         App\Providers\RouteServiceProvider::class,
         Laravel\Socialite\SocialiteServiceProvider::class,
         Spatie\Newsletter\NewsletterServiceProvider::class,
+        Yajra\Datatables\DatatablesServiceProvider::class,
 
     ],
 
@@ -230,6 +231,7 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
         'Socialite' => Laravel\Socialite\Facades\Socialite::class,
         'Newsletter'=>Spatie\Newsletter\NewsletterFacade::class,
+        'Datatables' => 'Yajra\Datatables\Facades\Datatables',
 
     ],
 

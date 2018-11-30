@@ -35,7 +35,7 @@
                                     <tr>
                                         <th>ID</th><td>{{ $banner->id }}</td>
                                     </tr>
-                                    <tr><th> Banner Name </th><td> {{ $banner->banner_name }} </td></tr><tr><th> Banner Image </th><td> {{ $banner->banner_path }} </td></tr><tr><th> Status </th><td> {{ $banner->status }} </td></tr>
+                                    <tr><th> Banner Name </th><td> {{ $banner->banner_name }} </td></tr><tr><th> Banner Image </th><td> <img  src="{{ '/storage/uploads/'.$banner->banner_path }}"> </td></tr><tr><th> Status </th><td> {{ $banner->status }} </td></tr>
                                 </tbody>
                             </table>
                         </div>

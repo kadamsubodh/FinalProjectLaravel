@@ -284,9 +284,9 @@ class CartController extends Controller
             Session::flash('alert-danger', "Quantity is rerquired!!");
             return redirect()->back();
         }
-        else if($request->quantity==0 || $request->quantity>3)
+        else if($request->quantity==0 || $request->quantity>5)
         {
-            Session::flash('alert-danger', "Minimum 1 and maximum 3 quantity allowed to add in cart!!");
+            Session::flash('alert-danger', "Minimum 1 and maximum 5 quantity allowed to add in cart!!");
             return redirect()->back();
         }
         else

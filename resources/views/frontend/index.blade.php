@@ -23,7 +23,7 @@
 								<div class="choose">
 									<ul class="nav nav-pills nav-justified">
 										<li><a href="{{'/eshopers/addtowishlist/'.$products->id }}"><i class="fa fa-plus-square"></i>Add to wishlist</a></li>
-										<li><a href="#"><i class="fa fa-plus-square"></i>Add to compare</a></li>
+										<li><a href="{{'/eshopers/productDetails/'.$products->id}}"><i class="fa fa-plus-square"></i>View Details</a></li>
 									</ul>
 								</div>
 							</div>
@@ -46,7 +46,8 @@
 									<div class="product-image-wrapper">
 										<div class="single-products">
 											<div class="productinfo text-center">
-												<img src="{{'/storage/uploads/'.$tshirts->product_image['image_name']}}" alt="" />
+												<a href="{{'/eshopers/productDetails/'.$tshirts->id}}">
+												<img src="{{'/storage/uploads/'.$tshirts->product_image['image_name']}}" alt="" /></a>
 												<h2>${{$tshirts->special_price}}</h2>
 												<p>{{$tshirts->name}}</p>
 												<a href="{{'/eshopers/cart/'.$tshirts->id}}" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>

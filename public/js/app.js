@@ -43547,6 +43547,10 @@ $(document).ready(function(){
                       {
                         alert("Only one coupon is allowed per order");
                       }
+                      else if(result=="expired")
+                      {
+                        $("#couponText").text('This coupon is expired!');
+                      }
                       else if(result=="invalid")
                       {
                         $("#couponText").text('Invalid Coupon Code!');                        

@@ -32,11 +32,20 @@ use PayPal\Api\Amount;
 use PayPal\Api\Payer;
 use PayPal\Api\Item;
 use PayPal\Api\Cost;
-
-
+use Redirect;
 
 class CheckoutController extends Controller
 {
+    private $_api_context;
+    public function __construct()
+    {
+
+        /** setup PayPal api context **/
+        $paypal_conf = Config::get('paypal');
+        $this->_api_context = new ApiContext(new OAuthTokenCredential($paypal_conf['client_id'], $paypal_conf['secret']));
+        $this->_api_context->setConfig($paypal_conf['settings']);
+    }
+
   public function checkoutList(Request $request)
     {
         if(!Auth::user())
@@ -47,8 +56,8 @@ class CheckoutController extends Controller
                 $product_ids= json_decode($cookiedata,true);                     
                 if(count($product_ids)==0)
                 {
-                    Session::flash('alert-danger', "You don't have any product in your cart!!");
-                    return redirect()->back();
+                    echo "You don't have any product in your cart!!";
+                
                 }
                 else
                 {
@@ -198,7 +207,6 @@ class CheckoutController extends Controller
             $paymentMethod="payPal";
         }
 
-
         if(Auth::user())
         {
             $user_id=Auth::user()->id;
@@ -233,7 +241,7 @@ class CheckoutController extends Controller
                 }
                 $orderSummaryForEmail="<tr><td> subtotal</td><td>$".$subTotal."</td></tr><tr><td>ecoTax</td><td>$".$ecoTax."</td></tr><tr><td>Total</td><td>". $total."</td></tr><tr><td>Discount</td><td>".$percent_off."%</td></tr><tr><td>shipping Charges</td><td>$".$shippingCharges."</td><tr><td>Final ammount</td><td>$".$grandTotal."</td></tr>";
             }
-            else
+            else if(isset($_COOKIE['finalData']))
             {
                 $cookiedata=stripcslashes($_COOKIE['finalData']);
                 $checkOutData1= json_decode($cookiedata,true);
@@ -332,10 +340,10 @@ class CheckoutController extends Controller
                     $grandTotal=$Data1['grandTotalAfterCouponApply'];
                     $shippingCharges=$Data1['shippingCharges'];
                     $coupon_id=$Data1['coupon_id'];
-                    $percent_off=$checkOutData['percent_off'];
-                    $total=$checkOutData['subTotal']+$checkOutData['ecoTax'];
-                    $subTotal=$checkOutData['subTotal'];
-                    $ecoTax=$checkOutData['ecoTax'];                    
+                    $percent_off=$Data1['percent_off'];
+                    $total=$Data1['subTotal']+$Data1['ecoTax'];
+                    $subTotal=$Data1['subTotal'];
+                    $ecoTax=$Data1['ecoTax'];                    
                     if($shippingCharges=="Free")
                     {
                         $shipping_method="Free";
@@ -528,6 +536,123 @@ class CheckoutController extends Controller
         $userOrder->save();
         if($userOrder)
         {
+            $billingAddress="<b>".$billedTo_firstname. " " .$billedTo_lastname."<b><br>".$billedTo_address_1.",<br>".$billedTo_address_2.",<br>".
+            $billedTo_city.", ".$billedTo_state.",<br>".$billedTo_country.", ".$billedTo_zipcode;
+
+            $shippingAddress="<b>".$shippedTo_firstname. " " .$shippedTo_lastname."<b><br>".$shippedTo_address_1."<b>,<br>".$shippedTo_address_2.",<br>".
+            $shippedTo_city.", ".$shippedTo_state.",<br>".$shippedTo_country.", ".$shippedTo_zipcode;
+
+            $orderSummaryForEmailView="<table border='1' style='border-collapse: collapse; align:right'>".$orderSummaryForEmail."</table>";
+
+            Session::put('billingAddress',$billingAddress);
+            Session::put('shippingAddress',$shippingAddress);
+            Session::put('orderSummaryForEmailView',$orderSummaryForEmailView);
+            Session::put('payment_gateway_id', $payment_gatewayId);
+            Session::put('userOrderId',$userOrder->id);
+            Session::put('coupon_id',$coupon_id);
+            Session::put('user_id',$user_id);
+            Session::put('product_ids',$product_ids);
+            Session::put('emailId',$emailId);  
+            Session::put('paymentMethod', $paymentMethod);
+            if($payment_gatewayId=='2')
+            {
+                $currency="USD";
+                $total = 0;
+                $payer = new Payer();
+                $payer->setPaymentMethod('paypal');
+                $items=[];
+                foreach($product_ids as $key=>$value)
+                {
+                    foreach(Product::where('id','=',$key)->get() as $product)
+                    {
+                        $item = new Item();
+                        $item->setName($product->name)->setCurrency($currency)->setQuantity($value)->setPrice($product->special_price);
+                        $items[] = $item;
+                        $total += $value*$product->special_price;
+                    }
+
+                }
+                if($coupon_id!=1)
+                {
+                    $couponDiscount = new Cost();
+                    $couponDiscount->setPercent($percent_off);
+                }
+                else
+                {
+                    $couponDiscount = new Cost();
+                    $couponDiscount->setPercent(0);
+                }
+                $shippingAddress=[
+                    "recipient_name" =>$shippedTo_firstname. " " .$shippedTo_lastname,
+                    "line1" => $shippedTo_address_1,
+                    "line2" => $shippedTo_address_2,
+                    "city" => $shippedTo_city,
+                    "state" =>$shippedTo_state,
+                    "postal_code" => $shippedTo_zipcode,
+                    "country_code"=>'IN',
+                    "phone" => "1234567890",                   
+                    ];
+                $shoppedItems = new ItemList();
+                $shoppedItems->setItems($items);
+                $shoppedItems->setShippingAddress($shippingAddress);
+
+                $details = new Details();
+                $details->setTax($ecoTax);
+                $details->setShipping($shippingCharges);
+                $details->setSubtotal($cartSubTotal);
+                $details->setShippingDiscount($percent_off);
+
+                $amount = new Amount();
+                $amount->setCurrency($currency)->setTotal($grandTotal)->setDetails($details);
+
+
+                $transaction = new Transaction();
+                $transaction->setAmount($amount)->setItemList($shoppedItems)->setDescription("The payment transaction description.")->setCustom('Discount percentage='.$percent_off);
+
+                $redirect_urls = new RedirectUrls();
+                $redirect_urls->setReturnUrl(URL::route('status'))->setCancelUrl(URL::route('status'));
+
+                $payment = new Payment();
+                $payment->setIntent('Sale')->setPayer($payer)->setRedirectUrls($redirect_urls)->setTransactions(array($transaction));
+                 
+                            
+                try{
+                    $payment->create($this->_api_context);
+
+                }
+                catch (\PayPal\Exception\PPConnectionException $ex) 
+                {
+                    if (\Config::get('app.debug')) 
+                    {
+                         Session::flash('alert-danger','Connection timeout');
+                        return view('frontend.checkout');
+                    } 
+                    else
+                    {
+                        Session::flash('alert-danger','Some error occur, sorry for inconvenient');
+                        return view('frontend.checkout');
+                        /** die('Some error occur, sorry for inconvenient'); **/
+                    }
+                }
+
+                foreach($payment->getLinks() as $link)
+                {
+                    if($link->getRel() == 'approval_url')
+                    {
+                        $redirect_url = $link->getHref();
+                        break;
+                    }
+                }
+                /** add payment ID to session **/
+                Session::put('paypal_payment_id', $payment->getId());  
+                if(isset($redirect_url))
+                {
+                        /** redirect to paypal **/
+                        return Redirect::away($redirect_url);
+                }
+                Session::flash('alert_danger','Unknown error occurred');
+                return view('frontend.checkout'); 
+            }
             $cartDetails="";
             if($coupon_id!=1)
             {
@@ -536,6 +661,7 @@ class CheckoutController extends Controller
                 $coupon_used->order_id=$userOrder->id;
                 $coupon_used->coupon_id=$coupon_id;
                 $coupon_used->save();
+                DB::table('coupons')->where('id','=',$coupon_id)->decrement('no_of_uses',1);
             }
              $i=1;
             foreach($product_ids as $product_id => $quantity)
@@ -557,14 +683,7 @@ class CheckoutController extends Controller
 
             $orderDetailsView="<table border='1' style='border-collapse: collapse; width:80%; align:center'><tr><td>Sr.No.</td><td>Item</td><td>Price</td><td>Quantity</td><td>Total</td></tr>".$cartDetails."</table>";
 
-
-            $billingAddress="<b>".$billedTo_firstname. " " .$billedTo_lastname."<b><br>".$billedTo_address_1.",<br>".$billedTo_address_2.",<br>".
-            $billedTo_city.", ".$billedTo_state.",<br>".$billedTo_country.", ".$billedTo_zipcode;
-
-            $shippingAddress="<b>".$shippedTo_firstname. " " .$shippedTo_lastname."<b><br>".$shippedTo_address_1."<b>,<br>".$shippedTo_address_2.",<br>".
-            $shippedTo_city.", ".$shippedTo_state.",<br>".$shippedTo_country.", ".$shippedTo_zipcode;
-
-            $orderSummaryForEmailView="<table border='1' style='border-collapse: collapse; align:right'>".$orderSummaryForEmail."</table>"; 
+            
 
             //send email notification of order to customer
             $template=Email_template::where('title','=','orderDetails')->get();
@@ -596,6 +715,118 @@ class CheckoutController extends Controller
             }
             Session::flash('alert-success', "Order successfully placed!! Thank you.");
             return redirect("/eshopers/home"); 
+        }
+    }
+
+
+    public function getPaymentStatus(Request $request)
+    {
+        /** Get the payment ID before session clear **/
+        $payment_id = Session::get('paypal_payment_id');
+        /** clear the session payment ID **/
+        // Session::forget('paypal_payment_id');
+        if (empty(Input::get('PayerID')) || empty(Input::get('token'))) {
+            // echo 'hi';die;
+            Session::flash('alert-danger','Payment failed');
+
+            return redirect('/eshopers/checkout');
+        }
+        $payment = Payment::get($payment_id, $this->_api_context);
+
+        /** PaymentExecution object includes information necessary **/
+        /** to execute a PayPal account payment. **/
+        /** The payer_id is added to the request query parameters **/
+        /** when the user is redirected from paypal back to your site **/
+        $execution = new PaymentExecution();
+        $execution->setPayerId(Input::get('PayerID'));
+        /**Execute the payment **/         
+        $result = $payment->execute($execution, $this->_api_context);  
+        if ($result->getState() == 'approved') 
+        {
+            $userOrderId=Session::get('userOrderId');                     
+            $order=User_order::findOrFail($userOrderId);            
+            $order->transaction_id=$payment_id;
+            $order->status="o";     
+            $order->save();
+
+            $billingAddress=Session::get('billingAddress');
+            $shippingAddress=Session::get('shippingAddress');
+            $orderSummaryForEmailView=Session::get('orderSummaryForEmailView');
+            $payment_gatewayId=Session::get('payment_gateway_id');            
+            $coupon_id=Session::get('coupon_id');
+            $user_id=Session::get('user_id');
+            $product_ids=Session::get('product_ids');
+            $emailId=Session::get('emailId');
+            $paymentMethod=Session::get('paymentMethod');   
+
+            $cartDetails="";
+            if($coupon_id!=1)
+            {
+                $coupon_used= new Coupon_used();
+                $coupon_used->user_id=$user_id;
+                $coupon_used->order_id=$userOrderId;
+                $coupon_used->coupon_id=$coupon_id;
+                $coupon_used->save();
+                DB::table('coupons')->where('id','=',$coupon_id)->decrement('no_of_uses',1);
+            }
+             $i=1;
+            foreach($product_ids as $product_id => $quantity)
+            {                 
+                foreach(Product::where('id','=',$product_id)->get() as $product)
+                {
+                    $orderDetails= new Order_detail();
+                    $orderDetails->order_id=$userOrderId;
+                    $orderDetails->product_id=$product->id;
+                    $orderDetails->quantity=$quantity;
+                    $orderDetails->ammount=$quantity*$product->special_price;
+                    $orderDetails->save();
+
+                DB::table('products')->where('id',$product->id)->decrement('quantity',$quantity);
+
+                    $cartDetails.="<tr><td>".$i."</td><td>".$product->name."</td><td>".$product->special_price."</td><td>".$quantity."</td><td>".$quantity*$product->special_price."</td></tr>";
+                }
+                $i++;
+            }
+
+            $orderDetailsView="<table border='1' style='border-collapse: collapse; width:80%; align:center'><tr><td>Sr.No.</td><td>Item</td><td>Price</td><td>Quantity</td><td>Total</td></tr>".$cartDetails."</table>";
+
+            
+
+            //send email notification of order to customer
+            $template=Email_template::where('title','=','orderDetails')->get();
+            foreach($template as $email)
+            {
+                $subject=$email->subject;
+                $content=$email->content;
+            }
+            $content=str_replace("{id}",$userOrderId,$content);
+            $content=str_replace("{date}",date("Y-m-d H:i:s"),$content);
+            $content=str_replace("{orderDetails}",$orderDetailsView,$content);
+            $content=str_replace("{total}",$orderSummaryForEmailView,$content);
+            $content=str_replace("{billed_to}",$billingAddress,$content);
+            $content=str_replace("{shipped_to}",$shippingAddress,$content);
+            $content=str_replace("{paymentMethod}",$paymentMethod,$content);
+
+            Mail::send([],[], function($message) use ($content,$subject,$request,$emailId)
+            {
+                $message->to($emailId)->cc('eshopersnoreply@gmail.com')->subject($subject)->setBody($content, 'text/html');
+            });
+            setcookie('checkOutData',null,time()-3600);
+            if(Auth::user())
+            {
+                setcookie(Auth::user()->firstname.Auth::user()->id,null,time()-3600,'/');
+            }
+            else
+            {
+                setcookie("cartItems",null,time()-3600,'/');
+            }
+            Session::flash('alert-success', "Order successfully placed!! Thank you.");
+            return redirect("/eshopers/home"); 
+        }
+        else{
+            Session::put('Invoice_error','Payment failed');
+            return view('Frontend.checkout.paypal');
+
         }
     }
 }

@@ -7,4 +7,8 @@ class Coupon_used extends Model
     {
     	return $this->belongsTo("App\Coupon");
     }
+    public function user()
+    {
+    	return $this->belongsTo('App\User');
+    }
 }

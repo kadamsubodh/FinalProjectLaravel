@@ -37,7 +37,7 @@
                         <br/>
                         <br/>
                         <div class="table-responsive">
-                            <table class="table">
+                            <table class="table" id="configurationsTable">
                                 <thead>
                                     <tr>
                                         <th>#</th><th>Conf Key</th><th>Conf Value</th>

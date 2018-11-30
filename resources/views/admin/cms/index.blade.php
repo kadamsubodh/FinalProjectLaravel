@@ -41,14 +41,14 @@
                             <table class="table">
                                 <thead>
                                     <tr>
-                                        <th>#</th><th>Title</th><th>Content</th><th>Meta Title</th><th>Actions</th>
+                                        <th>#</th><th>Title</th><th>Meta Title</th><th>Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                 @foreach($cms as $item)
                                     <tr>
                                         <td>{{ $loop->iteration or $item->id }}</td>
-                                        <td>{{ $item->title }}</td><td>{{ $item->content }}</td><td>{{ $item->meta_title }}</td>
+                                        <td>{{ $item->title }}</td><td>{{ $item->meta_title }}</td>
                                         <td>
                                             <a href="{{ url('/admin/cms/' . $item->id) }}" title="View cm"><button class="btn btn-info btn-sm"><i class="fa fa-eye" aria-hidden="true"></i> View</button></a>
                                             <a href="{{ url('/admin/cms/' . $item->id . '/edit') }}" title="Edit cm"><button class="btn btn-primary btn-sm"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit</button></a>

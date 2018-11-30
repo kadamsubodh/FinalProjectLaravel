@@ -43,6 +43,9 @@ Route::post('/eshopers/cart/{product_id}','front\CartController@addToCartFromWis
 Route::post("/eshopers/placeOrder",'front\CheckoutController@placeOrder');
 Route::get('/eshopers/checkout','front\CheckoutController@checkoutList');
 Route::post("/eshopers/setFinalCheckOutData",'front\CheckoutController@setCookieForFinalCheckOutData');
+Route::get("/eshopers/getPaymentStatus",'front\CheckoutController@getPaymentStatus')->name('status');
+
+
 //--------------------my orders------
 Route::get("eshopers/myOrders", function(){
     return view('frontend.myOrders');
@@ -233,3 +236,7 @@ Route::post("admin/changeOrderStatus/{order_id}","OrderManagementController@chan
 
 //---------------------------CMS Controller-----------------------------------
 Route::resource('admin/cms','CmsController');
+Route::get("admin/about/{cms}","CmsController@cms");
+
+//--------------------------Reports-----------------------------------
+Route::get('admin/reports/{typeOfReport}','ReportController@getReport');

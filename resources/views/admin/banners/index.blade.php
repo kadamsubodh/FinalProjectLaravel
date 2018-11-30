@@ -45,7 +45,7 @@
                                 @foreach($banners as $item)
                                     <tr>
                                         <td>{{ $loop->iteration or $item->id }}</td>
-                                        <td>{{ $item->banner_name }}</td><td>{{ $item->banner_path}}</td><td>{{ (isset($item) && (1 == $item->status))?'Enable':'Disable' }}</td>
+                                        <td>{{ $item->banner_name }}</td><td><img class="imageSize" src="{{'/storage/uploads/'.$item->banner_path}}"></td><td>{{ (isset($item) && (1 == $item->status))?'Enable':'Disable' }}</td>
                                         <td>
                                             <a href="{{ url('/admin/banners/' . $item->id) }}" title="View banner"><button class="btn btn-info btn-sm"><i class="fa fa-eye" aria-hidden="true"></i> View</button></a>
                                             <a href="{{ url('/admin/banners/' . $item->id . '/edit') }}" title="Edit banner"><button class="btn btn-primary btn-sm"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit</button></a>

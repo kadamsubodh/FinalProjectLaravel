@@ -4,8 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
-
+use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Session;
 use App\Cms;
+use Auth;
 use Illuminate\Http\Request;
 
 class CmsController extends Controller
@@ -48,12 +51,29 @@ class CmsController extends Controller
      */
     public function store(Request $request)
     {
-        
-        $requestData = $request->all();
-        
-        Cms::create($requestData);
+        $validate=$request->validate([
+            "title"=>"required",
+            "content"=>"required",
+            "meta_title"=>"required",
+            "meta_description"=>"required",
+            "meta_keywords"=>"required",
+        ]);
 
-        return redirect('admin/cms')->with('flash_message', 'Cms added!');
+        $cms=new Cms();
+        $cms->title=$request->title;
+        $cms->content=$request->content;
+        $cms->meta_title=$request->meta_title;
+        $cms->meta_description=$request->meta_description;
+        $cms->meta_keywords=$request->meta_keywords;
+        $cms->created_by=Auth::user()->id;
+        $cms->modify_by=Auth::user()->id;
+        $cms->save();
+        if($cms)
+        {
+            Session::flash('alert-success', "page created successfully!!");
+            return redirect('/admin/cms');
+        }       
+       
     }
 
     /**
@@ -97,10 +117,28 @@ class CmsController extends Controller
         
         $requestData = $request->all();
         
-        $cm = Cms::findOrFail($id);
-        $cm->update($requestData);
+        $validate=$request->validate([
+            "title"=>"required",
+            "content"=>"required",
+            "meta_title"=>"required",
+            "meta_description"=>"required",
+            "meta_keywords"=>"required",
+        ]);
 
-        return redirect('admin/cms')->with('flash_message', 'Cms updated!');
+        $cms=Cms::findOrFail($id);
+        $cms->title=$request->title;
+        $cms->content=$request->content;
+        $cms->meta_title=$request->meta_title;
+        $cms->meta_description=$request->meta_description;
+        $cms->meta_keywords=$request->meta_keywords;
+        $cms->created_by=Auth::user()->id;
+        $cms->modify_by=Auth::user()->id;
+        $cms->save();
+        if($cms)
+        {
+            Session::flash('alert-success', "page updated successfully!!");
+            return redirect('/admin/cms');
+        }       
     }
 
     /**
@@ -115,5 +153,11 @@ class CmsController extends Controller
         Cms::destroy($id);
 
         return redirect('admin/cms')->with('flash_message', 'Cms deleted!');
+    }
+    public function cms(Request $request)
+    {
+        $cms=Route::current()->parameter('cms');
+        $cms=Cms::where('title','=',$cms)->get();
+        return view('frontend.aboutEshopers',compact('cms'));
     }
 }

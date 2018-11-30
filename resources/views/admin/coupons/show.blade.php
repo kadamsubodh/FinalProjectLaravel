@@ -7,7 +7,7 @@
     <ol class="breadcrumb">
         <li><a href="/index"><i class="fa fa-dashboard"></i> Home</a></li>
         <li><a href="/admin/coupons"><i class="fa fa-dashboard"></i>Coupons</a></li>
-        <li class="active">Update {{ $category->id }}</li>
+        <li class="active">Update {{ $coupon->id }}</li>
     </ol>
 @endsection
 @section('content')
@@ -35,7 +35,7 @@
                                     <tr>
                                         <th>ID</th><td>{{ $coupon->id }}</td>
                                     </tr>
-                                    <tr><th> Code </th><td> {{ $coupon->code }} </td></tr><tr><th> Percent Off </th><td> {{ $coupon->percent_off }} </td></tr><tr><th> Number Of Uses </th><td> {{ $coupon->number_of_uses }} </td></tr>
+                                    <tr><th> Code </th><td> {{ $coupon->code }} </td></tr><tr><th> Percent Off </th><td> {{ $coupon->percent_off }} </td></tr><tr><th> Number Of Uses </th><td> {{ $coupon->no_of_uses }} </td></tr>
                                 </tbody>
                             </table>
                         </div>

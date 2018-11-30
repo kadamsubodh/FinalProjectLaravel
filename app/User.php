@@ -25,5 +25,9 @@ class User extends Model implements Authenticatable
    {
     return $this->hasMany("App\User_order");
    }
+   public function coupon_used()
+   {
+    return $this->hasMany("App\Coupon_used");
+   }
 
 }

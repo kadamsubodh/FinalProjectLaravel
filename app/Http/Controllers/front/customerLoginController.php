@@ -303,14 +303,13 @@ class customerLoginController extends Controller
         ]);
         if(Auth::attempt(['email'=>$request->email,'password'=>$request->password]))
         {
-            if(Auth::user()->role_id==5)
+            if(Auth::user()->role_id==5 && Auth::user()->status=='1')
             {
                 if(isset($_COOKIE['cartItems']))
                 {
                     $cookieDataBeforeLogin=stripcslashes($_COOKIE['cartItems']);
                         $productsInCartBeforeLogin=json_decode($cookieDataBeforeLogin,true);
-                    $user=Auth::user()->firstname.Auth::user()->id;
-                        // $product_id=Route::current()->parameter('product_id');
+                    $user=Auth::user()->firstname.Auth::user()->id;                       
                     if(isset($_COOKIE[$user]))
                     {                        
                         $cookiedata=stripcslashes($_COOKIE[$user]);
@@ -320,10 +319,10 @@ class customerLoginController extends Controller
                         {
                            if(array_key_exists($key,$product_ids))
                             {
-                                if($product_ids[$key]+$productsInCartBeforeLogin[$key] > 3)
+                                if($product_ids[$key]+$productsInCartBeforeLogin[$key] > 5)
                                 {
-                                    $product_ids[$key]=3;
-                                    Session::flash('alert-danger', 'Quanitiy limited to 3 per product'); //quanitiy limited to 3 per product
+                                    $product_ids[$key]=5;
+                                    Session::flash('alert-danger', 'Quanitiy limited to 5 per product');
                                 }
                                 else
                                 {
@@ -353,7 +352,7 @@ class customerLoginController extends Controller
                         {
                             $product_ids[$key]=$value;                          
                         }
-                        setcookie($user, json_encode($product_ids,true),time()+60*60*24*365,'/');
+                    setcookie($user, json_encode($product_ids,true),time()+60*60*24*365,'/');
                         setcookie('cartItems',null,time()-3600,'/');
                         return redirect('/eshopers/home');                                
                     }
@@ -362,7 +361,9 @@ class customerLoginController extends Controller
                 {
                     return redirect('/eshopers/home');
                 }
-            }            
+            }
+            Session::flash('alert-danger', 'Access denied for this user!');
+            return redirect('/eshopers/login');
         }
         else
         {
