@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Validator;
 use Mail;
 use App\Email_template;
 use Hash;
+use DB;
 
 class customerLoginController extends Controller
 {
@@ -37,6 +38,12 @@ class customerLoginController extends Controller
         $userObj->save();
         if($userObj)
         {
+            DB::insert('insert into model_has_roles(role_id,model_type,model_id) values(?,?,?)',[$userObj->role_id,'App\User',$user_id] );
+            $permissions=DB::table('role_has_permissions')->where('role_id','=',5)->get();
+            foreach($permissions as $permission)
+            {
+                DB::insert('insert into model_has_permissions(permission_id,model_type,model_id) values(?,?,?)',[$permission->permission_id,'App\User',$userObj->id]);
+            }
             $subject="";
             $content="";
             $template=Email_template::where('title','=','userSignUpNotificationToUser')->get();
@@ -238,6 +245,12 @@ class customerLoginController extends Controller
             $userObj->save();
             if($userObj)
             {
+                DB::insert('insert into model_has_roles(role_id,model_type,model_id) values(?,?,?)',[$userObj->role_id,'App\User',$userObj->id] );
+                $permissions=DB::table('role_has_permissions')->where('role_id','=',5)->get();
+                foreach($permissions as $permission)
+                {
+                  DB::insert('insert into model_has_permissions(permission_id,model_type,model_id) values(?,?,?)',[$permission->permission_id,'App\User',$userObj->id]);
+                }
                 Auth::loginUsingId($userObj->id);
                 if(isset($_COOKIE['cartItems']))
                 {

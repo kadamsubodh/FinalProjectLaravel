@@ -13,6 +13,7 @@ class CartController extends Controller
 {
     public function addToCart(Request $request)
     {
+        $product_ids=[];
         if(!Auth::user())
         {
             if(isset($_COOKIE['cartItems']))
@@ -22,8 +23,21 @@ class CartController extends Controller
                 $id=Route::current()->parameter('product_id');
                 if(array_key_exists($id,$product_ids))
                 {
-                     Session::flash('alert-danger', 'This product already exists in your cart!!');
-                     return redirect()->back();
+                     if($product_ids[$id]>=5)
+                     {
+                        $product_ids[$id]=5;
+                        setcookie('cartItems',json_encode($product_ids,true),time()+60*60*24*365,'/');
+                       Session::flash('alert-danger', 'You have maximum number of quantity of this product in your cart!!'); 
+                       return redirect()->back(); 
+
+                     }
+                     else
+                     {
+                        $product_ids[$id]=$product_ids[$id]+1;
+                        setcookie('cartItems',json_encode($product_ids,true),time()+60*60*24*365,'/');
+                        Session::flash('alert-success', 'Quantity incremented by 1!!');
+                        return redirect()->back(); 
+                     }
                 }
                 else
                 {
@@ -55,8 +69,21 @@ class CartController extends Controller
         		$id=Route::current()->parameter('product_id');
         		if(array_key_exists($id,$product_ids))
         		{
-        			 Session::flash('alert-danger', 'This product already exists in your cart!!');
-        			 return redirect()->back();
+        			if($product_ids[$id]>=5)
+                     {
+                        $product_ids[$id]=5;
+                        setcookie($user,json_encode($product_ids,true),time()+60*60*24*365,'/');
+                       Session::flash('alert-danger', 'You have maximum number of quantity of this product in your cart!!');  
+                       return redirect()->back();
+
+                     }
+                     else
+                     {
+                        $product_ids[$id]=$product_ids[$id]+1;
+                        setcookie($user,json_encode($product_ids,true),time()+60*60*24*365,'/');
+                        Session::flash('alert-success', 'Quantity incremented by 1!!'); 
+                        return redirect()->back();
+                     }
         		}
         		else
         		{
@@ -278,6 +305,7 @@ class CartController extends Controller
 
     public function addToCartFromWishList(Request $request)
     {
+        $product_ids=[];
         $quantity=0;
         if($request->quantity==null)
         {
@@ -288,6 +316,11 @@ class CartController extends Controller
         {
             Session::flash('alert-danger', "Minimum 1 and maximum 5 quantity allowed to add in cart!!");
             return redirect()->back();
+        }
+        else if(!filter_var($request->quantity, FILTER_VALIDATE_INT)){
+            Session::flash('alert-danger', "Quantity must be Integer!!");
+            return redirect()->back();
+
         }
         else
         {
@@ -302,8 +335,21 @@ class CartController extends Controller
                 $id=Route::current()->parameter('product_id');
                 if(array_key_exists($id,$product_ids))
                 {
-                     Session::flash('alert-danger', 'This product already exists in your cart!!');
-                     return redirect()->back();
+                     if($product_ids[$id]>=5)
+                     {
+                        $product_ids[$id]=5;
+                        setcookie('cartItems',json_encode($product_ids,true),time()+60*60*24*365,'/');
+                       Session::flash('alert-danger', 'You have maximum number of quantity of this product in your cart!!');  
+                       return redirect()->back();
+
+                     }
+                     else
+                     {
+                        $product_ids[$id]=$product_ids[$id]+1;
+                        setcookie('cartItems',json_encode($product_ids,true),time()+60*60*24*365,'/');
+                        Session::flash('alert-success', 'Quantity incremented by 1!!'); 
+                        return redirect()->back();
+                     }
                 }
                 else
                 {
@@ -333,8 +379,21 @@ class CartController extends Controller
                 $id=Route::current()->parameter('product_id');
                 if(array_key_exists($id,$product_ids))
                 {
-                     Session::flash('alert-danger', 'This product already exists in your cart!!');
-                     return redirect()->back();
+                     if($product_ids[$id]>=5)
+                     {
+                        $product_ids[$id]=5;
+                       Session::flash('alert-danger', 'You have maximum number of quantity of this product in your cart!!'); 
+                       setcookie($user,json_encode($product_ids,true),time()+60*60*24*365,'/'); 
+                       return redirect()->back();
+
+                     }
+                     else
+                     {
+                        $product_ids[$id]=$product_ids[$id]+1;
+                        setcookie($user,json_encode($product_ids,true),time()+60*60*24*365,'/');
+                        Session::flash('alert-success', 'Quantity incremented by 1!!'); 
+                        return redirect()->back();
+                     }
                 }
                 else
                 {

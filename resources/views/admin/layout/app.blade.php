@@ -82,27 +82,13 @@
       <!-- /.search form -->
       <!-- sidebar menu: : style can be found in sidebar.less -->
       <ul class="sidebar-menu" data-widget="tree">
-        <li class="header">MAIN NAVIGATION</li>
-        <li class="{{str_contains(Request::path(),'index') ? 'active' : ''}} treeview">
-          <a href="#">
-            <i class="fa fa-dashboard"></i> <span>Dashboard </span>
-            <span class="pull-right-container">
-              <i class="fa fa-angle-left pull-right"></i>
-            </span>
-          </a>
-          <ul class="treeview-menu">
-            <li class="active"><a href="{{'/index'}}"><i class="fa fa-circle-o"></i> Dashboard v1</a></li>
-            <li><a href="{{'/index2'}}"><i class="fa fa-circle-o"></i> Dashboard v2</a></li>
-          </ul>
-        </li>
+        <li class="header">MAIN NAVIGATION</li>        
        @hasrole('superadmin')
          <li class="{{str_contains(Request::path(),'admin/users') ? 'active' : ''}} treeview">
           <a href="#">
             <i class="fa fa-files-o"></i>
             <span>User Management</span>
-            <span class="pull-right-container">
-              <span class="label label-primary pull-right">2</span>
-            </span>
+            
           </a>
           <ul class="treeview-menu">
             <li><a href="/admin/users "><i class="fa fa-circle-o"></i>User List</a></li>
@@ -114,9 +100,7 @@
           <a href="#">
             <i class="fa fa-files-o"></i>
             <span>Configuration</span>
-            <span class="pull-right-container">
-              <span class="label label-primary pull-right">2</span>
-            </span>
+            
           </a>
           <ul class="treeview-menu">
             <li><a href="/admin/configurations "><i class="fa fa-circle-o"></i>Configuration List</a></li>
@@ -128,9 +112,7 @@
           <a href="#">
             <i class="fa fa-files-o"></i>
             <span>Banners</span>
-            <span class="pull-right-container">
-              <span class="label label-primary pull-right">2</span>
-            </span>
+            
           </a>
           <ul class="treeview-menu">
             <li><a href="/admin/banners "><i class="fa fa-circle-o"></i>Banners List</a></li>
@@ -143,9 +125,7 @@
           <a href="#">
             <i class="fa fa-files-o"></i>
             <span>Categories</span>
-            <span class="pull-right-container">
-              <span class="label label-primary pull-right">2</span>
-            </span>
+            
           </a>
           <ul class="treeview-menu">
             <li><a href="/admin/categories "><i class="fa fa-circle-o"></i>Category List</a></li>
@@ -156,9 +136,7 @@
           <a href="#">
             <i class="fa fa-files-o"></i>
             <span>Coupons</span>
-            <span class="pull-right-container">
-              <span class="label label-primary pull-right">2</span>
-            </span>
+            
           </a>
           <ul class="treeview-menu">
             <li><a href="/admin/coupons "><i class="fa fa-circle-o"></i>Coupons List</a></li>
@@ -169,9 +147,7 @@
           <a href="#">
             <i class="fa fa-files-o"></i>
             <span>Mail Templates</span>
-            <span class="pull-right-container">
-              <span class="label label-primary pull-right">2</span>
-            </span>
+            
           </a>
           <ul class="treeview-menu">
             <li><a href="/admin/mailTemplate "><i class="fa fa-circle-o"></i>Mail Template List</a></li>
@@ -182,9 +158,7 @@
           <a href="#">
             <i class="fa fa-files-o"></i>
             <span>Recieved Queries</span>
-            <span class="pull-right-container">
-              <span class="label label-primary pull-right">1</span>
-            </span>
+            
           </a>
           <ul class="treeview-menu">
             <li><a href="/admin/contactUs "><i class="fa fa-circle-o"></i>Query List</a></li>           
@@ -194,9 +168,7 @@
           <a href="#">
             <i class="fa fa-files-o"></i>
             <span>Order Management</span>
-            <span class="pull-right-container">
-              <span class="label label-primary pull-right">1</span>
-            </span>
+            
           </a>
           <ul class="treeview-menu">
             <li><a href="/admin/orderManagement "><i class="fa fa-circle-o"></i>View Orders</a></li>           
@@ -207,9 +179,7 @@
           <a href="#">
             <i class="fa fa-files-o"></i>
             <span>Products Attributes</span>
-            <span class="pull-right-container">
-              <span class="label label-primary pull-right">2</span>
-            </span>
+            
           </a>
           <ul class="treeview-menu">
             <li><a href="/admin/productsattributes "><i class="fa fa-circle-o"></i>Product Attributes List</a></li>
@@ -220,9 +190,7 @@
           <a href="#">
             <i class="fa fa-files-o"></i>
             <span>Products</span>
-            <span class="pull-right-container">
-              <span class="label label-primary pull-right">2</span>
-            </span>
+            
           </a>
           <ul class="treeview-menu">
             <li><a href="/admin/products "><i class="fa fa-circle-o"></i>Product List</a></li>
@@ -235,9 +203,7 @@
           <a href="#">
             <i class="fa fa-files-o"></i>
             <span>CMS</span>
-            <span class="pull-right-container">
-              <span class="label label-primary pull-right">2</span>
-            </span>
+            
           </a>
           <ul class="treeview-menu">
             <li><a href="/admin/cms "><i class="fa fa-circle-o"></i>CMS List</a></li>
@@ -249,9 +215,7 @@
           <a href="#">
             <i class="fa fa-files-o"></i>
             <span>Reports</span>
-            <span class="pull-right-container">
-              <span class="label label-primary pull-right">3</span>
-            </span>
+            
           </a>
           <ul class="treeview-menu">
             <li><a href="/admin/reports/salesReport "><i class="fa fa-circle-o"></i>Sales Reports</a></li>
@@ -321,7 +285,7 @@
   <!-- AdminLTE for demo purposes -->
   <script src="{{asset('dist/js/demo.js')}}"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
-  
+  <script src="{{asset('/js/app.js')}}"></script>
 
 @show
 </body>

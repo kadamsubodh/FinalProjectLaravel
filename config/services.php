@@ -36,8 +36,8 @@ return [
     ],
 
     'facebook' => [
-        'client_id' => '998151693725713',
-        'client_secret' => 'f7f748a82fa67023d71044dcc0734433',
+        'client_id' => '2106466276059478',
+        'client_secret' => '98d6074587e4ae5c7884c23ef8ad5a3a',
         'redirect' => 'http://localhost:8000/auth/social/callback/facebook',
     ],
 

@@ -167,13 +167,13 @@ class CouponsController extends Controller
                 {
                     $coupon_id=$code->id;
                 }
-                if(Coupon_used::where('coupon_id','=',$coupon_id)->where('user_id','=',Auth::user()->id)->get() !==null)
+                if(Coupon_used::where('coupon_id','=',$coupon_id)->where('user_id','=',Auth::user()->id)->count()>0)
                 {
-                    echo $coupon_id;
+                    echo "used";
                 }
                 else
                 {
-                    echo "null";
+                    echo $coupon_id;
                 }
             }
             else
@@ -198,14 +198,10 @@ class CouponsController extends Controller
                 if($no_of_use=='0')
                 {
                     echo "expired";
-                }
-                else if(!Auth::user())
+                }               
+                else if(Coupon_used::where('coupon_id','=',$coupon_id)->where('user_id','=',Auth::user()->id)->count() > 0)
                 {
-                    echo $coupon_id;
-                }
-                else if(Coupon_used::where('coupon_id','=',$coupon_id)->where('user_id','=',Auth::user()->id)->get() !==null)
-                {
-                    echo "null";
+                    echo "used";
                 }
                 else
                 {

@@ -20,7 +20,7 @@
                         <a href="{{ url('/admin/productsattributes/create') }}" class="btn btn-success btn-sm" title="Add New productsattribute">
                             <i class="fa fa-plus" aria-hidden="true"></i> Add New
                         </a>
-
+<!-- 
                         <form method="GET" action="{{ url('/admin/productsattributes') }}" accept-charset="UTF-8" class="form-inline my-2 my-lg-0 float-right" role="search">
                             <div class="input-group">
                                 <input type="text" class="form-control" name="search" placeholder="Search..." value="{{ request('search') }}">
@@ -30,11 +30,11 @@
                                     </button>
                                 </span>
                             </div>
-                        </form>
+                        </form> -->
 
                         <br/>
                         <br/>
-                        <div class="table-responsive">
+                        <div class="table-responsive" id="listTable">
                             <table class="table">
                                 <thead>
                                     <tr>

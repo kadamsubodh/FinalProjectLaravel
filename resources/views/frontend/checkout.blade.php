@@ -456,8 +456,7 @@
 								<input type="email" placeholder="Email" name='email'/>
 								<input type="password" placeholder="Password" name='password'/>
 								<span>
-									<input type="checkbox" class="checkbox"> 
-									Keep me signed in &nbsp&nbsp<a href="/eshopers/forgetpassword">Forget Password</a>
+									<a href="/eshopers/forgetpassword">Forget Password</a>
 								</span>
 								<button type="submit" class="btn btn-default update"> Login</button>
 								<br/>

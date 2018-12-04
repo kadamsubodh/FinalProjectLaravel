@@ -22,7 +22,7 @@
                             <i class="fa fa-plus" aria-hidden="true"></i> Add New
                         </a>
 
-                        <form method="GET" action="{{ url('/admin/coupons') }}" accept-charset="UTF-8" class="form-inline my-2 my-lg-0 float-right" role="search">
+                       <!--  <form method="GET" action="{{ url('/admin/coupons') }}" accept-charset="UTF-8" class="form-inline my-2 my-lg-0 float-right" role="search">
                             <div class="input-group">
                                 <input type="text" class="form-control" name="search" placeholder="Search..." value="{{ request('search') }}">
                                 <span class="input-group-append">
@@ -31,12 +31,12 @@
                                     </button>
                                 </span>
                             </div>
-                        </form>
+                        </form> -->
 
                         <br/>
                         <br/>
                         <div class="table-responsive">
-                            <table class="table">
+                            <table class="table" id="listTable">
                                 <thead>
                                     <tr>
                                         <th>#</th><th>Code</th><th>Percent Off</th><th>Number Of Uses</th><th>Actions</th>

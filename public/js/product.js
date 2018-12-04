@@ -66,8 +66,7 @@ function getCode()
 			url: "/getCouponCode",
 			success:function(response){
 				var result=response;
-				
-					
+				$('#code').val(result);
 					}
 	});
 };

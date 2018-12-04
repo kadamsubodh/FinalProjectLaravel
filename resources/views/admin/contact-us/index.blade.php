@@ -37,7 +37,7 @@
                         <br/>
                         <br/>
                         <div class="table-responsive">
-                            <table class="table">
+                            <table class="table" id="listTable">
                                 <thead>
                                     <tr>
                                         <th>#</th><th>Name</th><th>Email</th><th>Contact No</th><th>message</th><th>My Comment</th><th>Actions</th>

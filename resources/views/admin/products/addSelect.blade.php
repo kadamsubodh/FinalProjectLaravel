@@ -18,6 +18,5 @@ $AttributeValue="Attribute_value[]";
 <div class="col-md-1">
 </div>
 <div class="col-md-1">
-	<input type="button" class="btn btn-danger btn-sm" id="remove" value="remove" onclick="deleteSelect.call(this,event)"/>
+	<input type="button" class="btn btn-danger btn-sm" id="remove" value="remove" onclick="deleteAttributeValue.call(this,event)"/>
 </div>
-

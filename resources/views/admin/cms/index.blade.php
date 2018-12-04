@@ -23,8 +23,7 @@
                         <a href="{{ url('/admin/cms/create') }}" class="btn btn-success btn-sm" title="Add New cm">
                             <i class="fa fa-plus" aria-hidden="true"></i> Add New
                         </a>
-
-                        <form method="GET" action="{{ url('/admin/cms') }}" accept-charset="UTF-8" class="form-inline my-2 my-lg-0 float-right" role="search">
+                        <!-- <form method="GET" action="{{ url('/admin/cms') }}" accept-charset="UTF-8" class="form-inline my-2 my-lg-0 float-right" role="search">
                             <div class="input-group">
                                 <input type="text" class="form-control" name="search" placeholder="Search..." value="{{ request('search') }}">
                                 <span class="input-group-append">
@@ -34,11 +33,11 @@
                                 </span>
                             </div>
                         </form>
-
+ -->
                         <br/>
                         <br/>
                         <div class="table-responsive">
-                            <table class="table">
+                            <table class="table" id="listTable">
                                 <thead>
                                     <tr>
                                         <th>#</th><th>Title</th><th>Meta Title</th><th>Actions</th>

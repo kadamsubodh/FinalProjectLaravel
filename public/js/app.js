@@ -43536,6 +43536,11 @@ function cartBill(){
 $(document).ready(function(){
       $("#applyCoupon").click(function(){
         var code=$("#couponCode").val();
+        if(code.length >8)
+        {
+          alert("invalid coupon code");
+          return false;
+        }
         var token = $('meta').attr('content');
         $.ajax({
           type:"POST",
@@ -43555,14 +43560,15 @@ $(document).ready(function(){
                       {
                         $("#couponText").text('Invalid Coupon Code!');                        
                       }
-                      else if(result!=="used")
+                      else if(result=="used")
                       { 
-                        $("#couponText").text('');
-                        applyCoupon(response); 
+                        $("#couponText").text('You already used this coupon!');
+                       
                       }
                       else
                       {
-                         $("#couponText").text('You already used this coupon!');
+                          $("#couponText").text('');
+                        applyCoupon(response); 
                       }
                   }
         });

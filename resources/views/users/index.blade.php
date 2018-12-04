@@ -62,7 +62,7 @@
                       <a href="{{ url('/admin/users/create') }}" class="btn btn-success btn-sm" title="Add New User">
                           <i class="fa fa-plus" aria-hidden="true"></i> Add New
                       </a>
-                      <form method="GET" action="{{ url('/admin/users') }}" accept-charset="UTF-8" class="form-inline my-2 my-lg-0 float-right" role="search">
+                      <!-- <form method="GET" action="{{ url('/admin/users') }}" accept-charset="UTF-8" class="form-inline my-2 my-lg-0 float-right" role="search">
                           <div class="input-group">
                               <input type="text" class="form-control" name="search" placeholder="Search..." value="{{ request('search') }}">
                               <span class="input-group-append">
@@ -71,7 +71,7 @@
                                   </button>
                                 </span>
                             </div>
-                        </form>
+                        </form> -->
                         <br/>
                         <br/>
                         <div class="table-responsive">
@@ -129,8 +129,8 @@
 <script src="{{asset('bower_components/bootstrap/dist/js/bootstrap.min.js')}}"></script>
 <!-- Morris.js charts -->
 <script src="{{asset('bower_components/raphael/raphael.min.js')}}"></script>
-<script src="{{asset('bower_components/morris.js/morris.min.js')}}"></script>
-<!-- Sparkline -->
+<!-- <script src="{{asset('bower_components/morris.js/morris.min.js')}}"></script>
+ --><!-- Sparkline -->
 <script src="{{asset('bower_components/jquery-sparkline/dist/jquery.sparkline.min.js')}}"></script>
 <!-- jvectormap -->
 <script src="{{asset('plugins/jvectormap/jquery-jvectormap-1.2.2.min.js')}}"></script>

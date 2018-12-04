@@ -88,12 +88,12 @@
 									<input name="password" value="" placeholder="Password" id="input-password" class="form-control" type="password">
 								</div>
 								<span>{{ $errors->first('password') }}</span>
-									<span class="help-block"><a href="https://demo.opencart.com/admin/index.php?route=common/forgotten">Forgotten Password</a></span>
+									
 								</div>
 									<div class="text-right">
 										<button type="submit" class="btn btn-primary"><i class="fa fa-key"></i> Login</button>
 									</div>
-									<input name="redirect" value="https://demo.opencart.com/admin/index.php?route=common/login" type="hidden">
+									
 								</form>
 							</div>
 						</div>

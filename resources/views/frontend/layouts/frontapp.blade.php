@@ -38,7 +38,7 @@
 							</ul>
 						</div>
 					</div>
-					<div class="col-sm-6">
+					<!-- <div class="col-sm-6">
 						<div class="social-icons pull-right">
 							<ul class="nav navbar-nav">
 								<li><a href="#"><i class="fa fa-facebook"></i></a></li>
@@ -48,7 +48,7 @@
 								<li><a href="#"><i class="fa fa-google-plus"></i></a></li>
 							</ul>
 						</div>
-					</div>
+					</div> -->
 				</div>
 			</div>
 		</div><!--/header_top-->
@@ -86,7 +86,7 @@
 					<div class="col-sm-8">
 						<div class="shop-menu pull-right ">
 							<ul class="nav navbar-nav">
-								<li class="dropdown"><a href="#"><i class="fa fa-user"></i> @if(Auth::user()) {{Auth::user()->firstname}} {{Auth::user()->lastname}} @else Account @endif</a>
+								<li class="dropdown">@if(Auth::user())<a href="#"><i class="fa fa-user"></i> {{Auth::user()->firstname}} {{Auth::user()->lastname}}</a>@else <a href="/eshopers/login"><i class="fa fa-user"></i>Account</a> @endif
 									@if(Auth::user())
 									<ul role="menu" class="sub-menu">				
                                         <li class="dropdown-item"><a href="/eshopers/myOrders">My Orders</a></li>
@@ -176,7 +176,7 @@
 								</div>
 								<div class="col-sm-6">
 									<img src="{{asset('frontend/images/home/'.$banners->banner_path)}}" class="girl img-responsive" alt="" />
-									<img src="{{asset('frontend/images/home/pricing.png')}}"  class="pricing" alt="" />
+									
 								</div>
 								<?php $i++; ?>
 							</div>
@@ -230,6 +230,11 @@
 						<div class="shipping text-center"><!--shipping-->
 							<img src="{{asset('frontend/images/home/shipping.jpg')}}" alt="" />
 						</div><!--/shipping-->
+						<div class="shipping text-center">
+							@foreach(DB::table('coupons')->where('no_of_uses','>',0)->inRandomOrder()->limit(1)->get() as $coupons)
+							<h4>Use Coupon <b> {{$coupons->code}}</b> get <b>{{$coupons->percent_off}} % </b>off</h4>
+							@endforeach 
+						</div>
 					
 					</div>
 					@show
@@ -379,8 +384,8 @@
     <script src="{{asset('frontend/js/main.js')}}"></script>
     <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true"></script>
     <script type="text/javascript" src="{{asset('frontend/js/gmaps.js')}}"></script>
-	<script src="{{asset('frontend/js/contact.js')}}"></script>
-	<script src="{{asset('js/app.js')}}"></script>
+	<script src="{{asset('frontend/js/contact.js')}}"></script>	
+	<script type="text/javascript" src="{{asset('/js/app.js')}}"></script>
   @show
 </body>
 </html>

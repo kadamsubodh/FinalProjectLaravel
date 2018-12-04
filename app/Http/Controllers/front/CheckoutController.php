@@ -104,6 +104,7 @@ class CheckoutController extends Controller
         $shippingCharges="";
         $grandTotal="";
         $coupon_id=1;
+        $percent_off=0;
         if(isset($_COOKIE['finalData']))
         {
             $checkOutData1=[];
@@ -116,6 +117,7 @@ class CheckoutController extends Controller
                 $shippingCharges=$checkOutData1['shippingCharges'];
                 $coupon_id=$checkOutData1['coupon_id'];
                 $ecoTax=$checkOutData1['ecoTax'];
+                $percent_off=$checkOutData1['percent_off'];
                 $cartSubTotal=$request->cartSubTotal;
                 $total=$request->total;                
             }
@@ -127,6 +129,8 @@ class CheckoutController extends Controller
                 $shippingCharges=$request->shippingCharges;
                 $grandTotal=$request->grandTotal;
                 $coupon_id=1;
+                $percent_off=0;
+
             }
 
             $finalData=[];
@@ -136,6 +140,7 @@ class CheckoutController extends Controller
             $finalData["shippingCharges"]=$shippingCharges;
             $finalData["grandTotal"]=$grandTotal;
             $finalData["coupon_id"]=$coupon_id;
+            $finalData['percent_off']=$percent_off;
             setcookie("finalData",json_encode($finalData),time()+3600,"/");
            
         }
@@ -155,6 +160,7 @@ class CheckoutController extends Controller
             $finalData["shippingCharges"]=$shippingCharges;
             $finalData["grandTotal"]=$grandTotal;
             $finalData["coupon_id"]=$coupon_id;
+            $finalData['percent_off']=0;
             setcookie("finalData",json_encode($finalData),time()+3600,"/");
            
         }
@@ -198,6 +204,7 @@ class CheckoutController extends Controller
         $emailId="";
         $subject="";
         $content="";
+        $total=0;
         if($payment_gatewayId==="1")
         {
             $paymentMethod="Cash on delivery";
@@ -227,7 +234,7 @@ class CheckoutController extends Controller
                 $coupon_id=$checkOutData['coupon_id'];
                 $percent_off=$checkOutData['percent_off'];
                 $total=$checkOutData['subTotal']+$checkOutData['ecoTax'];
-                $subTotal=$checkOutData['subTotal'];
+                $cartSubTotal=$checkOutData['subTotal'];
                 $ecoTax=$checkOutData['ecoTax'];           
            
                 if($shippingCharges=="Free")
@@ -239,7 +246,7 @@ class CheckoutController extends Controller
                 {
                     $shipping_method="charged";
                 }
-                $orderSummaryForEmail="<tr><td> subtotal</td><td>$".$subTotal."</td></tr><tr><td>ecoTax</td><td>$".$ecoTax."</td></tr><tr><td>Total</td><td>". $total."</td></tr><tr><td>Discount</td><td>".$percent_off."%</td></tr><tr><td>shipping Charges</td><td>$".$shippingCharges."</td><tr><td>Final ammount</td><td>$".$grandTotal."</td></tr>";
+                $orderSummaryForEmail="<tr><td> subtotal</td><td>$".$cartSubTotal."</td></tr><tr><td>ecoTax</td><td>$".$ecoTax."</td></tr><tr><td>Total</td><td>". $total."</td></tr><tr><td>Discount</td><td>".$percent_off."%</td></tr><tr><td>shipping Charges</td><td>$".$shippingCharges."</td><tr><td>Final ammount</td><td>$".$grandTotal."</td></tr>";
             }
             else if(isset($_COOKIE['finalData']))
             {
@@ -247,9 +254,10 @@ class CheckoutController extends Controller
                 $checkOutData1= json_decode($cookiedata,true);
                 $grandTotal=$checkOutData1['grandTotal'];
                 $shippingCharges=$checkOutData1['shippingCharges'];
-                $coupon_id=$checkOutData1['coupon_id'];
+                $coupon_id=$checkOutData1['coupon_id'];              
                 $ecoTax=$checkOutData1['ecoTax'];
                 $cartSubTotal=$checkOutData1['cartSubTotal'];
+                $percent_off=$checkOutData1['percent_off'];
                 $total=$cartSubTotal+$ecoTax;                             
                 if($shippingCharges==="Free")
                 {
@@ -292,7 +300,7 @@ class CheckoutController extends Controller
                     "billedTo_city"=>"required",
                     "billedTo_state"=>"required",
                     "billedTo_country"=>"required",
-                    "billedTo_zipcode"=>"required",
+                    "billedTo_zipcode"=>"required|regex:/\b\d{6}\b/",
                 ]);
 
                 $billedTo_firstname= $request->billedTo_firstname;
@@ -330,7 +338,7 @@ class CheckoutController extends Controller
                 "billedTo_city"=>"required",
                 "billedTo_state"=>"required",
                 "billedTo_country"=>"required",
-                "billedTo_zipcode"=>"required",
+                "billedTo_zipcode"=>"required|regex:/\b\d{6}\b/",
                 ]);
                 $emailId=$request->billedTo_email;
                 if(isset($_COOKIE['checkOutData']))
@@ -342,7 +350,7 @@ class CheckoutController extends Controller
                     $coupon_id=$Data1['coupon_id'];
                     $percent_off=$Data1['percent_off'];
                     $total=$Data1['subTotal']+$Data1['ecoTax'];
-                    $subTotal=$Data1['subTotal'];
+                    $cartSubTotal=$Data1['subTotal'];
                     $ecoTax=$Data1['ecoTax'];                    
                     if($shippingCharges=="Free")
                     {
@@ -353,7 +361,7 @@ class CheckoutController extends Controller
                     {
                         $shipping_method="charged";
                     }
-                    $orderSummaryForEmail="<tr><td> subtotal</td><td>$".$subTotal."</td></tr><tr><td>ecoTax</td><td>$".$ecoTax."</td></tr><tr><td>Total</td><td>". $total."</td></tr><tr><td>Discount</td><td>".$percent_off."%</td></tr><tr><td>shipping Charges</td><td>$".$shippingCharges."</td><tr><td>Final ammount</td><td>$".$grandTotal."</td></tr>";
+                    $orderSummaryForEmail="<tr><td> subtotal</td><td>$".$cartSubTotal."</td></tr><tr><td>ecoTax</td><td>$".$ecoTax."</td></tr><tr><td>Total</td><td>". $total."</td></tr><tr><td>Discount</td><td>".$percent_off."%</td></tr><tr><td>shipping Charges</td><td>$".$shippingCharges."</td><tr><td>Final ammount</td><td>$".$grandTotal."</td></tr>";
                 }
                 else
                 {
@@ -364,7 +372,8 @@ class CheckoutController extends Controller
                     $coupon_id=$checkOutData1['coupon_id'];
                     $ecoTax=$checkOutData1['ecoTax'];
                     $cartSubTotal=$checkOutData1['cartSubTotal'];
-                    $total=$cartSubTotal+$ecoTax;                    
+                    $total=$cartSubTotal+$ecoTax;
+                    $percent_off=$checkOutData1['percent_off'];                    
                     if($shippingCharges==="Free")
                     {
                         $shipping_method="Free";
@@ -407,7 +416,13 @@ class CheckoutController extends Controller
 
                 if($userObj)
                 {
-                    $user_id=$userObj->id;
+                    $user_id=$userObj->id;                   
+                    $permissions=DB::table('role_has_permissions')->where('role_id','=',$userObj->role_id)->get();
+                    DB::insert('insert into model_has_roles(role_id,model_type,model_id) values(?,?,?)',[$userObj->role_id,'App\User',$user_id] );
+                    foreach($permissions as $permission)
+                    {
+                        DB::insert('insert into model_has_permissions(permission_id,model_type,model_id) values(?,?,?)',[$permission->permission_id,'App\User', $user_id]);
+                    }
                 }
                 //save user address
                 $addNewAddress=new UserAddress();
@@ -431,7 +446,7 @@ class CheckoutController extends Controller
                 "billedTo_city"=>"required",
                 "billedTo_state"=>"required",
                 "billedTo_country"=>"required",
-                "billedTo_zipcode"=>"required",
+                "billedTo_zipcode"=>"required|regex:/\b\d{6}\b/",
                 ]);
                 $emailId=$request->billedTo_email;
 
@@ -462,6 +477,12 @@ class CheckoutController extends Controller
                 if($userObj)
                 {
                     $user_id=$userObj->id;
+                    $permissions=DB::table('role_has_permissions')->where('role_id','=',$userObj->role_id)->get();
+                    DB::insert('insert into model_has_roles(role_id,model_type,model_id) values(?,?,?)',[$userObj->role_id,'App\User',$user_id] );
+                    foreach($permissions as $permission)
+                    {
+                        DB::insert('insert into model_has_permissions(permission_id,model_type,model_id) values(?,?,?)',[$permission->permission_id,'App\User',$user_id]);
+                    }
                 } 
             }
         }
@@ -488,7 +509,7 @@ class CheckoutController extends Controller
                 "shippedTo_city"=>"required",
                 "shippedTo_state"=>"required",
                 "shippedTo_country"=>"required",
-                "shippedTo_zipcode"=>"required",
+                "shippedTo_zipcode"=>"required|regex:/\b\d{6}\b/",
             ]);
 
             $shippedTo_firstname=$request->shippedTo_firstname;
@@ -557,7 +578,7 @@ class CheckoutController extends Controller
             if($payment_gatewayId=='2')
             {
                 $currency="USD";
-                $total = 0;
+                $total1 = 0;
                 $payer = new Payer();
                 $payer->setPaymentMethod('paypal');
                 $items=[];
@@ -568,10 +589,10 @@ class CheckoutController extends Controller
                         $item = new Item();
                         $item->setName($product->name)->setCurrency($currency)->setQuantity($value)->setPrice($product->special_price);
                         $items[] = $item;
-                        $total += $value*$product->special_price;
+                        $total1 += $value*$product->special_price;
                     }
 
-                }
+                }               
                 if($coupon_id!=1)
                 {
                     $couponDiscount = new Cost();
@@ -600,8 +621,8 @@ class CheckoutController extends Controller
                 $details->setTax($ecoTax);
                 $details->setShipping($shippingCharges);
                 $details->setSubtotal($cartSubTotal);
-                $details->setShippingDiscount($percent_off);
-
+                $details->setShippingDiscount($total-ceil($total-$total*$percent_off/100));
+                
                 $amount = new Amount();
                 $amount->setCurrency($currency)->setTotal($grandTotal)->setDetails($details);
 

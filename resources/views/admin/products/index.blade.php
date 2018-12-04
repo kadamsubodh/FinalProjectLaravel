@@ -9,7 +9,7 @@
                         <a href="{{ url('/admin/products/create') }}" class="btn btn-success btn-sm" title="Add New product">
                             <i class="fa fa-plus" aria-hidden="true"></i> Add New
                         </a>
-                        <form method="GET" action="{{ url('/admin/products') }}" accept-charset="UTF-8" class="form-inline my-2 my-lg-0 float-right" role="search">
+                        <!-- <form method="GET" action="{{ url('/admin/products') }}" accept-charset="UTF-8" class="form-inline my-2 my-lg-0 float-right" role="search">
                             <div class="input-group">
                                 <input type="text" class="form-control" name="search" placeholder="Search..." value="{{ request('search') }}">
                                 <span class="input-group-append">
@@ -18,21 +18,32 @@
                                     </button>
                                 </span>
                             </div>
-                        </form>
+                        </form> -->
                         <br/>
                         <br/>
                         <div class="table-responsive">
-                            <table class="table">
+                            <table class="table" id="listTable">
                                 <thead>
                                     <tr>
-                                        <th>#</th><th>Name</th><th>Sku</th><th>Short Description</th><th>Actions</th>
+                                        <th>#</th>
+                                        <th>Name</th>                                        
+                                        <th>Sku</th>
+                                        <th>Short Description</th>
+                                        <th>Price</th>
+                                        <th>Quantity</th>
+                                        <th>Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                 @foreach($products as $item)
                                     <tr>
                                         <td>{{ $loop->iteration or $item->id }}</td>
-                                        <td>{{ $item->name }}</td><td>{{ $item->sku }}</td><td>{{ $item->short_description }}</td>
+                                        <td>{{ $item->name }}</td>
+                                        <td>{{ $item->sku }}</td>
+                                        <td>{{ $item->short_description }}</td>
+                                        <td>{{$item->special_price}}</td>
+                                        <td>{{$item->quantity}}</td>
+                                        
                                         <td>
                                             <a href="{{ url('/admin/products/' . $item->id) }}" title="View product"><button class="btn btn-info btn-sm"><i class="fa fa-eye" aria-hidden="true"></i> View</button></a>
                                             <a href="{{ url('/admin/products/' . $item->id . '/edit') }}" title="Edit product"><button class="btn btn-primary btn-sm"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit</button></a>

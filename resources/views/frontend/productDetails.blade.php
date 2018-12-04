@@ -7,15 +7,13 @@
 	<div class="product-details"><!--product-details-->
 		<div class="col-sm-5">
 			<div class="view-product">
-				<img src="{{'/storage/uploads/'.$product->product_image['image_name']}}" alt="" />
-				<h3>ZOOM</h3>
+				<img src="{{'/storage/uploads/'.$product->product_image['image_name']}}" alt="" />				
 			</div>
 		</div>
 		<div class="col-sm-7">
-			<div class="product-information"><!--/product-information-->
-				<img src="{{asset('frontend/images/product-details/new.jpg')}}" class="newarrival" alt="" />
+			<div class="product-information"><!--/product-information-->				
 				<h2>{{$product->name}}</h2>
-				<p>{{'Web ID: 1089772'.$product->id}}</p>
+				<p>{{'Web ID:'.$product->id}}</p>
 				<img src="{{asset('frontend/images/product-details/rating.png')}}" alt="" />
 				<span>
 					<span>US ${{$product->special_price}}</span>
@@ -29,7 +27,7 @@
 				<p><b>Availability:</b> In Stock</p>
 				<p><b>Condition:</b> New</p>
 				<p><b>Brand:</b> E-SHOPPER</p>
-				<a href=""><img src="{{asset('frontend/images/product-details/share.png')}}" class="share img-responsive"  alt="" /></a>
+				
 			</div><!--/product-information-->
 		</div>
 	</div><!--/product-details-->

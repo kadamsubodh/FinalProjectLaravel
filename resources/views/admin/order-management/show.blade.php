@@ -145,7 +145,7 @@
                         </tr>
                         <tr>
                             <th>Transaction Id</th>
-                            <td> @if($order->payment_gateway_id=='1') NA @else {{$order0->transaction_id}}@endif</td>
+                            <td> @if($order->payment_gateway_id=='1') NA @else {{$order->transaction_id}}@endif</td>
                         </tr>
                         <tr>
                             <th>subTotal</th>

@@ -166,56 +166,49 @@ class userController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $validate=$request->validate([
-            'firstname'=>'required',
-            'lastname'=>'required',
-            'email'=>'required|email',
-            'status'=>'required',
-            'role'=>'required'
-        ]);
+      $validate=$request->validate([
+          'firstname'=>'required',
+          'lastname'=>'required',
+          'email'=>'required|email',
+          'status'=>'required',
+          'role'=>'required'
+      ]);      
+      $user = User::findOrFail($id);
+      $user->firstname=$request->firstname;
+      $user->lastname=$request->lastname;
+      $user->email=$request->email;
+      $user->status=$request->status;
+      $user->role_id=$request->role;
+      $user->created_date = date("Y-m-d H:i:s");
+      $user->save();
+      $modelPermissions=true;
+      if($user)
+      {
+          $role=$request->role;
+          $permissions= DB::table('role_has_permissions')->where(function ($query) use ($role,$id){
+                  $query->where('role_id','=', $role)->pluck('permission_id');
+                  // $query->where('id','=', $id);
+                  })->get();
+          $modelRole= DB::update('update model_has_roles set role_id=? where model_id=?',[$role,$id]);
+          $deletePermission=DB::delete('delete from model_has_permissions where model_id=?',[$id]);
+          if($deletePermission)
+          {
 
-        if(User::where('email','=',$request->email)->where('role_id','=',$request->role)->count()>0)
-        {
-          Session::flash('alert-danger', 'Email id already exist!');
-          return redirect('admin/users'); 
-        }
-        else
-        {
+              foreach ($permissions as $per) 
+              {
+
+              $permission= $per->permission_id;
+
+              DB::insert('insert into model_has_permissions(permission_id,model_type,model_id) values(?,?,?)',[$permission,'App\User',$id]);
+              }       
+          }                 
      
-            $user = User::findOrFail($id);
-            $user->firstname=$request->firstname;
-            $user->lastname=$request->lastname;
-            $user->email=$request->email;
-            $user->status=$request->status;
-            $user->role_id=$request->role;
-            $user->created_date = date("Y-m-d H:i:s");
-            $user->save();
-            $modelPermissions;
-            if($user)
-            {
-                $role=$request->role;
-                $permissions= DB::table('role_has_permissions')->where(function ($query) use ($role,$id){
-                        $query->where('role_id','=', $role)->pluck('permission_id');
-                        // $query->where('id','=', $id);
-                        })->get();
-                $modelRole= DB::update('update model_has_roles set role_id=? where model_id=?',[$role,$id]);
-                $deletePermission=DB::delete('delete from model_has_permissions where model_id=?',[$id]);
-                if($deletePermission)
-                        {
-                            foreach ($permissions as $per) {
-                            $permission= $per->permission_id;
-                            $modelPermissions= DB::insert('insert into model_has_permissions(permission_id,model_type,model_id) values(?,?,?)',[$permission,'App\User',$id]);
-                            }       
-                        }                    
-           
-                if($modelPermissions && $modelRole)
-                {
-                    Session::flash('alert-success', 'User updated!');
+              Session::flash('alert-success', 'User updated!');
 
-                    return redirect('admin/users');
-                }
-            }
-        }
+              return redirect('admin/users');
+ 
+      }
+        
     }
     /**
      * Remove the specified resource from storage.
