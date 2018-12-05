@@ -172,6 +172,11 @@
                 <input class="form-control" name="Attribute_value[]" type="text" id="Attribute_value" value="{{ $product->Attribute_value or ''}}" >
                 {!! $errors->first('Attribute_value[]', '<p class="help-block">:message</p>') !!}
             </div>
+            <div class="col-md-1">
+            </div>           
+            <div class="col-md-1 form-group">
+                <input type="button" class="btn btn-danger btn-sm"  style="margin-top:26px; margin-left:15px" id="remove" value="remove" onclick="deleteAttributeValue.call(this,event)"/>
+            </div>
         </div>
         @endif   
     </div>

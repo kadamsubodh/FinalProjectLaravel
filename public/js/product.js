@@ -56,7 +56,16 @@ $(document).ready(function(){
 // });
 
 function deleteAttributeValue(event){
-$(this).parent().parent().remove();
+	var container = $(".container-fluid");
+	var divlength=$(".container-fluid > .row div select").length;
+	if(divlength==1)
+	{
+		alert('atleast one attribute is required!!');
+	}
+	else
+	{
+		$(this).parent().parent().remove();
+	}
 };
 
 function getCode()
